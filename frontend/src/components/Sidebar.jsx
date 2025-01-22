@@ -9,7 +9,7 @@ const Sidebar = () => {
   return (
     <div>
       <div
-        className={` py-5 transition-all ease-linear duration-300 pl-2 pr-3 flex flex-col ${
+        className={` pt-3 transition-all ease-linear duration-300 pl-2 pr-3 flex flex-col  ${
           expended ? "md:w-56 sm:w-48 " : "w-28 "
         }`}
       >
