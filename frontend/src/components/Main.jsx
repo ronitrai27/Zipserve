@@ -3,7 +3,7 @@ import MyLocationMap from "./MyLocation";
 import { assets } from "../assets/assets";
 const Main = () => {
   return (
-    <div className="flex-1 border-[1.6px] border-gray-200 bg-stone-50 h-[90vh] rounded-tl-3xl p-5 pr-10">
+    <div className="flex-1 w-[98%] border-[1.6px] border-gray-200 bg-stone-50 h-full rounded-t-3xl p-5 pr-10">
       <div className="flex justify-between ">
         <div className="workers-div bg-white border-[1px] w-[28%] flex flex-col  justify-center gap-2  rounded-xl font-inter">
           <h1 className="text-lg font-medium text-gray-800 my-2 text-center">

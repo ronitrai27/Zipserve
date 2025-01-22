@@ -18,7 +18,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="relative flex items-center justify-between py-3 pr-14 font-outfit ">
+    <div className="relative flex items-center justify-between py-3 pr-14 font-outfit">
       {/* ---------left part--------- */}
       <motion.div
         className=""
@@ -34,23 +34,25 @@ const Navbar = () => {
         />
       </motion.div>
       {/* ------------MIDDLE------------ */}
-      <div className="w-1/2 h-[90%] flex flex-col  ">
+      <div className="w-1/2 h-full flex flex-col ">
         <div
-          className={`border-none rounded-tl-full rounded-br-full overflow-hidden bg-gradient-to-r
+          className={`border-none rounded-tl-full rounded-br-full py-2 bg-gradient-to-r
 from-white/0
 via-primary/20
 to-indigo-50/0 h-full text-center flex items-center justify-center font-outfit ${
             currentText === 0 ? "block" : "hidden"
           }`}
         >
-          <h1 className="text-xl font-medium text-gray-600 tracking-wider">
+          <h1 className="text-2xl font-medium text-gray-600 tracking-wider">
             Still confused, what to Book? try{" "}
-            <span className=" text-blue-400 font-medium ml-2">trending!</span>
+            <span className=" text-primary font-medium ml-2 font-inter uppercase">
+              trending!
+            </span>
           </h1>
         </div>
 
         <div
-          className={`border-none rounded-3xl overflow-hidden bg-gradient-to-r
+          className={`border-none rounded-3xl overflow-hidden py-3 bg-gradient-to-r
 from-yellow-200/0
 via-yellow-300
 to-yellow-50/0  h-full text-center flex items-center justify-center font-inter ${

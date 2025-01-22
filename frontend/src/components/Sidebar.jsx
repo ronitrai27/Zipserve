@@ -51,7 +51,7 @@ const Sidebar = () => {
           )}
         </div>
         {expended && (
-          <hr className="w-[78%] mx-auto mt-4 mb-5 border-[1px] border-primaryLight" />
+          <hr className="w-[78%] mx-auto my-5 border-[1px] border-primaryLight" />
         )}
 
         {/* --------------------Middle----------------- */}
@@ -315,7 +315,7 @@ to-primary border-none rounded-md mt-6 mb-4 px-1 py-2  "
           </div>
         </div>
         {/* ---------------------Bottom---------------------- */}
-        <hr className="w-[78%] mx-auto mt-5   border-[1px] border-primaryLight" />
+        <hr className="w-[78%] mx-auto mt-5   border-[1px] border-primaryLight " />
         <div className="flex items-center justify-center">
           {expended ? (
             <img src={assets.zipPng} className="sm:w-36 -mt-2 md:w-40" />

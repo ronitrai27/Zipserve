@@ -14,7 +14,7 @@ const App = () => {
   const location = useLocation();
   const noSidebarRoutes = ["/my-profile", "/login", "/mycoins"];
   return (
-    <div className="w-full h-full fixed flex flex-col">
+    <div className="w-full fixed flex flex-col">
       <Navbar />
 
       {/* Main Content: Sidebar + Routes */}
