@@ -5,7 +5,7 @@ import Workers from "./pages/Workers";
 import Navbar from "./components/Navbar";
 import Bookings from "./pages/Bookings";
 import BookingHistory from "./pages/BookingHistory";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/Sidebar.jsx";
 import Login from "./pages/Login";
 import MyProfile from "./pages/MyProfile";
 import MyCoins from "./pages/MyCoins";
@@ -14,7 +14,7 @@ const App = () => {
   const location = useLocation();
   const noSidebarRoutes = ["/my-profile", "/login", "/mycoins"];
   return (
-    <div className="w-full fixed flex flex-col">
+    <div className="w-full fixed h-full flex flex-col">
       <Navbar />
 
       {/* Main Content: Sidebar + Routes */}

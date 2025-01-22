@@ -6,7 +6,7 @@ const Main = () => {
     <div className="flex-1 w-[98%] border-[1.6px] border-gray-200 bg-stone-50 h-full rounded-t-3xl pl-5 pr-10 py-[1.1rem]">
       <div className="flex justify-between ">
         <div className="workers-div bg-white border-[1px] w-[28%] flex flex-col  justify-center gap-2  rounded-xl font-inter">
-          <h1 className="text-lg font-medium text-gray-800 my-2 text-center">
+          <h1 className="text-lg font-medium text-gray-800 mt-2 mb-1 text-center">
             Browse Services
           </h1>
           <div className="flex items-center justify-between px-4">
@@ -25,7 +25,7 @@ const Main = () => {
             <div className="bg-gray-100 w-full h-[7.2rem] border rounded-md"></div>
           </div>
 
-          <div className="">
+          <div className="text-center">
             <p className="">More...</p>
           </div>
         </div>

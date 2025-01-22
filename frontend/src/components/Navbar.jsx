@@ -53,13 +53,13 @@ to-indigo-50/0 h-full text-center flex items-center justify-center font-outfit $
 
         <div
           className={`border-none rounded-3xl overflow-hidden py-3 bg-gradient-to-r
-from-yellow-200/0
-via-yellow-300
+from-primaryLight/0
+via-primaryLight
 to-yellow-50/0  h-full text-center flex items-center justify-center font-inter ${
             currentText === 1 ? "block" : "hidden"
           }`}
         >
-          <h1 className="text-xl font-medium text-gray-600 tracking-wider">
+          <h1 className="text-xl font-medium text-white tracking-wider">
             Collect Coins and Avail huge Discounts!!{" "}
             <span className="animate-pulse transition-all duration-700 text-gray-800">
               Book Now

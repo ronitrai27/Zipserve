@@ -31,6 +31,7 @@ import trend2 from "./trending-img.jpg";
 import trend3 from "./trending-img2.jpg";
 import trend4 from "./trending-img3.jpg";
 import trend5 from "./trending-moving.jpg";
+import { IoSettingsOutline } from "react-icons/io5";
 
 export const assets = {
   zipPng,
@@ -66,4 +67,5 @@ export const assets = {
   trend3,
   trend4,
   trend5,
+  IoSettingsOutline,
 };

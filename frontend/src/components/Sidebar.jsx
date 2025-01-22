@@ -6,21 +6,22 @@ const Sidebar = () => {
   const handleSidebar = () => {
     setExpended(!expended);
   };
+  const navigate = useNavigate();
   return (
-    <div>
+    <div className="h-full">
       <div
-        className={` pt-3 transition-all ease-linear duration-300 pl-2 pr-3 flex flex-col  ${
-          expended ? "md:w-56 sm:w-48 " : "w-28 "
+        className={`h-full pt-3 transition-all ease-linear duration-300 pl-2 pr-3 flex flex-col ${
+          expended ? "w-[220px] lg:w-[240px]" : "w-[80px] lg:w-[100px]"
         }`}
       >
         {/* ------------------Top-------------------- */}
-        <div className="flex items-center justify-between text-gray-900 mt-2 font-outfit">
-          <div className="w-11 h-11 bg-gray-200 border  flex items-center justify-center rounded-full">
-            <img src={assets.sideUserLogo} alt="" className="w-8" />
+        <div className="flex items-center justify-between  text-gray-900 mt-2 font-outfit">
+          <div className="w-9 h-9 lg:w-11 lg:h-11 bg-gray-200 border flex items-center justify-center rounded-full">
+            <img src={assets.sideUserLogo} alt="" className="w-6 lg:w-8" />
           </div>
           <div className={`flex flex-col items-center`}>
             <p
-              className={`font-semibold text-lg w-auto transition-all duration-300  ${
+              className={`font-semibold text-base lg:text-lg w-auto transition-all duration-300 ${
                 expended
                   ? "opacity-100 max-w-full"
                   : "opacity-0 max-w-0 overflow-hidden"
@@ -29,7 +30,7 @@ const Sidebar = () => {
               John Parker
             </p>
             <p
-              className={`font-light text-sm italic transition-all duration-300  ${
+              className={`font-light text-xs lg:text-sm italic transition-all duration-300 ${
                 expended
                   ? "opacity-100 max-w-full"
                   : "opacity-0 max-w-0 overflow-hidden"
@@ -40,33 +41,33 @@ const Sidebar = () => {
           </div>
           {expended ? (
             <assets.GoSidebarExpand
-              className="cursor-pointer text-[1.5rem]"
+              className="cursor-pointer text-[1.2rem] lg:text-[1.5rem]"
               onClick={handleSidebar}
             />
           ) : (
             <assets.GoSidebarCollapse
-              className="cursor-pointer text-[1.5rem]"
+              className="cursor-pointer text-[1.2rem] lg:text-[1.5rem]"
               onClick={handleSidebar}
             />
           )}
         </div>
         {expended && (
-          <hr className="w-[78%] mx-auto my-5 border-[1px] border-primaryLight" />
+          <hr className="w-[78%] mx-auto my-3 lg:my-5 border-[1px] border-primaryLight" />
         )}
 
         {/* --------------------Middle----------------- */}
         <div
-          className={`text-gray-500  ml-2 flex flex-col font-inter   ${
-            expended ? "md:gap-2 sm:gap-1 " : "gap-3"
+          className={`text-gray-500 ml-2 flex flex-col font-inter ${
+            expended ? "gap-1 lg:gap-2" : "gap-2 lg:gap-3"
           }`}
         >
           {/* 1 */}
-          <div className="cursor-pointer pl-4 relative group">
+          <div className="cursor-pointer pl-2 lg:pl-4 relative group">
             <NavLink
               onClick={() => setExpended(true)}
               to="/"
               className={({ isActive }) =>
-                `flex items-center gap-2 w-full px-1 py-2 rounded-xl transition-all ${
+                `flex items-center gap-2 w-full px-1 py-1.5 lg:py-2 rounded-xl transition-all ${
                   isActive
                     ? "text-gray-900 bg-stone-100"
                     : "hover:text-gray-900 hover:bg-stone-100"
@@ -75,17 +76,21 @@ const Sidebar = () => {
             >
               <div className="">
                 <assets.LuPanelsTopLeft
-                  className={`${expended ? "text-[1.45rem]" : "text-[1.7rem]"}`}
+                  className={`${
+                    expended
+                      ? "text-[1.2rem] lg:text-[1.45rem]"
+                      : "text-[1.4rem] lg:text-[1.7rem]"
+                  }`}
                 />
                 {/* Tooltip */}
                 {!expended && (
-                  <p className="absolute z-50 left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-3 py-2 rounded-md text-sm whitespace-nowrap">
+                  <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
                     Dashboard
                   </p>
                 )}
               </div>
               <p
-                className={`text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -97,29 +102,33 @@ const Sidebar = () => {
           </div>
 
           {/* 2 */}
-          <div className={` cursor-pointer pl-4 relative group `}>
+          <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
               onClick={() => setExpended(false)}
               to="/workers"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
                   isActive
-                    ? "text-gray-900 bg-stone-100 px-1 py-2 rounded-xl"
-                    : "hover:text-gray-900 hover:bg-stone-100 transition-all  px-1 py-2 rounded-xl"
+                    ? "text-gray-900 bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
+                    : "hover:text-gray-900 hover:bg-stone-100 transition-all px-1 py-1.5 lg:py-2 rounded-xl"
                 }`
               }
             >
               <assets.LuBriefcase
-                className={`${expended ? "text-[1.45rem]" : "text-[1.7rem]"}`}
+                className={`${
+                  expended
+                    ? "text-[1.2rem] lg:text-[1.45rem]"
+                    : "text-[1.4rem] lg:text-[1.7rem]"
+                }`}
               />
               {/* Tooltip */}
               {!expended && (
-                <p className="absolute z-50 left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-3 py-2 rounded-md text-sm whitespace-nowrap">
+                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
                   Workers
                 </p>
               )}
               <p
-                className={`text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -131,29 +140,33 @@ const Sidebar = () => {
           </div>
           {/* 3 */}
 
-          <div className={` cursor-pointer pl-4 relative group`}>
+          <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
               onClick={() => setExpended(false)}
               to="/messages"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
                   isActive
-                    ? "text-gray-900 bg-stone-100 px-1 py-2 rounded-xl"
-                    : "hover:text-gray-900 hover:bg-stone-100 transition-all  px-1 py-2 rounded-xl"
+                    ? "text-gray-900 bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
+                    : "hover:text-gray-900 hover:bg-stone-100 transition-all px-1 py-1.5 lg:py-2 rounded-xl"
                 }`
               }
             >
               <assets.BsChatDots
-                className={`${expended ? "text-[1.45rem]" : "text-[1.7rem]"}`}
+                className={`${
+                  expended
+                    ? "text-[1.2rem] lg:text-[1.45rem]"
+                    : "text-[1.4rem] lg:text-[1.7rem]"
+                }`}
               />
               {/* Tooltip */}
               {!expended && (
-                <p className="absolute z-50 left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-3 py-2 rounded-md text-sm whitespace-nowrap">
+                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
                   Messages
                 </p>
               )}
               <p
-                className={`text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -165,29 +178,33 @@ const Sidebar = () => {
           </div>
 
           {/* 4 */}
-          <div className={` cursor-pointer pl-4  relative group `}>
+          <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
               onClick={() => setExpended(false)}
               to="/bookings"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
                   isActive
-                    ? "text-gray-900 bg-stone-100 px-1 py-2 rounded-xl "
-                    : "hover:text-gray-900 hover:bg-stone-100 transition-all px-1 py-2 rounded-xl"
+                    ? "text-gray-900 bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
+                    : "hover:text-gray-900 hover:bg-stone-100 transition-all px-1 py-1.5 lg:py-2 rounded-xl"
                 }`
               }
             >
               <assets.LuPackageCheck
-                className={`${expended ? "text-[1.45rem]" : "text-[1.7rem]"}`}
+                className={`${
+                  expended
+                    ? "text-[1.2rem] lg:text-[1.45rem]"
+                    : "text-[1.4rem] lg:text-[1.7rem]"
+                }`}
               />
               {/* Tooltip */}
               {!expended && (
-                <p className="absolute z-50 left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-3 py-2 rounded-md text-sm whitespace-nowrap">
+                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
                   Bookings
                 </p>
               )}
               <p
-                className={`text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -197,31 +214,35 @@ const Sidebar = () => {
               </p>
             </NavLink>
           </div>
-          {/* 4 */}
-          <div className={` cursor-pointer pl-4 relative group  `}>
+          {/* 5 */}
+          <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
               onClick={() => setExpended(false)}
               to="/bookinghistory"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
                   isActive
-                    ? "text-gray-900 bg-stone-100 px-1 py-2 rounded-xl"
-                    : "hover:text-gray-900 hover:bg-stone-100 px-1 py-2 rounded-xl"
+                    ? "text-gray-900 bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
+                    : "hover:text-gray-900 hover:bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
                 }`
               }
             >
               <assets.LuPackageSearch
-                className={`${expended ? "text-[1.45rem]" : "text-[1.7rem]"}`}
+                className={`${
+                  expended
+                    ? "text-[1.2rem] lg:text-[1.45rem]"
+                    : "text-[1.4rem] lg:text-[1.7rem]"
+                }`}
               />
               {/* Tooltip */}
               {!expended && (
-                <p className="absolute z-50 left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-3 py-2 rounded-md text-sm whitespace-nowrap">
+                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
                   BookingHistory
                 </p>
               )}
               {expended ? (
                 <p
-                  className={`text-[0.95rem] transition-all duration-300 max-w-full opacity-100 `}
+                  className={`text-sm lg:text-[0.95rem] transition-all duration-300 max-w-full opacity-100`}
                 >
                   Booking History
                 </p>
@@ -230,57 +251,78 @@ const Sidebar = () => {
               )}
             </NavLink>
           </div>
-          {/* 5 AD --------border-[#5f6fff66] */}
+          {/* 6 AD */}
           {expended ? (
-            <div
-              className="coins-add w-[190px] h-28 bg-gradient-to-br
-from-primaryLight/60
-via-primaryLight
-to-primary border-none rounded-md mt-6 mb-4 px-1 py-2  "
-            >
-              <div className="text-md font-medium  text-white flex flex-col items-center justify-center h-full gap-4">
-                <p className="flex  items-center justify-center gap-2">
+            <div className="coins-add w-full max-w-[210px] mx-auto h-24 lg:h-28 bg-gradient-to-br from-primaryLight/60 via-primaryLight to-primary border-none rounded-md my-2 px-2 py-2">
+              <div className="text-sm lg:text-xl font-medium text-white flex flex-col items-center justify-center h-full gap-3 lg:gap-4">
+                <p className="flex items-center justify-center gap-2">
                   <img
                     src={assets.gameCoins}
                     alt=""
-                    className="w-8 animate-bounce transition-all duration-1000"
+                    className="w-6 lg:w-9 animate-bounce transition-all duration-1000"
                   />
                   10 More Coins !!
                 </p>
-                <p className="text-center text-sm">
+                <p className="text-center text-sm lg:text-lg">
                   & Get{" "}
-                  <span className="text-xl bg-white px-2 py-1 text-gray-900 rounded-full font-medium">
+                  <span className="text-lg lg:text-xl bg-white px-2 py-1 text-gray-900 rounded-full font-medium">
                     Discounts%
                   </span>
                 </p>
               </div>
             </div>
           ) : (
-            <div className="w-full h-28  "></div>
+            <div className="w-full h-20 lg:h-24"></div>
           )}
-          {/* 6 */}
-          <div className={` cursor-pointer pl-3 relative group`}>
-            <NavLink
-              to="/my-profile"
-              className={({ isActive }) =>
-                `flex items-center gap-2 w-full ${
-                  isActive
-                    ? "text-gray-900 bg-stone-100 px-1 py-2 rounded-xl"
-                    : "hover:text-gray-900 hover:bg-stone-100 transition-all  px-1 py-2 rounded-xl"
-                }`
-              }
+          {/* ---------others Links ------------ */}
+          <div className="flex flex-col gap-1 ">
+            {/* 8 ---------------Settings----------------- */}
+            <div
+              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all hover:text-gray-700`}
             >
-              <assets.CgProfile
-                className={`${expended ? "text-[1.45rem]" : "text-[1.7rem]"}`}
+              <assets.IoSettingsOutline
+                className={`${
+                  expended
+                    ? "text-[1.2rem] lg:text-[1.45rem]"
+                    : "text-[1.4rem] lg:text-[1.7rem]"
+                }`}
               />
               {/* Tooltip */}
               {!expended && (
-                <p className="absolute z-50 left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-3 py-2 rounded-md text-sm whitespace-nowrap">
+                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
+                  Settings
+                </p>
+              )}
+              <p
+                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                  expended
+                    ? "max-w-full opacity-100"
+                    : "opacity-0 max-w-0 overflow-hidden"
+                }`}
+              >
+                Settings
+              </p>
+            </div>
+            {/* 7 ---------------PROFILE----------------- */}
+            <div
+              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all hover:text-gray-700`}
+              onClick={() => navigate("/my-profile")}
+            >
+              <assets.CgProfile
+                className={`${
+                  expended
+                    ? "text-[1.2rem] lg:text-[1.45rem]"
+                    : "text-[1.4rem] lg:text-[1.7rem]"
+                }`}
+              />
+              {/* Tooltip */}
+              {!expended && (
+                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
                   Profile
                 </p>
               )}
               <p
-                className={`text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -288,39 +330,44 @@ to-primary border-none rounded-md mt-6 mb-4 px-1 py-2  "
               >
                 Profile
               </p>
-            </NavLink>
-          </div>
-          {/* 7 */}
-          <div
-            className={` cursor-pointer pl-4 relative group flex items-center gap-2 w-full py-2 hover:scale-110 transition-all hover:text-gray-700`}
-          >
-            <assets.RiChatAiLine
-              className={`${expended ? "text-[1.45rem]" : "text-[1.7rem]"}`}
-            />
-            {/* Tooltip */}
-            {!expended && (
-              <p className="absolute z-50 left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-3 py-2 rounded-md text-sm whitespace-nowrap">
+            </div>
+            {/* 8 ---------------HELP----------------- */}
+            <div
+              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all hover:text-gray-700`}
+            >
+              <assets.RiChatAiLine
+                className={`${
+                  expended
+                    ? "text-[1.2rem] lg:text-[1.45rem]"
+                    : "text-[1.4rem] lg:text-[1.7rem]"
+                }`}
+              />
+              {/* Tooltip */}
+              {!expended && (
+                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
+                  Help
+                </p>
+              )}
+              <p
+                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                  expended
+                    ? "max-w-full opacity-100"
+                    : "opacity-0 max-w-0 overflow-hidden"
+                }`}
+              >
                 Help
               </p>
-            )}
-            <p
-              className={`text-[0.95rem] transition-all duration-300 ${
-                expended
-                  ? "max-w-full opacity-100"
-                  : "opacity-0 max-w-0 overflow-hidden"
-              }`}
-            >
-              Help
-            </p>
+            </div>
           </div>
         </div>
         {/* ---------------------Bottom---------------------- */}
-        <hr className="w-[78%] mx-auto mt-5   border-[1px] border-primaryLight " />
+
+        <hr className="w-[78%] mx-auto mt-3 lg:mt-5 border-[1px] border-primaryLight" />
         <div className="flex items-center justify-center">
           {expended ? (
-            <img src={assets.zipPng} className="sm:w-36 -mt-2 md:w-40" />
+            <img src={assets.zipPng} className="w-28 lg:w-40 -mt-4" />
           ) : (
-            <img src={assets.z} className="w-8 mt-3" />
+            <img src={assets.z} className="w-6 lg:w-8 mt-2" />
           )}
         </div>
       </div>
