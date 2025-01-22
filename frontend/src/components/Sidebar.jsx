@@ -254,7 +254,7 @@ const Sidebar = () => {
           {/* 6 AD */}
           {expended ? (
             <div className="coins-add w-full max-w-[210px] mx-auto h-24 lg:h-28 bg-gradient-to-br from-primaryLight/60 via-primaryLight to-primary border-none rounded-md my-2 px-2 py-2">
-              <div className="text-sm lg:text-xl font-medium text-white flex flex-col items-center justify-center h-full gap-3 lg:gap-4">
+              <div className="text-sm lg:text-lg font-medium text-white flex flex-col items-center justify-center h-full gap-3 lg:gap-4">
                 <p className="flex items-center justify-center gap-2">
                   <img
                     src={assets.gameCoins}
