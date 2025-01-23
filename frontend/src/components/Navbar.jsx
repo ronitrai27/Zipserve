@@ -43,7 +43,7 @@ to-indigo-50/0 h-full text-center flex items-center justify-center font-outfit $
             currentText === 0 ? "block" : "hidden"
           }`}
         >
-          <h1 className="text-2xl font-medium text-gray-600 tracking-wider">
+          <h1 className="text-xl font-medium text-gray-600 tracking-wider">
             Still confused, what to Book? try{" "}
             <span className=" text-primary font-medium ml-2 font-inter uppercase">
               trending!
@@ -68,7 +68,7 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
         </div>
 
         <div
-          className={` text-center h-full font-inter ${
+          className={` text-center h-full py-2 font-inter ${
             currentText === 2 ? "block" : "hidden"
           }`}
         >
@@ -172,7 +172,10 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
         </div>
 
         {/* ----------------button2-------------- */}
-        <button className="cursor-pointer text-gray-600 text-[1.4rem]  hover:text-gray-900 transition-all">
+        <button
+          onClick={() => navigate("/about")}
+          className="cursor-pointer text-gray-600 text-[1.4rem]  hover:text-gray-900 transition-all"
+        >
           <assets.GoInfo />
         </button>
         {/* ----------------button3---------- */}

@@ -10,9 +10,11 @@ import Login from "./pages/Login";
 import MyProfile from "./pages/MyProfile";
 import MyCoins from "./pages/MyCoins";
 import Chats from "./pages/Chats";
+import About from "./pages/About.jsx";
+import About2 from "./pages/About2.jsx";
 const App = () => {
   const location = useLocation();
-  const noSidebarRoutes = ["/my-profile", "/login", "/mycoins"];
+  const noSidebarRoutes = ["/my-profile", "/login", "/mycoins", "/about"];
   return (
     <div className="w-full fixed h-full flex flex-col">
       <Navbar />
@@ -26,6 +28,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/about" element={<About2 />} />
             <Route path="/mycoins" element={<MyCoins />} />
             <Route path="/messages" element={<Chats />} />
             <Route path="/my-profile" element={<MyProfile />} />

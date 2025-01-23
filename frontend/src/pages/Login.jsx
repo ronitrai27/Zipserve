@@ -64,7 +64,9 @@ const Login = () => {
               <input
                 placeholder="Username"
                 type="text"
+                value={name}
                 class="p-2 px-3 border-b-[2px] focus:border-blue-400 w-full outline-none bg-white transition duration-300"
+                onChange={(e) => setName(e.target.value)}
               />
             )}
 
@@ -72,11 +74,15 @@ const Login = () => {
               placeholder="Email"
               type="email"
               class="p-2 px-3 mt-3 border-b-[2px] focus:border-blue-400 w-full outline-none bg-white transition duration-300"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <input
               placeholder="Password"
               type="password"
+              value={pass}
               class="p-2 px-3 mt-3 border-b-[2px] focus:border-blue-400 w-full outline-none bg-white transition duration-300"
+              onChange={(e) => setPass(e.target.value)}
             />
           </div>
 
@@ -106,7 +112,7 @@ const Login = () => {
               type="submit"
               class="bg-blue-600 text-white text-sm h-10 w-[130px] rounded-md font-semibold mt-5 shadow-md hover:bg-blue-700 transition duration-300 hover:scale-105"
             >
-              Get Started
+              Login
             </button>
           )}
         </div>
