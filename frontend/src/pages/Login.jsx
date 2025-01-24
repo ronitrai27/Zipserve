@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
-
+import { AuroraText } from "../components/ui/aurora-text.jsx";
 const Login = () => {
   const [state, setState] = useState("sign up");
   const [email, setEmail] = useState("");
@@ -48,10 +48,13 @@ const Login = () => {
           <div class="mt-10">
             {state === "sign up" ? (
               <h1 class="text-2xl font-semibold">
-                Register & Avail Discounts on Bookings!
+                <AuroraText>Register</AuroraText> & Avail Discounts on Bookings!
               </h1>
             ) : (
-              <h1 class="text-2xl font-semibold">Welcome Back!</h1>
+              <h1 class="text-2xl font-semibold">
+                {" "}
+                <AuroraText>Welcome</AuroraText> Back!
+              </h1>
             )}
           </div>
 

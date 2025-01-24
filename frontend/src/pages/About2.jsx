@@ -1,13 +1,15 @@
 import React from "react";
+import { MagicCardDemo } from "../components/Test.jsx";
 
 const About2 = () => {
   return (
     <div className="bg-slate-50 h-screen">
       <hr className="border-[.8px] border-gray-200 shadow-lg " />
-      <div className="max-w-[70%] mx-auto my-8">
+      <div className="max-w-[75%] mx-auto my-8 ">
+        {/* ------------------Text area ------------------ */}
         <div className="text-area  text-center">
-          <h1 className="font-outfit text-3xl">
-            <span className="font-inter text-primary text-4xl font-semibold">
+          <h1 className="font-outfit text-5xl">
+            <span className="font-outfit text-primary text-4xl font-semibold">
               Welcome To{" "}
             </span>
             Zipserve
@@ -20,6 +22,10 @@ const About2 = () => {
             consequuntur alias esse unde ut inventore? Lorem ipsum dolor sit
             amet consectetur adipisicing elit. Ipsam, praesentium.
           </p>
+        </div>
+        {/* ------------------Mission Vision ------------------ */}
+        <div className="my-10">
+          <MagicCardDemo />
         </div>
       </div>
     </div>

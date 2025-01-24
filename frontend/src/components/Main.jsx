@@ -1,9 +1,16 @@
 import React from "react";
 import MyLocationMap from "./MyLocation";
 import { assets } from "../assets/assets";
+import { useAppContext } from "../context/AppContext";
+
 const Main = () => {
+  const { theme } = useAppContext();
   return (
-    <div className="flex-1 w-[98%] border-[1.6px] border-gray-200 bg-stone-50 h-full rounded-t-3xl pl-5 pr-10 py-[1.1rem]">
+    <div
+      className={`flex-1 w-[98%] border-[1.6px] ${
+        theme ? "border-gray-200 bg-stone-50" : "border-gray-900 bg-stone-100"
+      } h-full rounded-t-3xl rounded-b-md pl-5 pr-10 py-[1.1rem]`}
+    >
       <div className="flex justify-between ">
         <div className="workers-div bg-white border-[1px] w-[28%] flex flex-col  justify-center gap-2  rounded-xl font-inter">
           <h1 className="text-lg font-medium text-gray-800 mt-2 mb-1 text-center">

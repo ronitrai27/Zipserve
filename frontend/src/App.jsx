@@ -12,11 +12,17 @@ import MyCoins from "./pages/MyCoins";
 import Chats from "./pages/Chats";
 import About from "./pages/About.jsx";
 import About2 from "./pages/About2.jsx";
+import { useAppContext } from "./context/AppContext";
 const App = () => {
   const location = useLocation();
   const noSidebarRoutes = ["/my-profile", "/login", "/mycoins", "/about"];
+  const { theme } = useAppContext();
   return (
-    <div className="w-full fixed h-full flex flex-col">
+    <div
+      className={`w-full fixed h-full flex flex-col ${
+        theme ? "bg-white" : "bg-slate-900"
+      }`}
+    >
       <Navbar />
 
       {/* Main Content: Sidebar + Routes */}

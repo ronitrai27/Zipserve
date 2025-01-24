@@ -1,22 +1,28 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 const Sidebar = () => {
   const [expended, setExpended] = useState(true);
   const handleSidebar = () => {
     setExpended(!expended);
   };
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useAppContext();
   return (
-    <div className="h-full">
+    <div className="h-full ">
       <div
         className={`h-full pt-3 transition-all ease-linear duration-300 pl-2 pr-3 flex flex-col ${
           expended ? "w-[220px] lg:w-[240px]" : "w-[80px] lg:w-[100px]"
         }`}
       >
         {/* ------------------Top-------------------- */}
-        <div className="flex items-center justify-between  text-gray-900 mt-2 font-outfit">
-          <div className="w-9 h-9 lg:w-11 lg:h-11 bg-gray-200 border flex items-center justify-center rounded-full">
+        <div className="flex items-center justify-between  mt-2 font-outfit">
+          <div
+            className={`w-9 h-9 lg:w-11 lg:h-11  border flex items-center justify-center rounded-full ${
+              theme ? "bg-gray-200" : "bg-gray-200"
+            }`}
+          >
             <img src={assets.sideUserLogo} alt="" className="w-6 lg:w-8" />
           </div>
           <div className={`flex flex-col items-center`}>
@@ -25,7 +31,7 @@ const Sidebar = () => {
                 expended
                   ? "opacity-100 max-w-full"
                   : "opacity-0 max-w-0 overflow-hidden"
-              }`}
+              } ${theme ? "text-gray-900" : "text-white"}`}
             >
               John Parker
             </p>
@@ -34,19 +40,23 @@ const Sidebar = () => {
                 expended
                   ? "opacity-100 max-w-full"
                   : "opacity-0 max-w-0 overflow-hidden"
-              }`}
+              } ${theme ? "text-gray-900" : "text-gray-300"}`}
             >
               John12@gmail.com
             </p>
           </div>
           {expended ? (
             <assets.GoSidebarExpand
-              className="cursor-pointer text-[1.2rem] lg:text-[1.5rem]"
+              className={`cursor-pointer text-[1.2rem] lg:text-[1.5rem] ${
+                theme ? "text-gray-900" : "text-white"
+              }`}
               onClick={handleSidebar}
             />
           ) : (
             <assets.GoSidebarCollapse
-              className="cursor-pointer text-[1.2rem] lg:text-[1.5rem]"
+              className={`cursor-pointer text-[1.2rem] lg:text-[1.5rem] ${
+                theme ? "text-gray-900" : "text-white"
+              }`}
               onClick={handleSidebar}
             />
           )}
@@ -57,7 +67,9 @@ const Sidebar = () => {
 
         {/* --------------------Middle----------------- */}
         <div
-          className={`text-gray-500 ml-2 flex flex-col font-inter ${
+          className={` ${
+            theme ? "text-gray-500" : "text-gray-300"
+          } ml-2 flex flex-col font-inter ${
             expended ? "gap-1 lg:gap-2" : "gap-2 lg:gap-3"
           }`}
         >
@@ -365,7 +377,7 @@ const Sidebar = () => {
         <hr className="w-[78%] mx-auto mt-3 lg:mt-5 border-[1px] border-primaryLight" />
         <div className="flex items-center justify-center">
           {expended ? (
-            <img src={assets.zipPng} className="w-28 lg:w-40 -mt-4" />
+            <img src={assets.zipblack} className="w-28 lg:w-32 mt-3" />
           ) : (
             <img src={assets.z} className="w-6 lg:w-8 mt-2" />
           )}

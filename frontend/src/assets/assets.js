@@ -1,5 +1,3 @@
-import zipPng from "./ZipserveLogo.png";
-import zipSvg from "./ZipserveLogo.svg";
 import { GoSidebarCollapse } from "react-icons/go";
 import { GoSidebarExpand } from "react-icons/go";
 import { LuFilter } from "react-icons/lu";
@@ -32,10 +30,11 @@ import trend3 from "./trending-img2.jpg";
 import trend4 from "./trending-img3.jpg";
 import trend5 from "./trending-moving.jpg";
 import { IoSettingsOutline } from "react-icons/io5";
-
+import zipwhite from "./newZipserveWhite-removebg-preview.png";
+import zipblack from "./newZipserveBlack-removebg-preview.png";
+import { GiBullseye } from "react-icons/gi";
+import { FaRegEye } from "react-icons/fa";
 export const assets = {
-  zipPng,
-  zipSvg,
   GoSidebarCollapse,
   GoSidebarExpand,
   sideUserLogo,
@@ -68,4 +67,8 @@ export const assets = {
   trend4,
   trend5,
   IoSettingsOutline,
+  zipwhite,
+  zipblack,
+  GiBullseye,
+  FaRegEye,
 };
