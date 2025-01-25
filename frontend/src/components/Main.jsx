@@ -8,7 +8,7 @@ const Main = () => {
   return (
     <div
       className={`flex-1 w-[98%] border-[1.6px] ${
-        theme ? "border-gray-200 bg-stone-50" : "border-gray-900 bg-stone-100"
+        theme ? "border-gray-200 bg-stone-50" : "border-gray-900 bg-gray-50"
       } h-full rounded-t-3xl rounded-b-md pl-5 pr-10 py-[1.1rem]`}
     >
       <div className="flex justify-between ">

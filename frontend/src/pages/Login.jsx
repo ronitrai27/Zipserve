@@ -13,7 +13,7 @@ const Login = () => {
   return (
     <div className="border-t-[1px] bg-stone-50 h-full">
       <div className="flex items-center justify-center mt-14 ">
-        <div class="border border-gray-100 shadow w-[360px] p-8 rounded-md bg-white">
+        <div class="border border-gray-100 shadow w-[380px] p-8 rounded-md bg-white">
           <div class="flex justify-between text-sm">
             <div class="flex items-center gap-2">
               <img src={assets.z} alt="" className="w-10 -mt-3" />
@@ -47,7 +47,7 @@ const Login = () => {
 
           <div class="mt-10">
             {state === "sign up" ? (
-              <h1 class="text-2xl font-semibold">
+              <h1 class="text-[26px] font-semibold leading-9">
                 <AuroraText>Register</AuroraText> & Avail Discounts on Bookings!
               </h1>
             ) : (

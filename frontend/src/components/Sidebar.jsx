@@ -377,7 +377,13 @@ const Sidebar = () => {
         <hr className="w-[78%] mx-auto mt-3 lg:mt-5 border-[1px] border-primaryLight" />
         <div className="flex items-center justify-center">
           {expended ? (
-            <img src={assets.zipblack} className="w-28 lg:w-32 mt-3" />
+            <>
+              {theme ? (
+                <img src={assets.zipblack} className={`w-28 lg:w-32 mt-3`} />
+              ) : (
+                <img src={assets.zipwhite} className={`w-28 lg:w-32 mt-3`} />
+              )}
+            </>
           ) : (
             <img src={assets.z} className="w-6 lg:w-8 mt-2" />
           )}

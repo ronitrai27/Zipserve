@@ -19,7 +19,7 @@ const App = () => {
   const { theme } = useAppContext();
   return (
     <div
-      className={`w-full fixed h-full flex flex-col ${
+      className={`w-full select-none fixed h-full flex flex-col ${
         theme ? "bg-white" : "bg-slate-900"
       }`}
     >

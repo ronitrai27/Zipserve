@@ -1,7 +1,7 @@
 // import { useTheme } from "next-themes";
 
-import { MagicCard } from "../components/ui/magic-card.jsx";
-import { assets } from "../assets/assets";
+import { MagicCard } from "./ui/magic-card.jsx";
+import { assets } from "../assets/assets.js";
 export function MagicCardDemo() {
   //   const { theme } = useTheme();
   return (

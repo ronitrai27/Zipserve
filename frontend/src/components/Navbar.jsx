@@ -118,7 +118,7 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
-            <span className="absolute top-9 left-1/2 -translate-x-1/2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            <span className="absolute z-50 top-9 left-1/2 -translate-x-1/2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
               Home
             </span>
           </button>
@@ -133,7 +133,7 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
             } transition-all group relative`}
           >
             <assets.FaFire />
-            <span className="absolute hidden group-hover:block bg-primaryLight text-white text-sm rounded px-2 py-1 top-9 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+            <span className="absolute z-50 hidden group-hover:block bg-primaryLight text-white text-sm rounded px-2 py-1 top-9 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
               Trending
             </span>
           </button>
@@ -230,7 +230,7 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
             } `}
           >
             <assets.GoInfo />
-            <span className="absolute hidden group-hover:block bg-primaryLight text-white text-sm rounded px-2 py-1 top-9 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+            <span className="absolute hidden group-hover:block z-50 bg-primaryLight text-white text-sm rounded px-2 py-1 top-9 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
               About us
             </span>
           </button>
