@@ -13,9 +13,11 @@ import Chats from "./pages/Chats";
 import About from "./pages/About.jsx";
 import About2 from "./pages/About2.jsx";
 import { useAppContext } from "./context/AppContext";
+import LeftBar from "./components/LeftBar.jsx";
 const App = () => {
   const location = useLocation();
   const noSidebarRoutes = ["/my-profile", "/login", "/mycoins", "/about"];
+  const noLeftBarRoutes = ["/login"];
   const { theme } = useAppContext();
   return (
     <div
@@ -43,6 +45,7 @@ const App = () => {
             <Route path="/bookinghistory" element={<BookingHistory />} />
           </Routes>
         </div>
+        {!noLeftBarRoutes.includes(location.pathname) && <LeftBar />}
       </div>
     </div>
   );

@@ -7,9 +7,9 @@ const Main = () => {
   const { theme } = useAppContext();
   return (
     <div
-      className={`flex-1 w-[98%] border-[1.6px] ${
+      className={`flex-1 w-full border-[1.6px] ${
         theme ? "border-gray-200 bg-stone-50" : "border-gray-900 bg-gray-50"
-      } h-full rounded-t-3xl rounded-b-md pl-5 pr-10 py-[1.1rem]`}
+      } rounded-t-3xl rounded-b-md pl-5 pr-10 py-[1.1rem]`}
     >
       <div className="flex justify-between ">
         <div className="workers-div bg-white border-[1px] w-[28%] flex flex-col  justify-center gap-2  rounded-xl font-inter">
