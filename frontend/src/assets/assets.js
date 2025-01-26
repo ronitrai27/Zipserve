@@ -35,6 +35,8 @@ import zipblack from "./newZipserveBlack-removebg-preview.png";
 import { GiBullseye } from "react-icons/gi";
 import { FaRegEye } from "react-icons/fa";
 import { BsWallet2 } from "react-icons/bs";
+import { MdOutlineArrowDropUp } from "react-icons/md";
+import { MdOutlineArrowDropDown } from "react-icons/md";
 export const assets = {
   GoSidebarCollapse,
   GoSidebarExpand,
@@ -73,4 +75,6 @@ export const assets = {
   GiBullseye,
   FaRegEye,
   BsWallet2,
+  MdOutlineArrowDropUp,
+  MdOutlineArrowDropDown,
 };

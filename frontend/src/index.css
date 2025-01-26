@@ -6,13 +6,7 @@
 @tailwind components;
 @tailwind utilities;
 
-*{
-  /* font-family: Outfit; */
-  /* font-family: Poppins; */
-}
-.active .active-circle{
-  @apply block
-}
+
 @layer base {
   :root {
 
@@ -40,4 +34,27 @@
 
     --color-5: 90 100% 63%
   }
+}
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d1d5db;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #e5e7eb transparent;
 }
