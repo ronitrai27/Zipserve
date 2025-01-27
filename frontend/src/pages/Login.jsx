@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { AuroraText } from "../components/ui/aurora-text.jsx";
+import { styled } from "styled-components";
 const Login = () => {
   const [state, setState] = useState("sign up");
   const [email, setEmail] = useState("");
@@ -57,7 +58,6 @@ const Login = () => {
               </h1>
             )}
           </div>
-
           <p class="text-sm mt-4">
             Zipserve commits to deliver transparency and comfort to customers.
           </p>

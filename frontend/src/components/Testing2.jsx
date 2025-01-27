@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { assets } from "../assets/assets";
 import Rating from "@mui/material/Rating";
-
+import { NavLink, useNavigate } from "react-router-dom";
 const Testing2 = ({ category, sortOption }) => {
   const [workers, setWorkers] = useState([]);
   const [filteredWorkers, setFilteredWorkers] = useState([]);
 
+  const navigate = useNavigate();
   // Fetching workers data
   useEffect(() => {
     const fetchWorkers = async () => {
@@ -52,12 +53,18 @@ const Testing2 = ({ category, sortOption }) => {
 
     setFilteredWorkers(result);
   }, [category, sortOption, workers]);
+
+  // Handle worker click to get details of particular worker--------
+  // const handleWorkerClick = (worker) => {
+  //   console.log(`Worker ID: ${worker._id}, Name: ${worker.name}`);
+  // };
+
   return (
     <div className="worker-box flex flex-col gap-4 px-3 font-inter">
       {filteredWorkers.map((worker) => (
         <div
           key={worker._id}
-          className="worker-card bg-gray-50 border-[1px] border-primaryLight hover:shadow-xl transition-all rounded-lg px-3 py-2"
+          className="worker-card cursor-pointer bg-gray-50 border-[1px] border-primaryLight hover:shadow-xl transition-all rounded-lg px-3 py-2"
         >
           <div className="worker-top flex items-center gap-5 mb-1">
             <img
@@ -106,7 +113,10 @@ const Testing2 = ({ category, sortOption }) => {
                 {" "}
                 <assets.LuMessagesSquare /> Chat
               </p>
-              <p className="text-base font-[400] cursor-pointer bg-primary hover:bg-blue-600 transition-colors px-4 py-1 rounded-md text-white">
+              <p
+                onClick={() => navigate(`/booking/${worker._id}`)}
+                className="text-base font-[400] cursor-pointer bg-primary hover:bg-blue-600 transition-colors px-4 py-1 rounded-md text-white"
+              >
                 Book
               </p>
             </div>

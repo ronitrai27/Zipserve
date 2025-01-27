@@ -5,15 +5,14 @@ import { motion } from "framer-motion";
 import { useAppContext } from "../context/AppContext";
 import { ArrowRight } from "lucide-react";
 import { BorderBeam } from "../components/ui/border-beam.jsx";
-
+import { TypingAnimation } from "../components/ui/typing-animation.jsx";
 const Navbar = () => {
   const [token, setToken] = useState(true);
   const navigate = useNavigate();
-  // const [hiddenDiv, setHiddenDiv] = useState(true);
   const [currentText, setCurrentText] = useState(0);
 
   const { theme, toggleTheme } = useAppContext();
-  console.log(theme);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentText((prevText) => (prevText + 1) % 3);
@@ -21,6 +20,44 @@ const Navbar = () => {
 
     return () => clearInterval(interval);
   }, []);
+  // typing -----------------
+
+  const placeholderTexts = [
+    "Search AC Repair...",
+    "Search Pipe Leakage...",
+    "Search Bathroom Cleaning...",
+  ];
+  const [placeholder, setPlaceholder] = useState("");
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isTyping, setIsTyping] = useState(true);
+
+  useEffect(() => {
+    let typingInterval;
+
+    if (isTyping) {
+      if (charIndex < placeholderTexts[currentTextIndex].length) {
+        typingInterval = setInterval(() => {
+          setPlaceholder(
+            placeholderTexts[currentTextIndex].substring(0, charIndex + 1)
+          );
+          setCharIndex((prev) => prev + 1);
+        }, 200);
+      } else {
+        setIsTyping(false);
+        setTimeout(() => {
+          setIsTyping(true);
+          setCharIndex(0);
+          setPlaceholder("");
+          setCurrentTextIndex((prev) => (prev + 1) % placeholderTexts.length);
+        }, 2000);
+      }
+    }
+
+    return () => {
+      if (typingInterval) clearInterval(typingInterval);
+    };
+  }, [charIndex, currentTextIndex, isTyping]);
 
   return (
     <div className="relative flex items-center justify-between py-3 pr-14 font-outfit">
@@ -100,8 +137,8 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
         <div className=" relative rounded-full overflow-hidden border-[1px] border-gray-200 ">
           <input
             type="text"
-            placeholder="search AC repair..."
-            className="w-72 px-5 py-2 focus:shadow-md  focus:outline-none bg-stone-100  text-gray-800 text-sm font-light "
+            placeholder={placeholder}
+            className="w-72 px-5 py-2 focus:shadow-md focus:outline-none bg-stone-100 text-gray-800 text-sm font-light"
           />
           <BorderBeam size={300} duration={18} delay={12} />
         </div>

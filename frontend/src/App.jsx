@@ -14,6 +14,7 @@ import About from "./pages/About.jsx";
 import About2 from "./pages/About2.jsx";
 import { useAppContext } from "./context/AppContext";
 import LeftBar from "./components/LeftBar.jsx";
+import MyBooking from "./pages/MyBooking.jsx";
 const App = () => {
   const location = useLocation();
   const noSidebarRoutes = ["/my-profile", "/login", "/mycoins", "/about"];
@@ -42,6 +43,7 @@ const App = () => {
             <Route path="/my-profile" element={<MyProfile />} />
             <Route path="/workers" element={<Workers />} />
             <Route path="/bookings" element={<Bookings />} />
+            <Route path="/booking/:id" element={<MyBooking />} />
             <Route path="/bookinghistory" element={<BookingHistory />} />
           </Routes>
         </div>
