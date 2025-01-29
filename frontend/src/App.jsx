@@ -8,7 +8,6 @@ import BookingHistory from "./pages/BookingHistory";
 import Sidebar from "./components/Sidebar.jsx";
 import Login from "./pages/Login";
 import MyProfile from "./pages/MyProfile";
-import MyCoins from "./pages/MyCoins";
 import Chats from "./pages/Chats";
 import About from "./pages/About.jsx";
 import About2 from "./pages/About2.jsx";
@@ -17,9 +16,13 @@ import LeftBar from "./components/LeftBar.jsx";
 import MyBooking from "./pages/MyBooking.jsx";
 const App = () => {
   const location = useLocation();
-  const noSidebarRoutes = ["/my-profile", "/login", "/mycoins", "/about"];
+  const noSidebarRoutes = ["/my-profile", "/login", "/about"];
   const noLeftBarRoutes = ["/login"];
   const { theme } = useAppContext();
+
+  // Check if current path starts with /booking/ for dynamic routes
+  const isBookingRoute = location.pathname.startsWith("/booking/");
+
   return (
     <div
       className={`w-full select-none fixed h-full flex flex-col ${
@@ -30,7 +33,9 @@ const App = () => {
 
       {/* Main Content: Sidebar + Routes */}
       <div className="flex flex-1">
-        {!noSidebarRoutes.includes(location.pathname) && <Sidebar />}
+        {!noSidebarRoutes.includes(location.pathname) && !isBookingRoute && (
+          <Sidebar />
+        )}
 
         {/* Dynamic Content */}
         <div className="flex-1">
@@ -38,7 +43,6 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/about" element={<About2 />} />
-            <Route path="/mycoins" element={<MyCoins />} />
             <Route path="/messages" element={<Chats />} />
             <Route path="/my-profile" element={<MyProfile />} />
             <Route path="/workers" element={<Workers />} />

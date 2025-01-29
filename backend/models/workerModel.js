@@ -33,10 +33,6 @@ const EmployeeSchema = new Schema({
     type: Number,
     required: true,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
   about: {
     type: String,
     required: true,
@@ -55,7 +51,25 @@ const EmployeeSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  age: {
+    type: Number,
+    required: true,
+    min: 18,
+  },
+  experience: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-const EmployeeModel = mongoose.model("Worker", EmployeeSchema); // Connecting schema to collection in the database
+const EmployeeModel = mongoose.model("Workers", EmployeeSchema);
 module.exports = EmployeeModel;

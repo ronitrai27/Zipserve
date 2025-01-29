@@ -3,8 +3,7 @@ const EmployeeModel = require("../models/workerModel.js");
 // ------------------------Controller to get all workers with filters and sorting-----------------
 const getAllWorkers = async (req, res) => {
   try {
-    // Get query parameters
-    const { category, sort } = req.query;
+    const { category, sort, page, limit } = req.query;
 
     // Build query filter
     const filter = {};
@@ -12,36 +11,100 @@ const getAllWorkers = async (req, res) => {
       filter.category = category;
     }
 
-    // Sorting
+    // Build sorting options
     let sortOptions = {};
     if (sort === "price_asc") {
-      sortOptions = { price: 1 }; // 1 for ascending order
+      sortOptions = { price: 1 }; // Sort by price in ascending order
     } else if (sort === "stars_desc") {
-      sortOptions = { stars: -1 }; // -1 for descending order
+      sortOptions = { stars: -1 }; // Sort by stars in descending order
     }
 
-    // Fetch employees with optional category and sorting
-    const employees = await EmployeeModel.find(filter).sort(sortOptions);
+    // Check if pagination is requested
+    if (page && limit) {
+      const pageNumber = parseInt(page);
+      const limitNumber = parseInt(limit);
 
-    // Return response
-    res.status(200).json(employees);
+      // Pagination logic
+      const skip = (pageNumber - 1) * limitNumber;
+
+      // Fetch paginated workers
+      const workers = await EmployeeModel.find(filter)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(limitNumber);
+
+      // Count total workers for the current filter
+      const totalWorkers = await EmployeeModel.countDocuments(filter);
+
+      // Return paginated response
+      return res.status(200).json({
+        workers,
+        totalWorkers,
+        totalPages: Math.ceil(totalWorkers / limitNumber),
+        currentPage: pageNumber,
+      });
+    }
+
+    // Fetch all workers without pagination
+    const workers = await EmployeeModel.find(filter).sort(sortOptions);
+
+    // Return all workers
+    res.status(200).json(workers);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error fetching employees" });
+    res.status(500).json({ message: "Error fetching workers" });
   }
 };
 
 // ------------------------Controller to create a new worker-----------------------------
 const createWorker = async (req, res) => {
   try {
-    // Extract worker data from the request body
-    const { name, email, phone, category, about, price, stars, address } =
-      req.body;
+    const {
+      name,
+      email,
+      phone,
+      category,
+      about,
+      price,
+      stars,
+      address,
+      available,
+      age,
+      experience,
+    } = req.body;
 
-    // Handle image upload and store the URL
-    const profileImageUrl = req.file ? req.file.path : null;
+    // Check if required file is present
+    if (!req.file) {
+      return res.status(400).json({ message: "Profile image is required" });
+    }
 
-    // Create new worker object
+    const profileImageUrl = req.file.path;
+
+    // Validate required fields
+    if (
+      !name ||
+      !email ||
+      !phone ||
+      !category ||
+      !about ||
+      !price ||
+      !stars ||
+      !address ||
+      !age ||
+      !experience
+    ) {
+      return res
+        .status(400)
+        .json({ message: "All required fields must be provided" });
+    }
+
+    // Validate numeric fields
+    if (isNaN(price) || isNaN(stars) || isNaN(age) || isNaN(experience)) {
+      return res
+        .status(400)
+        .json({ message: "Price, stars, age and experience must be numbers" });
+    }
+
     const newEmployee = new EmployeeModel({
       name,
       email,
@@ -51,20 +114,27 @@ const createWorker = async (req, res) => {
       price,
       stars,
       address,
-      profileImage: profileImageUrl, // Store the Cloudinary image URL
+      available,
+      profileImage: profileImageUrl,
+      age,
+      experience,
     });
 
-    // Save the new worker to the database
     await newEmployee.save();
-
-    // Respond with success message
     res
       .status(201)
       .json({ message: "Employee created successfully", worker: newEmployee });
   } catch (error) {
+    // Handle specific MongoDB errors
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
     console.error(error);
     res.status(500).json({ message: "Error creating employee" });
   }
 };
 
-module.exports = { getAllWorkers, createWorker };
+module.exports = {
+  getAllWorkers,
+  createWorker,
+};

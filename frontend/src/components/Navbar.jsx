@@ -5,11 +5,12 @@ import { motion } from "framer-motion";
 import { useAppContext } from "../context/AppContext";
 import { ArrowRight } from "lucide-react";
 import { BorderBeam } from "../components/ui/border-beam.jsx";
-import { TypingAnimation } from "../components/ui/typing-animation.jsx";
+
 const Navbar = () => {
   const [token, setToken] = useState(true);
   const navigate = useNavigate();
   const [currentText, setCurrentText] = useState(0);
+  const [hiddenDiv, setHiddenDiv] = useState(true);
 
   const { theme, toggleTheme } = useAppContext();
 
@@ -142,6 +143,102 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
           />
           <BorderBeam size={300} duration={18} delay={12} />
         </div>
+        {/* ------------trending------------- */}
+
+        <button
+          onClick={() => setHiddenDiv(!hiddenDiv)}
+          className={`cursor-pointer text-[1.5rem] ${
+            theme
+              ? "text-gray-600 hover:text-primary"
+              : "text-primary    hover:text-white"
+          } transition-all group relative`}
+        >
+          <assets.FaFire />
+          <span className="absolute z-50 top-9 left-1/2 transform -translate-x-1/2 whitespace-nowrap mr-2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity ">
+            Trending
+          </span>
+        </button>
+        {/* ---hidden div--- */}
+        <div
+          onMouseLeave={() => setHiddenDiv(!hiddenDiv)}
+          className={`absolute z-50 border-[1px] border-primaryLight shadow-xl rounded-xl bg-white flex items-center justify-between ${
+            hiddenDiv ? "hidden" : "block"
+          } w-[28rem] py-1 px-2 top-[5rem] right-[5rem]`}
+        >
+          {/* State for active image */}
+
+          {(() => {
+            const [activeImage, setActiveImage] = useState(null);
+
+            const links = [
+              {
+                id: 1,
+                text: "Painting",
+                icon: <assets.PiPaintRoller className="text-[1.4rem]" />,
+                image: assets.trend2,
+              },
+              {
+                id: 2,
+                text: "Cleaning",
+                icon: <assets.GiVacuumCleaner className="text-[1.4rem]" />,
+                image: assets.trend1,
+              },
+              {
+                id: 3,
+                text: "Moving",
+                icon: <assets.LiaTruckMovingSolid className="text-[1.4rem]" />,
+                image: assets.trend5,
+              },
+              {
+                id: 4,
+                text: "Lawn Care",
+                icon: <assets.LiaBroomSolid className="text-[1.4rem]" />,
+                image: assets.trend4,
+              },
+              {
+                id: 5,
+                text: "Installation",
+                icon: <assets.LuDrill className="text-[1.4rem]" />,
+                image: assets.trend3,
+              },
+            ];
+
+            return (
+              <>
+                {/* Links Section */}
+                <div className="trending-links flex flex-col gap-3 pl-6">
+                  <p className="w-full text-lg font-medium text-primary font-outfit">
+                    Trending Services!
+                  </p>
+                  {links.map((link) => (
+                    <p
+                      key={link.id}
+                      onMouseEnter={() => setActiveImage(link.id)} // Set active image on hover
+                      className="flex items-center gap-2 text-gray-500 font-medium text-[0.98rem] hover:text-gray-800 hover:translate-x-2 transition-all  cursor-pointer"
+                    >
+                      {link.icon} {link.text}
+                    </p>
+                  ))}
+                </div>
+
+                {/* Images Section */}
+                <div className="images">
+                  {links.map((link) => (
+                    <img
+                      key={link.id}
+                      src={link.image}
+                      alt={link.text}
+                      className={`w-56 h-full bg-cover rounded-md border-none ${
+                        activeImage === link.id ? "block" : "hidden"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            );
+          })()}
+        </div>
+
         <button
           className={`cursor-pointe text-[1.5rem] transition-all group relative ${
             theme
@@ -178,13 +275,13 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
                   <assets.CgProfile className="text-xl" />
                   My Profile
                 </p>
-                <p
+                {/* <p
                   onClick={() => navigate("/mycoins")}
                   className="hover:text-black cursor-pointer flex items-center gap-2"
                 >
                   <assets.PiCoinsLight className="text-xl" />
                   My Coins
-                </p>
+                </p> */}
 
                 {theme ? (
                   <p
@@ -260,7 +357,6 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
               <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
             </div>
             <div className="absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg bg-[#3b75ef] scale-[1] dark:group-hover:bg-[#3b75ef] group-hover:bg-[#3b75ef] group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0"></div>
-                      
           </div>
         )}
       </div>

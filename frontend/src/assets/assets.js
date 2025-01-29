@@ -37,6 +37,8 @@ import { FaRegEye } from "react-icons/fa";
 import { BsWallet2 } from "react-icons/bs";
 import { MdOutlineArrowDropUp } from "react-icons/md";
 import { MdOutlineArrowDropDown } from "react-icons/md";
+import { MdOutlineCall } from "react-icons/md";
+import { IoInformationSharp } from "react-icons/io5";
 export const assets = {
   GoSidebarCollapse,
   GoSidebarExpand,
@@ -77,4 +79,6 @@ export const assets = {
   BsWallet2,
   MdOutlineArrowDropUp,
   MdOutlineArrowDropDown,
+  MdOutlineCall,
+  IoInformationSharp,
 };

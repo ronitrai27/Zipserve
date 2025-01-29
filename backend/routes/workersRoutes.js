@@ -5,6 +5,11 @@ const {
   getAllWorkers,
 } = require("../controllers/workerController.js");
 
+const {
+  getWorkerReviews,
+  addWorkerReview,
+} = require("../controllers/reviewController.js");
+
 //Route to get all workers
 routes.get("/workers", getAllWorkers);
 
@@ -14,4 +19,11 @@ routes.post(
   cloudinaryFileUploader.single("profileImage"),
   createWorker
 );
+
+// Get reviews for a specific worker
+routes.get("/workers/:workerId/reviews", getWorkerReviews);
+
+// Add a review for a specific worker
+routes.post("/workers/:workerId/reviews", addWorkerReview);
+
 module.exports = routes;

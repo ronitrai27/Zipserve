@@ -12,11 +12,11 @@ const Main = () => {
   return (
     <div
       className={`flex-1 w-full border-[1.6px]  ${
-        theme ? "border-gray-200 bg-stone-50" : "border-gray-900 bg-gray-50"
-      } rounded-t-3xl rounded-b-md pl-5 pr-10 py-[1.1rem]`}
+        theme ? "border-gray-200 bg-gray-50" : "border-gray-900 bg-gray-100"
+      } rounded-t-3xl rounded-b-md px-8 py-[1.1rem]`}
     >
       <div className="flex justify-between ">
-        <div className="flex flex-col border border-gray-200 h-[calc(100vh-7rem)] min-w-[24%] w-[30%] py-2 bg-white rounded-lg">
+        <div className="flex flex-col border border-gray-200 h-[calc(100vh-7rem)] max-w-[34%]  w-[32%]  bg-white rounded-lg shadow-md">
           <div className="flex flex-col ">
             <h1 className="text-gray-800 text-[19px] font-medium font-inter text-center mb-3">
               Browse Workers
@@ -92,10 +92,12 @@ const Main = () => {
             </button>
           </div>
         </div>
-        <div className="map-div w-[62%] h-[25rem] z-10 bg-white p-2 rounded-3xl shadow-lg ">
-          <div className="w-full h-full  rounded-3xl overflow-hidden z-10">
+        {/* --------------------------MAP area -------------------------- */}
+        <div className="map-div w-[65%] h-[calc(100vh-6rem)] z-10 bg-white p-2 rounded-lg relative">
+          <div className="w-full h-full rounded-xl overflow-hidden ">
             <MyLocationMap />
           </div>
+          {/* <div className="absolute bottom-10 left-0 w-20 h-16 bg-white rounded-lg shadow-lg z-50"></div> */}
         </div>
       </div>
     </div>
