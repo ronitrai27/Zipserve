@@ -176,30 +176,35 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
                 text: "Painting",
                 icon: <assets.PiPaintRoller className="text-[1.4rem]" />,
                 image: assets.trend2,
+                category: "painters",
               },
               {
                 id: 2,
                 text: "Cleaning",
                 icon: <assets.GiVacuumCleaner className="text-[1.4rem]" />,
                 image: assets.trend1,
+                category: "cleaner",
               },
               {
                 id: 3,
                 text: "Moving",
                 icon: <assets.LiaTruckMovingSolid className="text-[1.4rem]" />,
                 image: assets.trend5,
+                category: "shifting",
               },
               {
                 id: 4,
                 text: "Lawn Care",
                 icon: <assets.LiaBroomSolid className="text-[1.4rem]" />,
                 image: assets.trend4,
+                category: "gardener",
               },
               {
                 id: 5,
                 text: "Installation",
                 icon: <assets.LuDrill className="text-[1.4rem]" />,
                 image: assets.trend3,
+                category: "carpenter",
               },
             ];
 
@@ -213,6 +218,7 @@ to-yellow-50/0  h-full text-center flex items-center justify-center font-inter $
                   {links.map((link) => (
                     <p
                       key={link.id}
+                      onClick={() => navigate(`/workers/${link.category}`)}
                       onMouseEnter={() => setActiveImage(link.id)} // Set active image on hover
                       className="flex items-center gap-2 text-gray-500 font-medium text-[0.98rem] hover:text-gray-800 hover:translate-x-2 transition-all  cursor-pointer"
                     >

@@ -12,7 +12,7 @@ const Sidebar = () => {
   return (
     <div className="h-full ">
       <div
-        className={`h-full pt-3 transition-all ease-linear duration-300 pl-2 pr-3 flex flex-col ${
+        className={`h-full pt-3 transition-all ease-in-out duration-200 pl-2 pr-3 flex flex-col ${
           expended ? "w-[220px] lg:w-[240px]" : "w-[80px] lg:w-[100px]"
         }`}
       >
@@ -27,7 +27,7 @@ const Sidebar = () => {
           </div>
           <div className={`flex flex-col items-center`}>
             <p
-              className={`font-semibold text-base lg:text-lg w-auto transition-all duration-300 ${
+              className={`font-semibold text-base lg:text-lg w-auto transition-all ease-in-out duration-200 ${
                 expended
                   ? "opacity-100 max-w-full"
                   : "opacity-0 max-w-0 overflow-hidden"
@@ -36,7 +36,7 @@ const Sidebar = () => {
               John Parker
             </p>
             <p
-              className={`font-light text-xs lg:text-sm italic transition-all duration-300 ${
+              className={`font-light text-xs lg:text-sm italic transition-all ease-in-out duration-200 ${
                 expended
                   ? "opacity-100 max-w-full"
                   : "opacity-0 max-w-0 overflow-hidden"
@@ -79,7 +79,7 @@ const Sidebar = () => {
               onClick={() => setExpended(false)}
               to="/"
               className={({ isActive }) =>
-                `flex items-center gap-2 w-full px-1 py-1.5 lg:py-2 rounded-xl transition-all ${
+                `flex items-center gap-2 w-full px-1 py-1.5 lg:py-2 rounded-xl transition-all ease-in-out duration-200 ${
                   isActive
                     ? "text-gray-900 bg-stone-100"
                     : "hover:text-gray-900 hover:bg-stone-100"
@@ -102,7 +102,7 @@ const Sidebar = () => {
                 )}
               </div>
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -122,7 +122,7 @@ const Sidebar = () => {
                 `flex items-center gap-2 w-full ${
                   isActive
                     ? "text-gray-900 bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
-                    : "hover:text-gray-900 hover:bg-stone-100 transition-all px-1 py-1.5 lg:py-2 rounded-xl"
+                    : "hover:text-gray-900 hover:bg-stone-100 transition-all ease-in-out duration-200 px-1 py-1.5 lg:py-2 rounded-xl"
                 }`
               }
             >
@@ -140,7 +140,7 @@ const Sidebar = () => {
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -160,7 +160,7 @@ const Sidebar = () => {
                 `flex items-center gap-2 w-full ${
                   isActive
                     ? "text-gray-900 bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
-                    : "hover:text-gray-900 hover:bg-stone-100 transition-all px-1 py-1.5 lg:py-2 rounded-xl"
+                    : "hover:text-gray-900 hover:bg-stone-100 transition-all ease-in-out duration-200 px-1 py-1.5 lg:py-2 rounded-xl"
                 }`
               }
             >
@@ -178,7 +178,7 @@ const Sidebar = () => {
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -198,7 +198,7 @@ const Sidebar = () => {
                 `flex items-center gap-2 w-full ${
                   isActive
                     ? "text-gray-900 bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
-                    : "hover:text-gray-900 hover:bg-stone-100 transition-all px-1 py-1.5 lg:py-2 rounded-xl"
+                    : "hover:text-gray-900 hover:bg-stone-100 transition-all ease-in-out duration-200 px-1 py-1.5 lg:py-2 rounded-xl"
                 }`
               }
             >
@@ -216,7 +216,7 @@ const Sidebar = () => {
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -254,7 +254,7 @@ const Sidebar = () => {
               )}
               {expended ? (
                 <p
-                  className={`text-sm lg:text-[0.95rem] transition-all duration-300 max-w-full opacity-100`}
+                  className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 max-w-full opacity-100`}
                 >
                   Booking History
                 </p>
@@ -290,7 +290,7 @@ const Sidebar = () => {
           <div className="flex flex-col gap-1 ">
             {/* 8 ---------------Settings----------------- */}
             <div
-              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all hover:text-gray-700`}
+              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all ease-in-out duration-200 hover:text-gray-700`}
             >
               <assets.IoSettingsOutline
                 className={`${
@@ -306,7 +306,7 @@ const Sidebar = () => {
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -317,7 +317,7 @@ const Sidebar = () => {
             </div>
             {/* 7 ---------------PROFILE----------------- */}
             <div
-              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all hover:text-gray-700`}
+              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all ease-in-out duration-200 hover:text-gray-700`}
               onClick={() => navigate("/my-profile")}
             >
               <assets.CgProfile
@@ -334,7 +334,7 @@ const Sidebar = () => {
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -345,7 +345,7 @@ const Sidebar = () => {
             </div>
             {/* 8 ---------------HELP----------------- */}
             <div
-              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all hover:text-gray-700`}
+              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all ease-in-out duration-200 hover:text-gray-700`}
             >
               <assets.RiChatAiLine
                 className={`${
@@ -361,7 +361,7 @@ const Sidebar = () => {
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -385,7 +385,7 @@ const Sidebar = () => {
               )}
             </>
           ) : (
-            <img src={assets.z} className="w-6 lg:w-8 mt-2" />
+            <img src={assets.z} className="w-6 lg:w-6 mt-3" />
           )}
         </div>
       </div>

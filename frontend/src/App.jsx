@@ -45,6 +45,7 @@ const App = () => {
             <Route path="/messages" element={<Chats />} />
             <Route path="/my-profile" element={<MyProfile />} />
             <Route path="/workers" element={<Workers />} />
+            <Route path="/workers/:category" element={<Workers />} />
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/booking/:id" element={<MyBooking />} />
             <Route path="/bookinghistory" element={<BookingHistory />} />

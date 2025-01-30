@@ -18,7 +18,7 @@ import { FaFire } from "react-icons/fa6";
 import sideUserLogo from "./boy.png";
 import sideUserLogo2 from "./nerd.png";
 import gameCoins from "./coin.png";
-import z from "./z-zipserve.png";
+import z from "./z-zipserve1.png";
 import { PiPaintRoller } from "react-icons/pi";
 import { GiVacuumCleaner } from "react-icons/gi";
 import { LiaBroomSolid } from "react-icons/lia";
@@ -40,6 +40,7 @@ import { MdOutlineArrowDropDown } from "react-icons/md";
 import { MdOutlineCall } from "react-icons/md";
 import { IoInformationSharp } from "react-icons/io5";
 import { VscTools } from "react-icons/vsc";
+import wallet from "./crypto-wallet.png";
 export const assets = {
   GoSidebarCollapse,
   GoSidebarExpand,
@@ -83,4 +84,5 @@ export const assets = {
   MdOutlineCall,
   IoInformationSharp,
   VscTools,
+  wallet,
 };

@@ -40,6 +40,7 @@ const RelatedWorkers = ({ id, category }) => {
         .map((worker, index) => (
           <div
             key={index}
+            n
             onClick={() => {
               navigate(`/booking/${worker._id}`);
               scrollTo(0, 0);

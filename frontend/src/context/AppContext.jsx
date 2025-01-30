@@ -32,8 +32,9 @@ export const AppProvider = ({ children }) => {
   const value = {
     theme,
     toggleTheme,
-    workers,
-    filteredWorkers,
+    workers, // fetched workers from backend
+    filteredWorkers, // filtered workers
+    setFilteredWorkers, // set filtered workers
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

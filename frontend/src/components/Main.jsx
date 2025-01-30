@@ -40,6 +40,10 @@ const Main = () => {
                   <MenuItem value={"electrician"}>Electrician</MenuItem>
                   <MenuItem value={"plumber"}>Plumber</MenuItem>
                   <MenuItem value={"carpenter"}>Carpenter</MenuItem>
+                  <MenuItem value={"technician"}>Technician</MenuItem>
+                  <MenuItem value={"painters"}>Painters</MenuItem>
+                  <MenuItem value={"cleaner"}>Cleaner</MenuItem>
+                  <MenuItem value={"gardener"}>Gardener</MenuItem>
                 </Select>
               </FormControl>
               {/* Sorting Filter */}
