@@ -39,6 +39,7 @@ import { MdOutlineArrowDropUp } from "react-icons/md";
 import { MdOutlineArrowDropDown } from "react-icons/md";
 import { MdOutlineCall } from "react-icons/md";
 import { IoInformationSharp } from "react-icons/io5";
+import { VscTools } from "react-icons/vsc";
 export const assets = {
   GoSidebarCollapse,
   GoSidebarExpand,
@@ -81,4 +82,5 @@ export const assets = {
   MdOutlineArrowDropDown,
   MdOutlineCall,
   IoInformationSharp,
+  VscTools,
 };

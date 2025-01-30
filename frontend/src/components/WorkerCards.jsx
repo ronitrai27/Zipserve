@@ -83,76 +83,72 @@ const Testing2 = ({ category, sortOption }) => {
               </div>
             </div>
           ))
-        : filteredWorkers.map((worker) => (
-            <div
-              key={worker._id}
-              className="worker-card cursor-pointer bg-gradient-to-b
+        : filteredWorkers
+            .filter((worker) => worker.available)
+            .slice(0, 15)
+            .map((worker) => (
+              <div
+                key={worker._id}
+                className="worker-card  bg-gradient-to-b
 from-gray-50
 via-gray-50
 to-blue-50 border-[1px] border-gray-200 hover:shadow-lg  hover:border-primary/20  transition-all duration-300 rounded-lg p-2"
-            >
-              <div className="worker-top flex items-center justify-evenly">
-                <img
-                  src={worker.profileImage}
-                  alt={worker.name}
-                  className="worker-image w-12 h-12 rounded-full object-cover border-2 border-gray-200"
-                />
-                <div className="flex flex-col gap-1 flex-1 ml-3">
-                  <div className="flex items-center justify-between ">
-                    <h3 className="worker-name text-[.96rem] font-medium text-gray-800 truncate max-w-[200px] mr-2">
-                      {worker.name}
-                    </h3>
-                    <Rating
-                      name="half-rating-read"
-                      size="small"
-                      defaultValue={worker.stars}
-                      precision={0.1}
-                      readOnly
-                    />
+              >
+                <div className="worker-top flex items-center justify-evenly">
+                  <img
+                    src={worker.profileImage}
+                    alt={worker.name}
+                    className="worker-image w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                  />
+                  <div className="flex flex-col gap-1 flex-1 ml-3">
+                    <div className="flex items-center justify-between ">
+                      <h3 className="worker-name capitalize text-[.96rem] font-medium text-gray-800 truncate max-w-[200px] mr-2">
+                        {worker.name}
+                      </h3>
+                      <Rating
+                        name="half-rating-read"
+                        size="small"
+                        defaultValue={worker.stars}
+                        precision={0.1}
+                        readOnly
+                      />
+                    </div>
+                    <hr className="w-full mt-1 border-gray-300 border-[.6px]" />
                   </div>
-                  <hr className="w-full mt-1 border-gray-300 border-[.6px]" />
                 </div>
-              </div>
-              <div className="worker-middle w-[80%] ml-auto flex items-center justify-between -mt-2">
-                <div className="flex flex-col py-2 gap-1">
-                  <p className="text-[14px] font-light">
-                    {" "}
-                    Visiting Fee: {worker.price}
-                  </p>
-                  <p className=" text-sm  text-gray-800 flex items-center gap-1">
-                    <assets.LuBriefcase className="font-light text-[14px]" />{" "}
-                    {worker.category}
-                  </p>
-                </div>
-                {worker.available ? (
+                <div className="worker-middle w-[80%] ml-auto flex items-center justify-between -mt-2">
+                  <div className="flex flex-col py-2 gap-1">
+                    <p className="text-[14px] font-light">
+                      {" "}
+                      Visiting Fee: {worker.price}
+                    </p>
+                    <p className=" text-sm  text-gray-800 flex items-center gap-1">
+                      <assets.LuBriefcase className="font-light text-[14px]" />{" "}
+                      {worker.category}
+                    </p>
+                  </div>
                   <div className="flex items-center gap-2 bg-green-100 px-2 py-1 rounded-full">
                     <p className="text-sm font-[400]">Available</p>
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse transition-all"></div>
                   </div>
-                ) : (
-                  <div className="flex items-center gap-2 bg-gray-100 px-2 py-1 rounded-full cursor-not-allowed">
-                    <p className="text-sm font-[400]">Available</p>
-                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse transition-all"></div>
+                </div>
+                <hr className="w-full my-1 border-gray-300 border-[.6px]" />
+                <div className="worker-bottom px-6 ">
+                  <div className="flex items-center justify-between">
+                    <p className="flex items-center gap-1 text-[14px]">
+                      {" "}
+                      <assets.LuMessagesSquare className="text-[16px]" /> Chat
+                    </p>
+                    <p
+                      onClick={() => navigate(`/booking/${worker._id}`)}
+                      className="text-[14px] font-[400] cursor-pointer bg-primary hover:bg-blue-600 transition-colors px-3 py-1 rounded-md text-white"
+                    >
+                      Book
+                    </p>
                   </div>
-                )}
-              </div>
-              <hr className="w-full my-1 border-gray-300 border-[.6px]" />
-              <div className="worker-bottom px-6 ">
-                <div className="flex items-center justify-between">
-                  <p className="flex items-center gap-1 text-[14px]">
-                    {" "}
-                    <assets.LuMessagesSquare className="text-[16px]" /> Chat
-                  </p>
-                  <p
-                    onClick={() => navigate(`/booking/${worker._id}`)}
-                    className="text-[14px] font-[400] cursor-pointer bg-primary hover:bg-blue-600 transition-colors px-3 py-1 rounded-md text-white"
-                  >
-                    Book
-                  </p>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
     </div>
   );
 };

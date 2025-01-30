@@ -14,14 +14,14 @@ const Login = () => {
   return (
     <div className="border-t-[1px] bg-stone-50 h-full">
       <div className="flex items-center justify-center mt-14 ">
-        <div class="border border-gray-100 shadow w-[380px] p-8 rounded-md bg-white">
+        <div class="border border-gray-100 shadow w-[420px] p-8 rounded-md bg-white">
           <div class="flex justify-between text-sm">
             <div class="flex items-center gap-2">
               <img src={assets.z} alt="" className="w-10 -mt-3" />
             </div>
             <div>
               {state === "sign up" ? (
-                <p className="tracking-wider">
+                <p className="tracking-wider text-[14px]">
                   Have an account?
                   <button
                     href="#"
@@ -32,7 +32,7 @@ const Login = () => {
                   </button>
                 </p>
               ) : (
-                <p className="tracking-tight">
+                <p className="tracking-tight text-[14px]">
                   New to Zipserve?
                   <button
                     href="#"
@@ -48,17 +48,17 @@ const Login = () => {
 
           <div class="mt-10">
             {state === "sign up" ? (
-              <h1 class="text-[26px] font-semibold leading-9">
+              <h1 class="text-[27px] font-semibold leading-9">
                 <AuroraText>Register</AuroraText> & Avail Discounts on Bookings!
               </h1>
             ) : (
-              <h1 class="text-2xl font-semibold">
+              <h1 class="text-[27px] font-semibold">
                 {" "}
                 <AuroraText>Welcome</AuroraText> Back!
               </h1>
             )}
           </div>
-          <p class="text-sm mt-4">
+          <p class="text-[16px] mt-4">
             Zipserve commits to deliver transparency and comfort to customers.
           </p>
 
@@ -111,27 +111,29 @@ const Login = () => {
           <div className="mt-4 flex items-center">
             <StyledWrapper>
               <label className="container">
-                <input 
+                <input
                   type="checkbox"
                   // checked={isChecked}
                   // onChange={(e) => setIsChecked(e.target.checked)}
                   // id="terms"
                 />
                 <svg viewBox="0 0 64 64" height="1em" width="1em">
-                  <path 
-                    d="M 0 16 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 16 L 32 48 L 64 16 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 16" 
-                    pathLength="575.0541381835938" 
-                    className="path" 
+                  <path
+                    d="M 0 16 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 16 L 32 48 L 64 16 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 16"
+                    pathLength="575.0541381835938"
+                    className="path"
                   />
                 </svg>
               </label>
             </StyledWrapper>
-             {<label class="ml-2 text-sm text-gray-600" for="terms">
-              I agree to the
-              <a class="text-blue-600 hover:underline" href="#">
-                Terms and Conditions
-              </a>
-            </label>}
+            {
+              <label class="ml-2 text-sm text-gray-600" for="terms">
+                I agree to the
+                <a class="text-blue-600 hover:underline" href="#">
+                  Terms and Conditions
+                </a>
+              </label>
+            }
           </div>
 
           {state === "sign up" ? (
@@ -166,10 +168,10 @@ const StyledWrapper = styled.div`
     border: solid 1.5px #9e9e9e;
     border-radius: 1rem;
     background: white;
-    padding: 1rem;
+    padding: 0.8rem;
     font-size: 1rem;
     color: #1a1a1a;
-    transition: border 150ms cubic-bezier(0.4,0,0.2,1);
+    transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .user-label {
@@ -178,18 +180,20 @@ const StyledWrapper = styled.div`
     color: #666;
     pointer-events: none;
     transform: translateY(1rem);
-    transition: 150ms cubic-bezier(0.4,0,0.2,1);
+    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .input:focus, input:valid {
+  .input:focus,
+  input:valid {
     outline: none;
     border: 1.5px solid #3b75ef;
   }
 
-  .input:focus ~ label, input:valid ~ label {
+  .input:focus ~ label,
+  input:valid ~ label {
     transform: translateY(-50%) scale(0.8);
     background-color: white;
-    padding: 0 .2em;
+    padding: 0 0.2em;
     color: #3b75ef;
   }
   .container {

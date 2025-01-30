@@ -10,7 +10,6 @@ import Login from "./pages/Login";
 import MyProfile from "./pages/MyProfile";
 import Chats from "./pages/Chats";
 import About from "./pages/About.jsx";
-import About2 from "./pages/About2.jsx";
 import { useAppContext } from "./context/AppContext";
 import LeftBar from "./components/LeftBar.jsx";
 import MyBooking from "./pages/MyBooking.jsx";
@@ -42,7 +41,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/about" element={<About2 />} />
+            <Route path="/about" element={<About />} />
             <Route path="/messages" element={<Chats />} />
             <Route path="/my-profile" element={<MyProfile />} />
             <Route path="/workers" element={<Workers />} />

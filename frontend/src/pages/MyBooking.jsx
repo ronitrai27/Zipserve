@@ -1,213 +1,243 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Rating from "@mui/material/Rating";
 import { assets } from "../assets/assets";
 import RelatedWorkers from "../components/RelatedWorkers";
+import { useAppContext } from "../context/AppContext";
+import Rating from "@mui/material/Rating";
 
-const MyBooking = () => {
-  const { id } = useParams();
-  const [workerInfo, setWorkerInfo] = useState(null);
-  const [workers, setWorkers] = useState([]);
+const NewMyBooking = () => {
+  const { id } = useParams(); // storing _id of selected worker
+  const [workerInfo, setWorkerInfo] = useState(null); // Stores information about the currently selected worker
+  const [workers, setWorkers] = useState([]); // Stores the full list of all workers
   const [about, setAbout] = useState(false);
-  const [sortOrder, setSortOrder] = useState("newest"); // Added missing state
-  const [isLoading, setIsLoading] = useState(true); // Added loading state
-  const [error, setError] = useState(null); // Added error state
+  const [sortOrder, setSortOrder] = useState("newest");
+  const [isLoading, setIsLoading] = useState(true);
+  const [toggleDetail, setToggleDetail] = useState(true);
+  const [visibleReviews, setVisibleReviews] = useState(4); // Added missing state for pagination
+  // Fetching worker info from context
+  const { workers: contextWorkers } = useAppContext();
 
-  // Fetching worker info
   useEffect(() => {
-    const fetchWorkersAndFindWorker = async () => {
+    // Only run if we have workers data from context
+    if (contextWorkers.length > 0) {
+      setIsLoading(true);
       try {
-        setIsLoading(true);
-        const response = await fetch("http://localhost:8080/api/workers");
-        if (!response.ok) {
-          throw new Error("Failed to fetch workers");
-        }
-        const data = await response.json();
-        setWorkers(data);
-
-        const workerInfo = data.find((wor) => wor._id === id); // finding the worker info by id params
+        const workerInfo = contextWorkers.find((worker) => worker._id === id);
         if (!workerInfo) {
           throw new Error("Worker not found");
         }
         setWorkerInfo(workerInfo);
-        console.log(workerInfo);
+        setWorkers(contextWorkers);
       } catch (error) {
-        setError(error.message);
         console.error("Error:", error);
       } finally {
         setIsLoading(false);
       }
+    }
+  }, [contextWorkers, id]);
+
+  // Fetching review for selected worker
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!id) return;
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/workers/${id}/reviews`
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to fetch reviews: ${response.status}`);
+        }
+        const data = await response.json();
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid response format - expected array");
+        }
+        setReviews(data);
+      } catch (error) {
+        console.error("Error fetching reviews:", error.message);
+        setReviews([]); // Set empty array on error
+      }
     };
 
-    fetchWorkersAndFindWorker();
+    fetchReviews();
   }, [id]);
 
-  const handleAbout = () => {
-    setAbout(!about);
-  };
-
   if (isLoading) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center bg-red-500">
-        Loading...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center text-red-500">
-        {error}
-      </div>
-    );
+    return <div>Loading...</div>; // Added loading state handling
   }
 
   return (
     <>
-      {workerInfo && (
-        <div className="booking-page w-full min-h-screen bg-gray-100 py-5 font-inter">
+      {workerInfo ? (
+        <div className="booking-page w-full min-h-screen bg-gray-100 py-5  rounded-tr-3xl">
           <div className="max-w-[90%] mx-auto flex flex-col md:flex-row justify-between gap-5 md:gap-10">
-            {/* worker Details and time slots and Reviews... */}
-            <div className="flex flex-col bg-white pl-3 pr-6 py-5 rounded-md w-full md:w-[65%]">
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-5 md:gap-10">
+            {/* ------------ Worker Details ------------ */}
+            <div className="px-8 py-4 flex flex-col gap-5 bg-white rounded-xl h-[90vh] overflow-y-scroll scroll-smooth w-[55rem]">
+              <div className="worker-top flex flex-row gap-8">
                 <img
-                  className="bg-primary w-full max-w-[200px] md:max-w-52 rounded-lg self-center md:self-start"
                   src={workerInfo.profileImage}
                   alt={`${workerInfo.name}'s profile`}
+                  className="w-60 bg-gray-200 border-[1px] border-primary rounded-xl object-cover"
                 />
-                <div className="worker-detail-area font-inter text-gray-800 flex flex-col w-full">
-                  <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-12">
-                    <p className="text-[18px] font-bold">{workerInfo.name}</p>
+                <div
+                  className="worker-basic-details font-inter text-gray-800  flex-1 flex-col rounded-xl px-3 py-1 bg-gradient-to-br
+                 from-primaryLight/20 via-primaryLight/70 to-primary w-[30rem]"
+                >
+                  <div className="flex justify-between items-center">
+                    <p className="text-[18px] pl-6 font-medium capitalize tracking-wide ">
+                      {workerInfo.name}
+                    </p>
                     <Rating
                       name="half-rating-read"
                       size="small"
-                      defaultValue={workerInfo.stars}
+                      defaultValue={workerInfo.stars || 0}
                       precision={0.5}
                       readOnly
                     />
                   </div>
-                  <hr className="w-full mt-3 mb-2 border-gray-600 border-[.9px]" />
-                  <div className="flex justify-end w-full">
-                    <p className="text-[14px] font-light bg-gray-200 px-2 py-1 rounded-full">
-                      experience: {workerInfo.experience} yr
+
+                  <div className="w-full flex items-center mt-3">
+                    <hr className="border-white flex-1 border-[.95px]" />
+                    <p className="text-[14px] font-light p-1 bg-white rounded-full ml-4">
+                      Experience: {workerInfo.experience} years
                     </p>
                   </div>
-                  <div className="flex flex-col md:flex-row py-5 gap-5 md:gap-20">
-                    <div className="flex flex-col gap-2 font-light">
-                      <p className="text-[16px] font-light underline-offset-2 underline text-gray-800">
-                        Worker Details
-                      </p>
-                      <p className="flex items-center gap-2">
-                        <assets.LuBriefcase /> {workerInfo.category}
-                      </p>
-                      <p>Visiting Fees: ₹{workerInfo.price}</p>
-                      <p>Age: {workerInfo.age}</p>
+                  {/* ------------ Details ------------ */}
+                  <div className="flex flex-col">
+                    <div className="flex gap-8 mb-4">
+                      <h1
+                        onClick={() => setToggleDetail(true)}
+                        className={`font-medium text-[16px] cursor-pointer font-outfit ${
+                          toggleDetail
+                            ? "underline underline-offset-4 decoration-white"
+                            : ""
+                        }`}
+                      >
+                        Basic details
+                      </h1>
+                      <h1
+                        onClick={() => setToggleDetail(false)}
+                        className={`font-medium text-[16px] cursor-pointer font-outfit ${
+                          !toggleDetail
+                            ? "underline underline-offset-4 decoration-white"
+                            : ""
+                        }`}
+                      >
+                        Contact info
+                      </h1>
                     </div>
-                    <div className="flex flex-col gap-2 font-light">
-                      <p className="text-[16px] font-light underline-offset-2 underline text-gray-800">
-                        Contact Information
-                      </p>
-                      <p className="flex items-center gap-2">
-                        <assets.MdOutlineCall /> {workerInfo.phone}
-                      </p>
-                      <p className="flex items-center gap-2">
-                        <assets.LuMail /> {workerInfo.email}
-                      </p>
-                      <button className="flex items-center gap-2 hover:text-blue-600 transition-colors">
-                        <assets.BsChatDots /> Chat
-                      </button>
-                    </div>
+
+                    {toggleDetail ? (
+                      // Basic Details
+                      <div className="flex flex-col gap-2">
+                        <p className="text-[15px] font-[400] flex items-center gap-2">
+                          <span className="font-medium">Category:</span>
+                          <assets.VscTools /> {workerInfo.category}
+                        </p>
+                        <p className="text-[15px] font-[400]">
+                          <span className="font-medium">Visiting Fee:</span>{" "}
+                          {workerInfo.price}
+                        </p>
+                        <p className="text-[15px] font-[400]">
+                          <span className="font-medium">Age:</span>{" "}
+                          {workerInfo.age}
+                        </p>
+                        <p className="text-[15px] font-[400]">
+                          <span className="font-medium">Address:</span>{" "}
+                          {workerInfo.address}
+                        </p>
+                      </div>
+                    ) : (
+                      // Contact Info
+                      <div className="flex flex-col gap-2">
+                        <p className="text-[15px] font-[400] flex items-center gap-2">
+                          <span className="font-medium">Phone:</span>
+                          <assets.MdOutlineCall /> {workerInfo.phone}
+                        </p>
+                        <p className="text-[15px] font-[400]">
+                          <span className="font-medium">Email:</span>{" "}
+                          {workerInfo.email}
+                        </p>
+                        <p className="text-[18px] font-medium bg-white text-primary px-2 py-1 rounded-full w-fit flex items-center gap-2 cursor-pointer">
+                          <assets.BsChatDots className="text-[20px]" /> chat
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-              <div className="mt-4">
-                <button
-                  onClick={handleAbout}
-                  className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 px-4 py-1 rounded-full text-gray-700 font-medium transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-50"
+              {/* ------------ About ------------ */}
+              <div className="flex flex-col gap-2 pl-4">
+                <div
+                  onClick={() => setAbout(!about)}
+                  className="flex items-center gap-2 cursor-pointer"
                 >
-                  <assets.IoInformationSharp className="text-gray-600" /> About
-                </button>
-                {about && (
-                  <p className="mt-2 text-black px-4 md:px-8 break-words text-[14px] font-light">
-                    {workerInfo.about || "No description available"}
-                  </p>
-                )}
+                  <h1 className="text-[18px] font-medium">About</h1>
+                  {about ? (
+                    <assets.MdOutlineArrowDropUp className="text-[24px]" />
+                  ) : (
+                    <assets.MdOutlineArrowDropDown className="text-[24px]" />
+                  )}
+                </div>
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${
+                    about ? "max-h-[500px]" : "max-h-0"
+                  }`}
+                >
+                  <p className="text-[15px] font-[400]">{workerInfo.about}</p>
+                </div>
+              </div>
+              {/* ------------ Reviews ------------ */}
+              <div className="flex flex-col gap-4 pl-4">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-[18px] font-medium">Reviews</h1>
+                  <select
+                    className="px-2 py-1 rounded-md border border-gray-300 outline-none"
+                    onChange={(e) => setSortOrder(e.target.value)}
+                    value={sortOrder}
+                  >
+                    <option value="newest">Latest</option>
+                    <option value="oldest">Earliest</option>
+                  </select>
+                </div>
 
-                {/* --------reviews------- */}
-                <div className="mt-8">
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
-                    <p className="text-[16px] font-light underline-offset-2 underline text-gray-800">
-                      Reviews
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setSortOrder("newest")}
-                        className={`flex items-center gap-1 text-sm ${
-                          sortOrder === "newest"
-                            ? "text-gray-800"
-                            : "text-gray-600"
-                        } hover:text-gray-800`}
+                <div className="flex flex-col gap-4 w-full h-[300px] overflow-y-auto font-outfit">
+                  {reviews
+                    ?.sort((a, b) => {
+                      if (sortOrder === "newest") {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                      } else {
+                        return new Date(a.createdAt) - new Date(b.createdAt);
+                      }
+                    })
+                    .slice(0, visibleReviews)
+                    .map((review, index) => (
+                      <div
+                        key={review._id || index}
+                        className=" border-b-[1px] rounded-md px-4 py-2 w-[90%] mx-auto"
                       >
-                        <assets.MdOutlineArrowDropUp />
-                        Newest
-                      </button>
-                      <button
-                        onClick={() => setSortOrder("oldest")}
-                        className={`flex items-center gap-1 text-sm ${
-                          sortOrder === "oldest"
-                            ? "text-gray-800"
-                            : "text-gray-600"
-                        } hover:text-gray-800`}
-                      >
-                        <assets.MdOutlineArrowDropDown />
-                        Oldest
-                      </button>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    {workerInfo.reviews && workerInfo.reviews.length > 0 ? (
-                      workerInfo.reviews
-                        .sort((a, b) => {
-                          if (sortOrder === "newest") {
-                            return (
-                              new Date(b.createdAt) - new Date(a.createdAt)
-                            );
-                          }
-                          return new Date(a.createdAt) - new Date(b.createdAt);
-                        })
-                        .slice(0, 3)
-                        .map((review, index) => (
-                          <div
-                            key={index}
-                            className="bg-gray-50 p-4 rounded-lg"
-                          >
-                            <div className="flex justify-between items-center">
-                              <p className="text-[14px] font-medium text-gray-700">
-                                {review.customerName}
-                              </p>
-                              <p className="text-[12px] text-gray-500">
-                                {new Date(review.createdAt)
-                                  .toLocaleString("en-US", {
-                                    year: "numeric",
-                                    month: "2-digit",
-                                    day: "2-digit",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })
-                                  .replace(",", "/")}
-                              </p>
-                            </div>
-                            <p className="text-[13px] font-light text-gray-600 mt-1">
-                              {review.comment}
-                            </p>
-                          </div>
-                        ))
-                    ) : (
-                      <p className="text-center text-gray-500">
-                        No reviews yet
-                      </p>
-                    )}
-                  </div>
+                        <div className="flex justify-between items-center mb-1">
+                          <h3 className="font-medium text-[14px] text-gray-800 font-inter capitalize">
+                            {review.customerName}
+                          </h3>
+                          <span className="text-sm text-gray-500">
+                            {new Date(review.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="text-[14px] text-gray-600 font-light break-words max-w-full overflow-hidden">
+                          {review.comment}
+                        </p>
+                      </div>
+                    ))}
+                  {reviews && visibleReviews < reviews.length && (
+                    <button
+                      onClick={() => setVisibleReviews((prev) => prev + 4)}
+                      className="bg-gray-100 text-gray-800 px-2 py-1 hover:bg-gray-200 rounded-md  transition-colors w-fit mx-auto"
+                    >
+                      Load More
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -222,9 +252,11 @@ const MyBooking = () => {
             </div>
           </div>
         </div>
+      ) : (
+        <div>Worker not found</div> // Added meaningful message
       )}
     </>
   );
 };
 
-export default MyBooking;
+export default NewMyBooking;

@@ -8,7 +8,7 @@ const Sidebar = () => {
     setExpended(!expended);
   };
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useAppContext();
+  const { theme } = useAppContext();
   return (
     <div className="h-full ">
       <div
@@ -76,7 +76,7 @@ const Sidebar = () => {
           {/* 1 */}
           <div className="cursor-pointer pl-2 lg:pl-4 relative group">
             <NavLink
-              onClick={() => setExpended(true)}
+              onClick={() => setExpended(false)}
               to="/"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full px-1 py-1.5 lg:py-2 rounded-xl transition-all ${
