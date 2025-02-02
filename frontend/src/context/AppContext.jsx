@@ -1,7 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 
 const AppContext = createContext();
-
+// problem is here only , page wise worker are being fetched for main , workerCard , RelatedWorker
 export const AppProvider = ({ children }) => {
   const [theme, setTheme] = useState(true);
   const [workers, setWorkers] = useState([]);
@@ -14,13 +14,17 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const fetchWorkers = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/workers");
+        const response = await fetch("http://localhost:8080/api/workers/all");
         if (!response.ok) {
           throw new Error("Failed to fetch workers");
         }
         const data = await response.json();
-        setWorkers(data);
-        setFilteredWorkers(data);
+
+        // Fix: Ensure workers is extracted from response object
+        const workersArray = data.workers || [];
+
+        setWorkers(workersArray);
+        setFilteredWorkers(workersArray);
       } catch (error) {
         console.error("Error fetching workers:", error);
       }

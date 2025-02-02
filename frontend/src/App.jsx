@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
-import Workers from "./pages/Workers";
 import Navbar from "./components/Navbar";
 import Bookings from "./pages/Bookings";
 import BookingHistory from "./pages/BookingHistory";
@@ -13,6 +12,8 @@ import About from "./pages/About.jsx";
 import { useAppContext } from "./context/AppContext";
 import LeftBar from "./components/LeftBar.jsx";
 import MyBooking from "./pages/MyBooking.jsx";
+import Workers from "./pages/Workers.jsx";
+import Test2 from "./pages/Test2.jsx";
 const App = () => {
   const location = useLocation();
   const noSidebarRoutes = ["/my-profile", "/login", "/about"];

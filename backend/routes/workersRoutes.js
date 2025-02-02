@@ -3,6 +3,7 @@ const routes = require("express").Router();
 const {
   createWorker,
   getAllWorkers,
+  getAllWorkersNoPage,
 } = require("../controllers/workerController.js");
 
 const {
@@ -12,7 +13,7 @@ const {
 
 //Route to get all workers
 routes.get("/workers", getAllWorkers);
-
+routes.get("/workers/all", getAllWorkersNoPage);
 // Route to create a new employee (with image upload)
 routes.post(
   "/workers",

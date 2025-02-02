@@ -41,6 +41,14 @@ import { MdOutlineCall } from "react-icons/md";
 import { IoInformationSharp } from "react-icons/io5";
 import { VscTools } from "react-icons/vsc";
 import wallet from "./crypto-wallet.png";
+import { IoIosSearch } from "react-icons/io";
+import { LuSettings2 } from "react-icons/lu";
+import { ImEnlarge2 } from "react-icons/im";
+import { LuChevronRight } from "react-icons/lu";
+import { LuChevronLeft } from "react-icons/lu";
+import { LuPhoneCall } from "react-icons/lu";
+import { LuFlame } from "react-icons/lu";
+import { RxCross2 } from "react-icons/rx";
 export const assets = {
   GoSidebarCollapse,
   GoSidebarExpand,
@@ -85,4 +93,12 @@ export const assets = {
   IoInformationSharp,
   VscTools,
   wallet,
+  IoIosSearch,
+  LuSettings2,
+  ImEnlarge2,
+  LuChevronRight,
+  LuChevronLeft,
+  LuPhoneCall,
+  LuFlame,
+  RxCross2,
 };

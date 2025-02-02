@@ -85,7 +85,7 @@ const Testing2 = ({ category, sortOption }) => {
           ))
         : filteredWorkers
             .filter((worker) => worker.available)
-            .slice(0, 20)
+            .slice(0, 15)
             .map((worker) => (
               <div
                 key={worker._id}

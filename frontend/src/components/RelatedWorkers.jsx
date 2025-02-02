@@ -4,31 +4,45 @@ import Rating from "@mui/material/Rating";
 const RelatedWorkers = ({ id, category }) => {
   const [workers, setWorkers] = useState([]);
   const [relWorkers, setRelWorkers] = useState([]);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+
   // fetching workers from database----------------
   useEffect(() => {
     const fetchWorkers = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/workers");
+        const response = await fetch("http://localhost:8080/api/workers/all");
         if (!response.ok) {
           throw new Error("Failed to fetch workers");
         }
         const data = await response.json();
-        setWorkers(data);
+
+        // Fix: Extract workers from API response
+        const workersArray = data.workers || [];
+        setWorkers(workersArray);
+        setError(null);
       } catch (error) {
         console.error("Error fetching workers:", error);
+        setError("Failed to load workers. Please try again later.");
       }
     };
 
     fetchWorkers();
   }, []);
-  // setting related workers by category and id-----------------
+
+  // Setting related workers by category and id
   useEffect(() => {
     if (workers.length > 0 && category) {
-      const workersData = workers.filter(
-        (wor) => wor.category === category && wor._id !== id //here docid is from params
-      );
-      setRelWorkers(workersData);
+      try {
+        const workersData = workers.filter(
+          (wor) => wor.category === category && wor._id !== id // id is from params
+        );
+        setRelWorkers(workersData);
+        setError(null);
+      } catch (error) {
+        console.error("Error filtering workers:", error);
+        setError("Failed to filter related workers.");
+      }
     }
   }, [workers, category, id]);
 
@@ -76,10 +90,10 @@ const RelatedWorkers = ({ id, category }) => {
           </div>
         ))}
       <button
-        // onClick={() => {
-        //   navigate(`/workers?category=${category}`);
-        //   scrollTo(0, 0);
-        // }}
+        onClick={() => {
+          navigate(`/workers/${category}`);
+          // scrollTo(0, 0);
+        }}
         className="w-full py-2 text-primary border border-gray-200 rounded-lg hover:bg-gray-50 transition-all"
       >
         View More

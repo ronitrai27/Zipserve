@@ -4,8 +4,10 @@ import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import WorkerCards from "./WorkerCards.jsx";
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
+  const navigate = useNavigate();
   const { theme } = useAppContext();
   const [category, setCategory] = useState("");
   const [sortOption, setSortOption] = useState("");
@@ -14,7 +16,7 @@ const Main = () => {
     <div
       className={`flex-1 w-full border-[1.6px]  ${
         theme ? "border-gray-200 bg-gray-50" : "border-gray-900 bg-gray-100"
-      } rounded-t-3xl rounded-b-md px-8 py-[1.1rem]`}
+      } rounded-t-lg rounded-b-md px-8 py-[1.1rem]`}
     >
       <div className="flex justify-between ">
         <div className="flex flex-col border border-gray-200 h-[calc(100vh-7rem)] max-w-[34%]  w-[32%]  bg-white rounded-lg shadow-md">
@@ -92,7 +94,10 @@ const Main = () => {
             <WorkerCards category={category} sortOption={sortOption} />
           </div>
           <div className="w-full py-2 text-center">
-            <button className="px-6 py-2 text-[18px] font-medium hover:scale-110 hover:underline underline-offset-2 decoration-primaryLight/20 text-primary transition-all duration-700">
+            <button
+              onClick={() => navigate("/workers")}
+              className="px-6 py-1 text-[16px] border-[1px] border-gray-200 rounded-lg font-medium hover:scale-110  text-primary hover:bg-primaryLight hover:text-white transition-all duration-700"
+            >
               More...
             </button>
           </div>

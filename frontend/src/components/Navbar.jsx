@@ -5,60 +5,13 @@ import { motion } from "framer-motion";
 import { useAppContext } from "../context/AppContext";
 import { ArrowRight } from "lucide-react";
 import { BorderBeam } from "../components/ui/border-beam.jsx";
+import ServiceSearch from "./SearchBarNav.jsx";
 
 const Navbar = () => {
   const [token, setToken] = useState(true);
   const navigate = useNavigate();
-  const [currentText, setCurrentText] = useState(0);
   const [hiddenDiv, setHiddenDiv] = useState(true);
-
   const { theme, toggleTheme } = useAppContext();
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentText((prevText) => (prevText + 1) % 3);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-  // typing -----------------
-
-  const placeholderTexts = [
-    "Search AC Repair...",
-    "Search Pipe Leakage...",
-    "Search Bathroom Cleaning...",
-  ];
-  const [placeholder, setPlaceholder] = useState("");
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-  const [isTyping, setIsTyping] = useState(true);
-
-  useEffect(() => {
-    let typingInterval;
-
-    if (isTyping) {
-      if (charIndex < placeholderTexts[currentTextIndex].length) {
-        typingInterval = setInterval(() => {
-          setPlaceholder(
-            placeholderTexts[currentTextIndex].substring(0, charIndex + 1)
-          );
-          setCharIndex((prev) => prev + 1);
-        }, 200);
-      } else {
-        setIsTyping(false);
-        setTimeout(() => {
-          setIsTyping(true);
-          setCharIndex(0);
-          setPlaceholder("");
-          setCurrentTextIndex((prev) => (prev + 1) % placeholderTexts.length);
-        }, 2000);
-      }
-    }
-
-    return () => {
-      if (typingInterval) clearInterval(typingInterval);
-    };
-  }, [charIndex, currentTextIndex, isTyping]);
 
   return (
     <div className="relative flex items-center justify-between py-3 pr-14 font-outfit">
@@ -85,64 +38,24 @@ const Navbar = () => {
           />
         )}
       </motion.div>
-      {/* ------------MIDDLE------------ */}
-      {/* <div className="w-1/2 h-full flex flex-col ">
-        <div
-          className={`border-none rounded-tl-full rounded-br-full py-2 bg-gradient-to-r
-from-white/0
-via-primary/20
-to-indigo-50/0 h-full text-center flex items-center justify-center font-outfit ${
-            currentText === 0 ? "block" : "hidden"
-          }`}
-        >
-          <h1 className="text-xl font-medium text-gray-600 tracking-wider">
-            Still confused, what to Book? try{" "}
-            <span className=" text-primary font-medium ml-2 font-inter uppercase">
-              trending!
-            </span>
-          </h1>
-        </div>
 
-        <div
-          className={`border-none rounded-3xl overflow-hidden py-3 bg-gradient-to-r
-from-primaryLight/0
-via-primaryLight
-to-yellow-50/0  h-full text-center flex items-center justify-center font-inter ${
-            currentText === 1 ? "block" : "hidden"
-          }`}
-        >
-          <h1 className="text-xl font-medium text-white tracking-wider">
-            Collect Coins and Avail huge Discounts!!{" "}
-            <span className="animate-pulse transition-all duration-700 text-gray-800">
-              Book Now
-            </span>
-          </h1>
-        </div>
-
-        <div
-          className={` text-center h-full py-2 font-inter ${
-            currentText === 2 ? "block" : "hidden"
-          }`}
-        >
-          <h1 className="text-2xl font-extralight">
-            Ready, Set, Zip and{" "}
-            <span className="ml-3 bg-primary/25 p-2 font-medium rounded-tl-full rounded-br-full">
-              Zipserve!
-            </span>
-          </h1>
-        </div>
-      </div> */}
       {/* ---------right part--------- */}
       <div className="flex items-center gap-6 font-inter">
-        {/* Input Field */}
-        <div className=" relative rounded-full overflow-hidden border-[1px] border-gray-200 ">
+        {/* Input Field -----*/}
+        {/* <div className=" relative rounded-full overflow-hidden border-[1px] border-gray-200 ">
           <input
             type="text"
-            placeholder={placeholder}
-            className="w-72 px-5 py-2 focus:shadow-md focus:outline-none bg-stone-100 text-gray-800 text-sm font-light"
+            // placeholder={placeholder}
+            placeholder="find services..."
+            className="w-[22rem] px-5 py-3 focus:shadow-md focus:outline-none bg-stone-100 text-gray-800 text-sm font-light"
           />
           <BorderBeam size={300} duration={18} delay={12} />
+        </div> */}
+        <div>
+          <ServiceSearch />
+          {/* <BorderBeam size={300} duration={18} delay={12} /> */}
         </div>
+
         {/* ------------trending------------- */}
 
         <button

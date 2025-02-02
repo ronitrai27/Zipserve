@@ -3,7 +3,7 @@ const EmployeeModel = require("../models/workerModel.js");
 // ------------------------Controller to get all workers with filters and sorting-----------------
 const getAllWorkers = async (req, res) => {
   try {
-    const { category, sort, page, limit } = req.query;
+    const { category, sort, page = 1, limit = 10 } = req.query;
 
     // Build query filter
     const filter = {};
@@ -19,40 +19,40 @@ const getAllWorkers = async (req, res) => {
       sortOptions = { stars: -1 }; // Sort by stars in descending order
     }
 
-    // Check if pagination is requested
-    if (page && limit) {
-      const pageNumber = parseInt(page);
-      const limitNumber = parseInt(limit);
+    // Convert page and limit to numbers
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+    const skip = (pageNumber - 1) * limitNumber;
 
-      // Pagination logic
-      const skip = (pageNumber - 1) * limitNumber;
+    // Fetch all filtered and sorted workers first (without pagination)
+    let allWorkers = await EmployeeModel.find(filter).sort(sortOptions);
 
-      // Fetch paginated workers
-      const workers = await EmployeeModel.find(filter)
-        .sort(sortOptions)
-        .skip(skip)
-        .limit(limitNumber);
+    // If pagination is requested, slice the sorted data
+    const paginatedWorkers = allWorkers.slice(skip, skip + limitNumber);
 
-      // Count total workers for the current filter
-      const totalWorkers = await EmployeeModel.countDocuments(filter);
+    // Count total workers for the current filter
+    const totalWorkers = allWorkers.length; // Since we already fetched the full dataset
 
-      // Return paginated response
-      return res.status(200).json({
-        workers,
-        totalWorkers,
-        totalPages: Math.ceil(totalWorkers / limitNumber),
-        currentPage: pageNumber,
-      });
-    }
-
-    // Fetch all workers without pagination
-    const workers = await EmployeeModel.find(filter).sort(sortOptions);
-
-    // Return all workers
-    res.status(200).json(workers);
+    // Return paginated response
+    res.status(200).json({
+      workers: paginatedWorkers,
+      totalWorkers,
+      totalPages: Math.ceil(totalWorkers / limitNumber),
+      currentPage: pageNumber,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error fetching workers" });
+  }
+};
+// ------------------------ Controller to Get All Workers (No Pagination) -----------------
+const getAllWorkersNoPage = async (req, res) => {
+  try {
+    const workers = await EmployeeModel.find(); // No pagination, returns all workers
+    res.status(200).json({ workers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching all workers" });
   }
 };
 
@@ -137,4 +137,5 @@ const createWorker = async (req, res) => {
 module.exports = {
   getAllWorkers,
   createWorker,
+  getAllWorkersNoPage,
 };

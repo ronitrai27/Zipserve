@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { assets } from "../assets/assets.js";
 import Rating from "@mui/material/Rating";
 
-const Workers = () => {
+const Test2 = () => {
   const [workers, setWorkers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -31,14 +31,8 @@ const Workers = () => {
       setWorkers(data.workers);
       setCurrentPage(data.currentPage);
       setTotalPages(data.totalPages);
-      // console.log("workers.data =>", data.workers);
-      // console.log("Pagination Data:", {
-      //   currentPage: data.currentPage,
-      //   totalPages: data.totalPages,
-      // });
     } catch (error) {
       console.error("Error fetching workers:", error);
-      // Could add error state and UI feedback here
     }
   };
 
@@ -66,7 +60,7 @@ const Workers = () => {
   };
 
   return (
-    <div className="flex-1 border-[1px] bg-stone-50 h-[90vh] rounded-t-xl pt-4 pb-2 overflow-hidden">
+    <div className="flex-1 border-[1px] bg-stone-50 h-[90vh] rounded-t-xl py-4 overflow-hidden">
       <div className="parent-container relative flex flex-row justify-between gap-6 w-[95%] mx-auto">
         {/* LEFT SIDE -> CATEGORIES AND AD */}
         <div className="left-side max-w-[24%] min-w-[24%] font-inter flex flex-col">
@@ -166,7 +160,7 @@ const Workers = () => {
               <AuroraText className="ml-2 font-outfit">{category}</AuroraText>
             </p>
           ) : (
-            <p className="flex items-center justify-center pr-24 text-[20px] font-[400] text-gray-800 tracking-wider mb-2">
+            <p className="flex items-center justify-center pr-24 text-[20px] font-[400] text-gray-800 tracking-wider mb-3">
               Hey John ! Lets start booking , try{" "}
               <span className="ml-3 text-primary">
                 <MorphingTextDemo />
@@ -174,7 +168,7 @@ const Workers = () => {
             </p>
           )}
 
-          <div className="flex items-center gap-5 mb-2">
+          <div className="flex items-center gap-5 mb-1">
             <div className="flex items-center bg-gray-200 w-full rounded-full px-6 gap-2 hover:bg-gray-100 transition-all">
               <assets.IoIosSearch className="text-[20px] cursor-pointer hover:scale-110 transition-all" />
               <input
@@ -193,37 +187,21 @@ const Workers = () => {
             </div>
           </div>
           {/* All the filters ----------------- */}
-          <div className="w-full h-[35px]  rounded-xl mt-1">
-            <div className="flex items-center justify-start gap-6">
-              {category && (
-                <p
-                  onClick={() => navigate("/workers")}
-                  className="text-[14px] font-extralight text-gray-800 flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full cursor-pointer"
-                >
-                  {category}{" "}
-                  <assets.RxCross2 className="text-black text-[16px]" />
-                </p>
-              )}
-            </div>
-          </div>
+          <div className="w-full h-[35px] rounded-xl mb-1"></div>
           {/* All selected Workers--------- */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentPage}
-              initial={{
-                opacity: 0,
-                x: currentPage > 1 ? 50 : -50,
-                scale: 1.1,
-              }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: currentPage > 1 ? -50 : 50, scale: 1.1 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
-              <div className="flex flex-col gap-3 font-inter bg-white py-5 px-4 rounded-2xl">
+          <div className="flex flex-col gap-3 font-inter bg-white py-5 px-4 rounded-2xl">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentPage} // Use currentPage as the key to trigger animations
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.5 }}
+              >
                 {filteredWorkers.map((worker) => (
                   <div
-                    key={worker._id}
-                    className=" bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200"
+                    key={worker._id} // Changed from worker.id to worker._id
+                    className="flex flex-col bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200"
                   >
                     <div className="flex flex-row gap-2 justify-between items-center">
                       <img
@@ -238,7 +216,7 @@ const Workers = () => {
                         {worker.category}
                       </p>
                       <Rating
-                        name={`rating-${worker._id}`}
+                        name={`rating-${worker._id}`} // Added unique name
                         size="small"
                         defaultValue={worker.stars}
                         precision={0.1}
@@ -272,7 +250,7 @@ const Workers = () => {
                     {enlargedWorker === worker._id && (
                       <div className="bg-inherit px-20 pt-2 flex items-center justify-between border-t border-gray-200">
                         <div className="flex items-center gap-4">
-                          <button className="flex items-center gap-1 font-medium text-[14px] text-primary hover:scale-105 transition-all duration-200 px-2 py-1.5 ">
+                          <button className="flex items-center gap-1 font-medium text-[14px] text-primary hover:bg-primary hover:text-white px-2 py-1.5 rounded-full border-[1px] border-primary transition-colors">
                             <assets.BsChatDots className="text-lg" />
                             Chat Now
                           </button>
@@ -284,7 +262,6 @@ const Workers = () => {
                         <button
                           onClick={() => navigate(`/booking/${worker._id}`)}
                           className="px-5 py-1.5 text-sm font-medium bg-gradient-to-r from-primary to-primaryLight text-white rounded-lg hover:shadow-lg transition-shadow"
-                          // disabled={!worker.available}
                         >
                           Book Now
                         </button>
@@ -292,36 +269,36 @@ const Workers = () => {
                     )}
                   </div>
                 ))}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-        {/* _________________Pagination ----------------- ABSOLUTE */}
-        <div className="pagination absolute -bottom-2 right-[40%] translate-x-[40%]">
-          <div className="pagination flex gap-10 justify-center items-center mt-4">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => fetchWorkers(currentPage - 1)}
-              className={`${
-                currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              <assets.LuChevronLeft className="text-primary text-[25px] cursor-pointer hover:scale-110 transition-all hover:bg-primaryLight rounded-full hover:text-white" />
-            </button>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          {/* Pagination ----------------- ABSOLUT */}
+          <div className="pagination absolute -bottom-2 right-[40%] translate-x-[40%]">
+            <div className="pagination flex gap-10 justify-center items-center mt-4">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => fetchWorkers(currentPage - 1)}
+                className={`${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                <assets.LuChevronLeft className="text-primary text-[25px] cursor-pointer hover:scale-110 transition-all hover:bg-primaryLight rounded-full hover:text-white" />
+              </button>
 
-            <span className="text-[14px] font-light">
-              Page {currentPage} of {totalPages}
-            </span>
+              <span className="text-[14px] font-light">
+                Page {currentPage} of {totalPages}
+              </span>
 
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => fetchWorkers(currentPage + 1)}
-              className={`${
-                currentPage === totalPages ? "opacity-50 cursor-none" : ""
-              }`}
-            >
-              <assets.LuChevronRight className="text-primary text-[25px] cursor-pointer hover:scale-110 transition-all hover:bg-primaryLight rounded-full hover:text-white" />
-            </button>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => fetchWorkers(currentPage + 1)}
+                className={`${
+                  currentPage === totalPages ? "opacity-50 cursor-none" : ""
+                }`}
+              >
+                <assets.LuChevronRight className="text-primary text-[25px] cursor-pointer hover:scale-110 transition-all hover:bg-primaryLight rounded-full hover:text-white" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -329,4 +306,4 @@ const Workers = () => {
   );
 };
 
-export default Workers;
+export default Test2;

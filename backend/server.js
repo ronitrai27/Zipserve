@@ -6,13 +6,15 @@ const app = express();
 require("./models/db"); // Database connection file
 app.use(cors());
 // Import routes
-const workerRoutes = require("./routes/workersRoutes"); // Adjust the path to the workerRoutes file
+const workerRoutes = require("./routes/workersRoutes");
+const serviceRoutes = require("./routes/serviceRoutes");
 
 // Middleware for parsing JSON
 app.use(express.json());
 
 // Use routes
 app.use("/api", workerRoutes); // Prefix routes with /api
+app.use("/api", serviceRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack); // Log error stack for debugging
