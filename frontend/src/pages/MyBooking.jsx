@@ -73,7 +73,7 @@ const NewMyBooking = () => {
         <div className="booking-page w-full min-h-screen bg-gray-100 py-5  rounded-tr-3xl">
           <div className="max-w-[90%] mx-auto flex flex-col md:flex-row justify-between gap-5 md:gap-10">
             {/* ------------ Worker Details ------------ */}
-            <div className="px-8 py-4 flex flex-col gap-5 bg-white rounded-xl h-[90vh] overflow-y-scroll scroll-smooth w-[55rem]">
+            <div className="px-8 py-4 flex flex-col gap-5  h-[90vh] overflow-y-scroll scroll-smooth w-[55rem]">
               <div className="worker-top flex flex-row gap-8">
                 <img
                   src={workerInfo.profileImage}
@@ -189,7 +189,7 @@ const NewMyBooking = () => {
                 </div>
               </div>
               {/* ------------ Reviews ------------ */}
-              <div className="flex flex-col gap-4 pl-4">
+              <div className="flex flex-col gap-4 pl-4 ">
                 <div className="flex items-center justify-between">
                   <h1 className="text-[18px] font-medium">Reviews</h1>
                   <select
@@ -215,7 +215,7 @@ const NewMyBooking = () => {
                     .map((review, index) => (
                       <div
                         key={review._id || index}
-                        className=" border-b-[1px] rounded-md px-4 py-2 w-[90%] mx-auto"
+                        className=" border-b-[1px] rounded-md px-4 py-2 w-[90%] mx-auto bg-gray-50/40"
                       >
                         <div className="flex justify-between items-center mb-1">
                           <h3 className="font-medium text-[14px] text-gray-800 font-inter capitalize">
