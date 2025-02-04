@@ -43,11 +43,6 @@ const Testing2 = ({ category, sortOption }) => {
     setFilteredWorkers(result);
   }, [category, sortOption, workers]);
 
-  // Handle worker click to get details of particular worker--------
-  // const handleWorkerClick = (worker) => {
-  //   console.log(`Worker ID: ${worker._id}, Name: ${worker.name}`);
-  // };
-
   return (
     <div className="worker-box flex flex-col gap-4 px-3 font-inter">
       {!filteredWorkers.length

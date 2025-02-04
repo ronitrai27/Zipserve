@@ -14,6 +14,21 @@ const Workers = () => {
   const [searchTerm, setSearchTerm] = useState(""); // Added search state
   const { category } = useParams();
   const navigate = useNavigate();
+  // filters ----------------------------------
+  const [sortVisible, setSortVisible] = useState(false);
+  const [sortOption, setSortOption] = useState(null);
+  const [availVisible, setAvailVisible] = useState(false);
+  const [availOption, setAvailOption] = useState(null);
+  const [priceVisible, setPriceVisible] = useState(false);
+
+  const handleCheckboxChange = (value) => {
+    setAvailOption(value);
+  };
+  // Filter State to make it block or hidden
+  const [filter, setFilter] = useState(false);
+  const handleFilter = () => {
+    setFilter(!filter);
+  };
 
   const fetchWorkers = async (page = 1) => {
     try {
@@ -21,6 +36,12 @@ const Workers = () => {
 
       if (category) {
         url += `&category=${category}`;
+      }
+      if (sortOption) {
+        url += `&sort=${sortOption}`;
+      }
+      if (availOption) {
+        url += `&available=${availOption}`;
       }
 
       const response = await fetch(url);
@@ -31,11 +52,6 @@ const Workers = () => {
       setWorkers(data.workers);
       setCurrentPage(data.currentPage);
       setTotalPages(data.totalPages);
-      // console.log("workers.data =>", data.workers);
-      // console.log("Pagination Data:", {
-      //   currentPage: data.currentPage,
-      //   totalPages: data.totalPages,
-      // });
     } catch (error) {
       console.error("Error fetching workers:", error);
       // Could add error state and UI feedback here
@@ -44,7 +60,7 @@ const Workers = () => {
 
   useEffect(() => {
     fetchWorkers();
-  }, [category]); // Added category to dependency array
+  }, [category, sortOption, availOption]); // Added sortOption , category to dependency array
 
   const handleEnlargeClick = (workerId) => {
     setEnlargedWorker(enlargedWorker === workerId ? null : workerId);
@@ -64,7 +80,7 @@ const Workers = () => {
       navigate(`/workers/${selectedCategory}`);
     }
   };
-
+  // required a skeleton loading ...
   return (
     <div className="flex-1 border-[1px] bg-stone-50 h-[90vh] rounded-t-xl pt-4 pb-2 overflow-hidden">
       <div className="parent-container relative flex flex-row justify-between gap-6 w-[95%] mx-auto">
@@ -166,7 +182,7 @@ const Workers = () => {
               <AuroraText className="ml-2 font-outfit">{category}</AuroraText>
             </p>
           ) : (
-            <p className="flex items-center justify-center pr-24 text-[20px] font-[400] text-gray-800 tracking-wider mb-2">
+            <p className="flex items-center justify-center pr-24 text-[20px] font-[400] text-gray-800 tracking-wider mb-4">
               Hey John ! Lets start booking , try{" "}
               <span className="ml-3 text-primary">
                 <MorphingTextDemo />
@@ -182,26 +198,171 @@ const Workers = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Try Searching Worker Name..."
-                className="w-full p-3 bg-inherit focus:outline-none focus:ring-0"
+                className="w-full px-3 py-2 bg-inherit focus:outline-none focus:ring-0"
               />
             </div>
-            <div className="bg-white flex items-center gap-2 px-5 py-2 rounded-md border-[1px] border-primaryLight cursor-pointer">
-              <assets.LuSettings2 className="text-primary text-[20px]" />
-              <button className="text-black text-[15px] font-[400]">
-                Filter
-              </button>
+            {/* Filter Button */}
+            <div className="relative">
+              <div
+                onClick={() => handleFilter()}
+                className="bg-white  flex items-center gap-2 px-5 py-2 rounded-md border-[1px] border-primaryLight cursor-pointer"
+              >
+                <assets.LuSettings2 className="text-primary text-[20px]" />
+                <button className="text-black text-[15px] font-[400]">
+                  Filter
+                </button>
+              </div>
+              <div
+                className={`absolute  top-12 right-0 ${
+                  filter ? "block" : "hidden"
+                } bg-white px-3  py-2 rounded-lg shadow-xl w-[16rem] z-50 overflow-hidden`}
+              >
+                <p className="text-[16px] text-primary font-[500] tracking-tight underline underline-offset-4 decoration-primaryLight text-center mb-4">
+                  Apply Filters:
+                </p>
+                <div className="filters flex flex-col gap-2">
+                  <div
+                    onClick={() => setSortVisible(!sortVisible)}
+                    className="sort px-2 py-1 flex justify-between items-center hover:bg-primary transition-all hover:scale-105 hover:text-white text-gray-800 duration-200 cursor-pointer border-b-[1px] border-gray-200 "
+                  >
+                    <p className="mb-1 capitalize text-[15px] font-[400] ">
+                      Sort By:
+                    </p>
+                    <assets.MdOutlineArrowDropDown className="text-[25px] text-primary" />
+                  </div>
+                  {/* sort by */}
+                  <div
+                    className={`flex flex-col gap-2 ${
+                      sortVisible ? "block" : "hidden"
+                    }`}
+                  >
+                    <p
+                      onClick={() => {
+                        setSortOption("price_asc");
+                        setFilter(!filter);
+                      }}
+                      className="flex items-center gap-2 text-[14px] font-light font-inter hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer transition-colors duration-200"
+                    >
+                      <assets.MdOutlineArrowDropDown className="text-[1.3rem]" />
+                      Price: Low to High
+                    </p>
+                    <p
+                      onClick={() => {
+                        setSortOption("stars_desc");
+                        setFilter(!filter);
+                      }}
+                      className="flex items-center gap-2 text-[14px] font-light font-inter hover:bg-gray-100 hover:text-gray-800 p-2 rounded-lg cursor-pointer transition-colors duration-200"
+                    >
+                      <assets.MdOutlineArrowDropUp className="text-[1.3rem]" />
+                      Stars: High to Low
+                    </p>
+                  </div>
+                  {/* Availability-------------------------- */}
+                  <div
+                    onClick={() => {
+                      setAvailVisible(!availVisible);
+                    }}
+                    className="sort px-2 py-1 flex justify-between items-center hover:bg-primary transition-all hover:scale-105 hover:text-white text-gray-800 duration-200 cursor-pointer border-b-[1px] border-gray-200 "
+                  >
+                    <p className="mb-1 capitalize text-[15px] font-[400] ">
+                      Availability
+                    </p>
+                    <assets.MdOutlineArrowDropDown className="text-[25px] text-primary" />
+                  </div>
+                  <div className={`px-8 ${availVisible ? "block" : "hidden"}`}>
+                    <p className="capitalize text-[14px] font-light mb-2">
+                      Show Available Workers:
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div
+                        onClick={() => {
+                          setAvailOption("true");
+                          // setFilter(!filter);
+                        }}
+                        className="flex items-center gap-2"
+                      >
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{ type: "spring", stiffness: 300 }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={availOption === "true"}
+                            onChange={() => handleCheckboxChange("true")}
+                          />
+                        </motion.div>
+                        <p className="capitalize text-[14px] font-light">Yes</p>
+                      </div>
+                      <div
+                        onClick={() => {
+                          setAvailOption("false");
+                          // setFilter(!filter);
+                        }}
+                        className="flex items-center gap-2"
+                      >
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{ type: "spring", stiffness: 300 }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={availOption === "false"}
+                            onChange={() => handleCheckboxChange("false")}
+                          />
+                        </motion.div>
+                        <p className="capitalize text-[14px] font-light">No</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="sort px-2 py-1 flex justify-between items-center hover:bg-primary transition-all hover:scale-105 hover:text-white text-gray-800 duration-200 cursor-pointer border-b-[1px] border-gray-200 ">
+                    <p className="mb-1 capitalize text-[15px] font-[400] ">
+                      Price Range
+                    </p>
+                    <assets.MdOutlineArrowDropDown className="text-[25px] text-primary" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           {/* All the filters ----------------- */}
-          <div className="w-full h-[35px]  rounded-xl mt-1">
+          <div className="w-full h-[35px]  rounded-xl mt-1 mb-1">
             <div className="flex items-center justify-start gap-6">
               {category && (
                 <p
                   onClick={() => navigate("/workers")}
-                  className="text-[14px] font-extralight text-gray-800 flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full cursor-pointer"
+                  className="text-[14px] font-extralight text-gray-600 italic flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full cursor-pointer"
                 >
                   {category}{" "}
                   <assets.RxCross2 className="text-black text-[16px]" />
+                </p>
+              )}
+
+              {sortOption && (
+                <p
+                  onClick={() => {
+                    setSortOption(null);
+                    // setFilter(!filter);
+                  }}
+                  className="text-[14px] font-extralight text-gray-600 italic flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full cursor-pointer"
+                >
+                  {sortOption}{" "}
+                  <assets.RxCross2 className="text-black text-[16px]" />
+                </p>
+              )}
+              {availOption === "true" && (
+                <p
+                  onClick={() => {
+                    setAvailOption(null);
+                    // setFilter(!filter);
+                  }}
+                  className="text-[14px] font-extralight text-gray-600 italic flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full cursor-pointer"
+                >
+                  {availOption === "true" && "Show Available "}
+                  {availOption === "true" && (
+                    <assets.RxCross2 className="text-black text-[16px]" />
+                  )}
                 </p>
               )}
             </div>
@@ -219,79 +380,127 @@ const Workers = () => {
               exit={{ opacity: 0, x: currentPage > 1 ? -50 : 50, scale: 1.1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <div className="flex flex-col gap-3 font-inter bg-white py-5 px-4 rounded-2xl">
-                {filteredWorkers.map((worker) => (
-                  <div
-                    key={worker._id}
-                    className=" bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200"
-                  >
-                    <div className="flex flex-row gap-2 justify-between items-center">
-                      <img
-                        src={worker.profileImage}
-                        alt={worker.name}
-                        className="w-10 h-10 rounded-full bg-white border-[1px] border-primaryLight"
-                      />
-                      <h2 className="capitalize text-[14px] font-[400]">
-                        {worker.name}
-                      </h2>
-                      <p className="capitalize text-[14px] font-light">
-                        {worker.category}
-                      </p>
-                      <Rating
-                        name={`rating-${worker._id}`}
-                        size="small"
-                        defaultValue={worker.stars}
-                        precision={0.1}
-                        readOnly
-                      />
-                      {worker.available ? (
-                        <div className="flex items-center gap-1 bg-white px-4 py-[2px] rounded-full">
-                          <p className="text-green-500 text-sm font-light">
-                            Available
-                          </p>
-                          <div className="w-2 h-2 rounded-full bg-green-500"></div>
+              <div className="flex flex-col gap-3 font-inter  bg-white rounded-2xl px-6 py-4">
+                {workers.length === 0 ? (
+                  <div className="flex flex-col gap-3">
+                    <div className="bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200 flex items-center justify-between">
+                      <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse transition-all duration-700"></div>
+                      <div className="w-60 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-20 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-7 h-7 rounded-full bg-gray-300  animate-pulse transition-all duration-700"></div>
+                    </div>
+                    <div className="bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200 flex items-center justify-between">
+                      <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse transition-all duration-700"></div>
+                      <div className="w-60 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-20 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-7 h-7 rounded-full bg-gray-300  animate-pulse transition-all duration-700"></div>
+                    </div>{" "}
+                    <div className="bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200 flex items-center justify-between">
+                      <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse transition-all duration-700"></div>
+                      <div className="w-60 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-20 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-7 h-7 rounded-full bg-gray-300  animate-pulse transition-all duration-700"></div>
+                    </div>{" "}
+                    <div className="bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200 flex items-center justify-between">
+                      <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse transition-all duration-700"></div>
+                      <div className="w-60 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-20 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-7 h-7 rounded-full bg-gray-300  animate-pulse transition-all duration-700"></div>
+                    </div>{" "}
+                    <div className="bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200 flex items-center justify-between">
+                      <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse transition-all duration-700"></div>
+                      <div className="w-60 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-20 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-7 h-7 rounded-full bg-gray-300  animate-pulse transition-all duration-700"></div>
+                    </div>
+                    <div className="bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200 flex items-center justify-between">
+                      <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse transition-all duration-700"></div>
+                      <div className="w-60 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-20 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-7 h-7 rounded-full bg-gray-300  animate-pulse transition-all duration-700"></div>
+                    </div>
+                    <div className="bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200 flex items-center justify-between">
+                      <div className="w-10 h-10 bg-gray-300 rounded-full animate-pulse transition-all duration-700"></div>
+                      <div className="w-60 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-20 h-7 rounded-xl bg-gray-300  animate-pulse transition-all duration-700"></div>
+                      <div className="w-7 h-7 rounded-full bg-gray-300  animate-pulse transition-all duration-700"></div>
+                    </div>
+                  </div>
+                ) : (
+                  filteredWorkers.map((worker) => (
+                    <div
+                      key={worker._id}
+                      className="bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg
+                       hover:bg-gray-200 transition-all hover:scale-105 duration-200"
+                    >
+                      <div className="flex flex-row gap-2 justify-between items-center">
+                        <img
+                          src={worker.profileImage}
+                          alt={worker.name}
+                          className="w-10 h-10 rounded-full bg-white border-[1px] border-primaryLight"
+                        />
+                        <h2 className="capitalize text-[14px] font-[400]">
+                          {worker.name}
+                        </h2>
+                        <p className="capitalize text-[14px] font-light">
+                          {worker.category}
+                        </p>
+                        <Rating
+                          name={`rating-${worker._id}`}
+                          size="small"
+                          defaultValue={worker.stars}
+                          precision={0.1}
+                          readOnly
+                        />
+                        {worker.available ? (
+                          <div className="flex items-center gap-1 bg-white px-4 py-[2px] rounded-full">
+                            <p className="text-green-500 text-sm font-light">
+                              Available
+                            </p>
+                            <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1 bg-white px-4 py-[2px] rounded-full">
+                            <p className="text-red-500 text-sm font-light">
+                              Available
+                            </p>
+                            <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                          </div>
+                        )}
+                        <p className="text-sm font-medium text-gray-800">
+                          ₹ {worker.price}
+                        </p>
+                        <div
+                          onClick={() => handleEnlargeClick(worker._id)}
+                          className="flex items-center bg-white p-2 rounded-full cursor-pointer"
+                        >
+                          <assets.ImEnlarge2 className="text-primary text-[20px]" />
                         </div>
-                      ) : (
-                        <div className="flex items-center gap-1 bg-white px-4 py-[2px] rounded-full">
-                          <p className="text-red-500 text-sm font-light">
-                            Available
-                          </p>
-                          <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                      </div>
+                      {enlargedWorker === worker._id && (
+                        <div className="bg-inherit px-20 pt-2 flex items-center justify-between border-t border-gray-200">
+                          <div className="flex items-center gap-4">
+                            <button className="flex items-center gap-1 font-medium text-[15px] text-primary hover:scale-105 transition-all duration-200 px-2 py-1.5 ">
+                              <assets.BsChatDots className="text-lg" />
+                              Chat
+                            </button>
+
+                            <p className="text-sm font-medium text-gray-700">
+                              {worker.phone}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => navigate(`/booking/${worker._id}`)}
+                            className="px-5 py-1.5 text-sm font-medium bg-gradient-to-r from-primary to-primaryLight text-white rounded-lg hover:shadow-lg transition-shadow"
+                            // disabled={!worker.available}
+                          >
+                            Book Now
+                          </button>
                         </div>
                       )}
-                      <p className="text-sm font-medium text-gray-800">
-                        ₹ {worker.price}
-                      </p>
-                      <div
-                        onClick={() => handleEnlargeClick(worker._id)}
-                        className="flex items-center bg-white p-2 rounded-full cursor-pointer"
-                      >
-                        <assets.ImEnlarge2 className="text-primary text-[20px]" />
-                      </div>
                     </div>
-                    {enlargedWorker === worker._id && (
-                      <div className="bg-inherit px-20 pt-2 flex items-center justify-between border-t border-gray-200">
-                        <div className="flex items-center gap-4">
-                          <button className="flex items-center gap-1 font-medium text-[14px] text-primary hover:scale-105 transition-all duration-200 px-2 py-1.5 ">
-                            <assets.BsChatDots className="text-lg" />
-                            Chat Now
-                          </button>
-
-                          <p className="text-sm font-medium text-gray-700">
-                            {worker.phone}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => navigate(`/booking/${worker._id}`)}
-                          className="px-5 py-1.5 text-sm font-medium bg-gradient-to-r from-primary to-primaryLight text-white rounded-lg hover:shadow-lg transition-shadow"
-                          // disabled={!worker.available}
-                        >
-                          Book Now
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </motion.div>
           </AnimatePresence>
