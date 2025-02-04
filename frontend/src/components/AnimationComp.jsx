@@ -1,9 +1,6 @@
-// import { useTheme } from "next-themes";
-
 import { MagicCard } from "./ui/magic-card.jsx";
 import { assets } from "../assets/assets.js";
 export function MagicCardDemo() {
-  //   const { theme } = useTheme();
   return (
     <div
       className={
