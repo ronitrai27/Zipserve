@@ -5,6 +5,9 @@ import { AuroraText } from "../components/ui/aurora-text.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { assets } from "../assets/assets.js";
 import Rating from "@mui/material/Rating";
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
+import MinimumDistanceSlider from "../components/Slider.jsx";
 
 const Workers = () => {
   const [workers, setWorkers] = useState([]);
@@ -20,6 +23,7 @@ const Workers = () => {
   const [availVisible, setAvailVisible] = useState(false);
   const [availOption, setAvailOption] = useState(null);
   const [priceVisible, setPriceVisible] = useState(false);
+  const [priceRange, setPriceRange] = useState([0, 150]); // Initial min-max price
 
   const handleCheckboxChange = (value) => {
     setAvailOption(value);
@@ -43,7 +47,13 @@ const Workers = () => {
       if (availOption) {
         url += `&available=${availOption}`;
       }
-
+      if (priceRange && priceRange.length === 2) {
+        const [minprice, maxprice] = priceRange;
+        if (minprice !== null && maxprice !== null) {
+          url += `&minPrice=${minprice}&maxPrice=${maxprice}`;
+        }
+      }
+      //  dont use min max as sort will not work !! need improvments
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -60,7 +70,7 @@ const Workers = () => {
 
   useEffect(() => {
     fetchWorkers();
-  }, [category, sortOption, availOption]); // Added sortOption , category to dependency array
+  }, [category, sortOption, availOption, priceRange]); // Added sortOption , category to dependency array
 
   const handleEnlargeClick = (workerId) => {
     setEnlargedWorker(enlargedWorker === workerId ? null : workerId);
@@ -80,7 +90,7 @@ const Workers = () => {
       navigate(`/workers/${selectedCategory}`);
     }
   };
-  // required a skeleton loading ...
+
   return (
     <div className="flex-1 border-[1px] bg-stone-50 h-[90vh] rounded-t-xl pt-4 pb-2 overflow-hidden">
       <div className="parent-container relative flex flex-row justify-between gap-6 w-[95%] mx-auto">
@@ -316,11 +326,26 @@ const Workers = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="sort px-2 py-1 flex justify-between items-center hover:bg-primary transition-all hover:scale-105 hover:text-white text-gray-800 duration-200 cursor-pointer border-b-[1px] border-gray-200 ">
+                  <div
+                    onClick={() => {
+                      setPriceVisible(!priceVisible);
+                    }}
+                    className="sort px-2 py-1 flex justify-between items-center hover:bg-primary transition-all hover:scale-105 hover:text-white text-gray-800 duration-200 cursor-pointer border-b-[1px] border-gray-200 "
+                  >
                     <p className="mb-1 capitalize text-[15px] font-[400] ">
                       Price Range
                     </p>
                     <assets.MdOutlineArrowDropDown className="text-[25px] text-primary" />
+                  </div>
+                  <div className={`${priceVisible ? "block" : "hidden"} px-2`}>
+                    <p className="capitalize text-[14px] font-light mb-2">
+                      Select Price Range:
+                    </p>
+
+                    <MinimumDistanceSlider
+                      value={priceRange}
+                      setValue={setPriceRange}
+                    />
                   </div>
                 </div>
               </div>
@@ -363,6 +388,17 @@ const Workers = () => {
                   {availOption === "true" && (
                     <assets.RxCross2 className="text-black text-[16px]" />
                   )}
+                </p>
+              )}
+              {priceRange && (priceRange[0] !== 0 || priceRange[1] !== 150) && (
+                <p
+                  onClick={() => {
+                    setPriceRange([0, 150]);
+                  }}
+                  className="text-[14px] font-extralight text-gray-600 italic flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-full cursor-pointer"
+                >
+                  Range: {priceRange[0]} - {priceRange[1]}
+                  <assets.RxCross2 className="text-black text-[16px]" />
                 </p>
               )}
             </div>

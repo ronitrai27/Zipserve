@@ -12,7 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/material": "^6.4.1",
+    "@mui/material": "^6.4.3",
     "@tabler/icons-react": "^3.29.0",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",

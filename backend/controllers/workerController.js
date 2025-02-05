@@ -1,6 +1,6 @@
 const EmployeeModel = require("../models/workerModel.js");
 
-// ------------------------Controller to get all workers with filters and sorting-----------------
+// get workers by paginated
 const getAllWorkers = async (req, res) => {
   try {
     const {
@@ -24,21 +24,17 @@ const getAllWorkers = async (req, res) => {
       filter.available = true;
     }
 
-    // Apply price range filter only if both minPrice and maxPrice are provided
-    let applySorting = true;
+    // Apply price range filter if provided
     if (minPrice && maxPrice) {
       filter.price = { $gte: parseInt(minPrice), $lte: parseInt(maxPrice) };
-      applySorting = false; // Disable sorting when price filtering is applied
     }
 
-    // Build sorting options (only if sorting is allowed)
+    // Build sorting options
     let sortOptions = {};
-    if (applySorting) {
-      if (sort === "price_asc") {
-        sortOptions = { price: 1 }; // Sort by price in ascending order
-      } else if (sort === "stars_desc") {
-        sortOptions = { stars: -1 }; // Sort by stars in descending order
-      }
+    if (sort === "price_asc") {
+      sortOptions = { price: 1 }; // Sort by price in ascending order
+    } else if (sort === "stars_desc") {
+      sortOptions = { stars: -1 }; // Sort by stars in descending order
     }
 
     // Convert page and limit to numbers
@@ -46,14 +42,14 @@ const getAllWorkers = async (req, res) => {
     const limitNumber = parseInt(limit);
     const skip = (pageNumber - 1) * limitNumber;
 
-    // Fetch workers from MongoDB with applied filters, pagination, and sorting (if allowed)
-    const workers = await EmployeeModel.find(filter)
-      .sort(applySorting ? sortOptions : {}) // Apply sorting only if allowed
-      .skip(skip)
-      .limit(limitNumber);
+    // Fetch all workers first (filtering + sorting)
+    const allWorkers = await EmployeeModel.find(filter).sort(sortOptions);
+
+    // Apply pagination
+    const workers = allWorkers.slice(skip, skip + limitNumber);
 
     // Count total workers for the current filter
-    const totalWorkers = await EmployeeModel.countDocuments(filter);
+    const totalWorkers = allWorkers.length;
 
     // Return paginated response
     res.status(200).json({
@@ -61,7 +57,6 @@ const getAllWorkers = async (req, res) => {
       totalWorkers,
       totalPages: Math.ceil(totalWorkers / limitNumber),
       currentPage: pageNumber,
-      sortingApplied: applySorting, // Optional: To tell frontend whether sorting was applied
     });
   } catch (error) {
     console.error(error);
