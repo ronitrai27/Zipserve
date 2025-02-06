@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import MyLocationMap from "./MyLocation";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import WorkerCards from "./WorkerCards.jsx";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+
+import Maps from "./MyLocation";
 
 const Main = () => {
   const navigate = useNavigate();
@@ -32,28 +33,6 @@ const Main = () => {
             </h1>
             {/* Category Filter */}
             <div className="flex justify-between items-center pr-16 ">
-              {/* <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Browse</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={category}
-                  label="Browse"
-                  onChange={(e) => setCategory(e.target.value)}
-                  style={{
-                    borderRadius: "30px",
-                  }}
-                >
-                  <MenuItem value={""}>All Categories</MenuItem>
-                  <MenuItem value={"electrician"}>Electrician</MenuItem>
-                  <MenuItem value={"plumber"}>Plumber</MenuItem>
-                  <MenuItem value={"carpenter"}>Carpenter</MenuItem>
-                  <MenuItem value={"technician"}>Technician</MenuItem>
-                  <MenuItem value={"painters"}>Painters</MenuItem>
-                  <MenuItem value={"cleaner"}>Cleaner</MenuItem>
-                  <MenuItem value={"gardener"}>Gardener</MenuItem>
-                </Select>
-              </FormControl> */}
               <StyledWrapper>
                 <div className="menu">
                   <div className="item">
@@ -202,11 +181,14 @@ const Main = () => {
           </div>
         </div>
         {/* --------------------------MAP area -------------------------- */}
-        <div className="map-div w-[65%] h-[calc(100vh-7rem)] z-10 bg-white p-2 rounded-lg relative">
-          <div className="w-full h-full rounded-xl overflow-hidden ">
-            <MyLocationMap />
+        <div className="map-div w-[64%] h-[calc(100vh-7rem)] z-10 bg-white p-2 rounded-lg relative">
+          <div className="w-full rounded-xl overflow-hidden relative ">
+            <Maps />
+            {/* booking progress bar */}
+            {/* <div className=""></div> */}
+            {/* bookings------ */}
+            <div className="absolute"></div>
           </div>
-          {/* <div className="absolute bottom-10 left-0 w-20 h-16 bg-white rounded-lg shadow-lg z-50"></div> */}
         </div>
       </div>
     </div>

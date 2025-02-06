@@ -1,21 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import L from "leaflet";
-import { assets } from "../assets/assets";
+// AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ
 
-const MyLocationMap = () => {
+//-------------------------------------------------------------------
+
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  GoogleMap,
+  useLoadScript,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
+import sideUserLogo from "../assets/boy.png";
+import { WorkersContext } from "../context/WorkerContext";
+
+const mapContainerStyle = {
+  width: "100%",
+  height: "645px",
+};
+
+const center = {
+  lat: 0, // Default center
+  lng: 0,
+};
+
+function Maps() {
+  const { workersLocations } = useContext(WorkersContext);
+  const navigate = useNavigate();
   const [currentPosition, setCurrentPosition] = useState(null);
+  const [showInfo, setShowInfo] = useState(false);
 
-  // Custom animated marker using divIcon
-  const customIcon = new L.divIcon({
-    className: "custom-marker", // Use a custom class for styling
-    html: `
-      <div class="relative animate-pulse transition-all duration-1000">
-        <img src="${assets.sideUserLogo}" alt="Location" class="w-10 h-10 bg-blue-400 rounded-full border-2 border-blue-500 shadow-md" />
-      </div>
-    `,
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: "AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ",
   });
 
   useEffect(() => {
@@ -23,57 +39,91 @@ const MyLocationMap = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setCurrentPosition([latitude, longitude]);
+          setCurrentPosition({
+            lat: latitude,
+            lng: longitude,
+          });
         },
-        (error) => {
-          console.error("Error fetching location:", error);
-          alert(
-            "Unable to fetch your location. Please enable location services."
-          );
+        () => {
+          console.error("Error fetching geolocation");
         }
       );
-    } else {
-      alert("Geolocation is not supported by your browser.");
     }
   }, []);
 
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return null;
+
   return (
-    <div style={{ height: "100%", width: "100%" }}>
-      {currentPosition ? (
-        <MapContainer
-          center={currentPosition}
-          zoom={12}
-          style={{ height: "100%", width: "100%" }}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    <div className="flex justify-center items-center">
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        zoom={13}
+        center={currentPosition || center}
+        options={{
+          disableDefaultUI: true,
+          zoomControl: false,
+          streetViewControl: false,
+          mapTypeControl: true,
+          fullscreenControl: false,
+        }}
+      >
+        {currentPosition && (
+          <>
+            <Marker
+              position={currentPosition}
+              icon={{
+                url: sideUserLogo,
+                scaledSize: window.google
+                  ? new window.google.maps.Size(35, 35)
+                  : undefined, // Prevents crash
+              }}
+              onClick={() => setShowInfo(true)}
+            />
+            {showInfo && (
+              <InfoWindow
+                position={{
+                  lat: currentPosition.lat + 0.0002, // Adjust this value to move the InfoWindow higher
+                  lng: currentPosition.lng,
+                }}
+                onCloseClick={() => setShowInfo(false)}
+              >
+                <motion.div
+                  className="font-outfit  overflow-hidden px-2"
+                  style={{
+                    width: "90px",
+                    height: "50px",
+                  }}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                >
+                  <p className="text-[15px] font-[400] mb-2 animate-pulse transition-all duration-700">
+                    I am here
+                  </p>
+                  <motion.p
+                    onClick={() => navigate("/my-profile")}
+                    className="capitalize text-[14px] font-light text-blue-500 cursor-pointer hover:text-gray-800 hover:scale-105 transition-all"
+                  >
+                    Profile
+                  </motion.p>
+                </motion.div>
+              </InfoWindow>
+            )}
+          </>
+        )}
+
+        {workersLocations.map((worker) => (
+          <Marker
+            key={worker.id}
+            position={{ lat: worker.lat, lng: worker.lng }}
+            title={worker.name}
           />
-          <Marker position={currentPosition} icon={customIcon}>
-            <Popup>You are here!</Popup>
-          </Marker>
-          <RecenterMap currentPosition={currentPosition} />
-        </MapContainer>
-      ) : (
-        <p className="text-center text-neutral-600 animate-pulse transition-all duration-300">
-          Loading...
-        </p>
-      )}
+        ))}
+      </GoogleMap>
     </div>
   );
-};
+}
 
-// Custom hook to recenter the map when the location changes
-const RecenterMap = ({ currentPosition }) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (currentPosition) {
-      map.setView(currentPosition, 15); // Recenter to the current position with a zoom level of 16
-    }
-  }, [currentPosition, map]);
-
-  return null;
-};
-
-export default MyLocationMap;
+export default Maps;

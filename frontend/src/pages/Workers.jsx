@@ -5,9 +5,8 @@ import { AuroraText } from "../components/ui/aurora-text.jsx";
 import { motion, AnimatePresence } from "framer-motion";
 import { assets } from "../assets/assets.js";
 import Rating from "@mui/material/Rating";
-import Box from "@mui/material/Box";
-import Slider from "@mui/material/Slider";
 import MinimumDistanceSlider from "../components/Slider.jsx";
+// import { useSearchParams } from "react-router-dom";
 
 const Workers = () => {
   const [workers, setWorkers] = useState([]);

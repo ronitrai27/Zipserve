@@ -1,32 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { assets } from "../assets/assets";
 import Rating from "@mui/material/Rating";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
+import { WorkersContext } from "../context/WorkerContext";
+import { getGeolocation } from "../utils/Geolocation";
 
-const Testing2 = ({ category, sortOption }) => {
-  const { workers, filteredWorkers: contextFilteredWorkers } = useAppContext();
+const WorkerCards = ({ category, sortOption }) => {
+  const { workers } = useAppContext();
   const [filteredWorkers, setFilteredWorkers] = useState([]);
-
+  const { workersLocations, setWorkersLocations } = useContext(WorkersContext);
   const navigate = useNavigate();
-
-  // Initialize filtered workers from context
-  useEffect(() => {
-    setFilteredWorkers(contextFilteredWorkers);
-  }, [contextFilteredWorkers]);
 
   // Filtering and sorting workers
   useEffect(() => {
     let result = [...workers];
 
-    // Apply category filter
     if (category) {
       result = result.filter(
         (worker) => worker.category.toLowerCase() === category.toLowerCase()
       );
     }
 
-    // Apply sorting
     if (sortOption) {
       result.sort((a, b) => {
         switch (sortOption) {
@@ -43,11 +38,61 @@ const Testing2 = ({ category, sortOption }) => {
     setFilteredWorkers(result);
   }, [category, sortOption, workers]);
 
+  // Fetch geolocation whenever filteredWorkers change
+  useEffect(() => {
+    if (!filteredWorkers.length) {
+      setWorkersLocations([]); // Clear map markers if no workers found
+      return;
+    }
+
+    const fetchGeolocations = async () => {
+      console.log("Fetching geolocation for:", filteredWorkers);
+      const locations = [];
+
+      for (const worker of filteredWorkers) {
+        // Check if the geolocation is already cached in localStorage
+        const cachedLocation = localStorage.getItem(`worker_${worker._id}`);
+        if (cachedLocation) {
+          locations.push({
+            id: worker._id,
+            name: worker.name,
+            category: worker.category,
+            ...JSON.parse(cachedLocation), // Use cached location
+          });
+          continue; // Skip fetching if the location is cached
+        }
+
+        // Filter workers that are available
+        if (worker.available) {
+          const geolocation = await getGeolocation(worker.address);
+          if (geolocation) {
+            // Store the fetched geolocation in localStorage
+            localStorage.setItem(
+              `worker_${worker._id}`,
+              JSON.stringify(geolocation)
+            );
+            locations.push({
+              id: worker._id,
+              name: worker.name,
+              category: worker.category,
+              ...geolocation,
+            });
+          }
+        }
+      }
+
+      setWorkersLocations(locations);
+    };
+
+    fetchGeolocations();
+  }, [filteredWorkers, setWorkersLocations]);
+
+  //-----------------------------------------
+
   return (
     <div className="worker-box flex flex-col gap-4 px-3 font-inter">
       {!filteredWorkers.length
-        ? // Skeleton loading animation
-          [...Array(3)].map((_, index) => (
+        ? [...Array(3)].map((_, index) => (
             <div
               key={index}
               className="worker-card bg-gray-50 border-[1px] border-gray-200 rounded-lg px-3 py-2 "
@@ -148,4 +193,4 @@ to-blue-50 border-[1px] border-gray-200 hover:shadow-lg  hover:border-primary/20
   );
 };
 
-export default Testing2;
+export default WorkerCards;

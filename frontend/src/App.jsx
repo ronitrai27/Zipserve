@@ -103,15 +103,12 @@ const App = () => {
               <Route path="/bookings" element={<Bookings />} />
               <Route path="/booking/:id" element={<MyBooking />} />
               <Route path="/bookinghistory" element={<BookingHistory />} />
-              {/* Add a route for NotFound */}
               <Route path="/404" element={<NotFound />} />
-              {/* Redirect any undefined paths to /404 */}
               <Route path="*" element={<Navigate to="/404" />} />
             </Routes>
           </Suspense>
         </div>
 
-        {/* Conditionally render LeftBar */}
         {shouldShowLeftBar && <LeftBar />}
       </div>
     </div>

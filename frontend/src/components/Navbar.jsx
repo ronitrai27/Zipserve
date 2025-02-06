@@ -42,15 +42,7 @@ const Navbar = () => {
       {/* ---------right part--------- */}
       <div className="flex items-center gap-6 font-inter">
         {/* Input Field -----*/}
-        {/* <div className=" relative rounded-full overflow-hidden border-[1px] border-gray-200 ">
-          <input
-            type="text"
-            // placeholder={placeholder}
-            placeholder="find services..."
-            className="w-[22rem] px-5 py-3 focus:shadow-md focus:outline-none bg-stone-100 text-gray-800 text-sm font-light"
-          />
-          <BorderBeam size={300} duration={18} delay={12} />
-        </div> */}
+
         <div>
           <ServiceSearch />
           {/* <BorderBeam size={300} duration={18} delay={12} /> */}
