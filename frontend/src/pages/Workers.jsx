@@ -157,10 +157,9 @@ const Workers = () => {
             </p>
           </div>
           {/* AD */}
-          <div className="relative bg-gradient-to-br from-primary via-primaryLight to-blue-500 px-4 py-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer">
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/30 via-transparent to-primary/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
 
-            <p className="text-xl font-light text-white/90 whitespace-nowrap text-[min(5vw,1.25rem)] mb-2">
+          <div className=" bg-gradient-to-br from-primary via-primaryLight to-blue-500 px-4 py-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300  cursor-pointer">
+            <p className="text-xl font-light text-white/90 whitespace-nowrap text-[min(5vw,1.25rem)] mb-2 ">
               Payments?
             </p>
 
@@ -178,9 +177,6 @@ const Workers = () => {
                 alt="Digital Wallet"
               />
             </div>
-
-            <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-primary/20 transition-all duration-300"></div>
-            <div className="absolute -top-12 -left-12 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-400/20 transition-all duration-300"></div>
           </div>
         </div>
         {/* RIGHT SIDE -> WORKERS ------------------------------------*/}

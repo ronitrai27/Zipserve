@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import MyLocationMap from "./MyLocation";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 import WorkerCards from "./WorkerCards.jsx";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
 import Maps from "./MyLocation";
+import Chatbot from "../chatbot/chatbot.jsx";
+import {
+  LuCalendarSearch,
+  LuCalendar,
+  LuCircleFadingPlus,
+} from "react-icons/lu";
 
 const Main = () => {
   const navigate = useNavigate();
@@ -184,10 +188,38 @@ const Main = () => {
         <div className="map-div w-[64%] h-[calc(100vh-7rem)] z-10 bg-white p-2 rounded-lg relative">
           <div className="w-full rounded-xl overflow-hidden relative ">
             <Maps />
-            {/* booking progress bar */}
-            {/* <div className=""></div> */}
+
             {/* bookings------ */}
-            <div className="absolute"></div>
+
+            <div className="absolute bottom-3 left-3 bg-white text-gray-800 font-inter  opacity-80 hover:opacity-100 shadow-xl rounded-lg px-4 w-[56%] py-2">
+              <div className=" flex items-center justify-between px-3">
+                <p className="text-[18px] font-[400] tracking-tight ">
+                  Current Bookings
+                </p>
+                <LuCalendar className="text-3xl text-primary " />
+              </div>
+              <hr className="text-gray-300 border-b-[.8px] my-3" />
+
+              <div className="flex flex-col px-6 items-center gap-2">
+                <LuCalendarSearch className="text-2xl text-primary " />
+                <p className="text-[16px] font-[400] tracking-wide">
+                  No Bookings Found
+                </p>
+                <p className=" capitalize text-[14px] font-light text-gray-600 text-center leading-5 tracking-tight">
+                  Your calender is lookig empty. <br /> ready to fill it with
+                  amazing experiences.
+                </p>
+                <div className="w-fit bg-primary px-2 py-2 rounded-full shadow-md flex items-center gap-2 cursor-pointer hover:scale-105 transition-all duration-200 hover:bg-blue-700 mt-2">
+                  <LuCircleFadingPlus className="text-[18px] text-white" />
+                  <button className="tracking-tight text-[15px] text-white font-medium">
+                    Book Now
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* chatbot------------ */}
+            <Chatbot />
           </div>
         </div>
       </div>

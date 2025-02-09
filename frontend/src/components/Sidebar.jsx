@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
+import { Context } from "../context/Context";
+
 const Sidebar = () => {
+  const { setOpened } = useContext(Context);
   const [expended, setExpended] = useState(true);
   const handleSidebar = () => {
     setExpended(!expended);
@@ -301,7 +304,7 @@ const Sidebar = () => {
               />
               {/* Tooltip */}
               {!expended && (
-                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
+                <p className="absolute z-[9999] left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
                   Settings
                 </p>
               )}
@@ -329,7 +332,7 @@ const Sidebar = () => {
               />
               {/* Tooltip */}
               {!expended && (
-                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
+                <p className="absolute z-[60] left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
                   Profile
                 </p>
               )}
@@ -345,6 +348,10 @@ const Sidebar = () => {
             </div>
             {/* 8 ---------------HELP----------------- */}
             <div
+              onClick={() => {
+                setOpened(true);
+                navigate("/");
+              }}
               className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all ease-in-out duration-200 hover:text-gray-700`}
             >
               <assets.RiChatAiLine

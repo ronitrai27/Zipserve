@@ -1,23 +1,22 @@
 const express = require("express");
-const cors = require("cors"); // Import cors
-// const bodyParser = require("body-parser"); // not required as express has built in
+const cors = require("cors");
 require("dotenv").config();
 const app = express();
-require("./models/db"); // Database connection file
+require("./models/db");
+
 app.use(cors());
-// Import routes
 const workerRoutes = require("./routes/workersRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
 
 // Middleware for parsing JSON
 app.use(express.json());
 
-// Use routes
-app.use("/api", workerRoutes); // Prefix routes with /api
+// Use routes----------------------------
+app.use("/api", workerRoutes);
 app.use("/api", serviceRoutes);
 
 app.use((err, req, res, next) => {
-  console.error(err.stack); // Log error stack for debugging
+  console.error(err.stack);
   res.status(500).json({
     message: "Something went wrong! -- server.js",
     error: err.message,

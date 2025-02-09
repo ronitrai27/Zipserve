@@ -1,10 +1,7 @@
-// AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ
-
-//-------------------------------------------------------------------
-
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import styled from "styled-components";
 import {
   GoogleMap,
   useLoadScript,
@@ -13,6 +10,7 @@ import {
 } from "@react-google-maps/api";
 import sideUserLogo from "../assets/boy.png";
 import { WorkersContext } from "../context/WorkerContext";
+import { useAppContext } from "../context/AppContext";
 
 const mapContainerStyle = {
   width: "100%",
@@ -20,14 +18,392 @@ const mapContainerStyle = {
 };
 
 const center = {
-  lat: 0, // Default center
+  lat: 0,
   lng: 0,
 };
 
+//Json style
+const lightStyle = [
+  {
+    featureType: "administrative",
+    elementType: "geometry",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.neighborhood",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+];
+
+//------------------
+const mapStyle = [
+  {
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#8ec3b9",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1a3646",
+      },
+    ],
+  },
+  {
+    featureType: "administrative",
+    elementType: "geometry",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.country",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#4b6878",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.land_parcel",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#64779e",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.neighborhood",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.province",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#4b6878",
+      },
+    ],
+  },
+  {
+    featureType: "landscape.man_made",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#334e87",
+      },
+    ],
+  },
+  {
+    featureType: "landscape.natural",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#283d6a",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#6f9ba5",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#3C7680",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#304a7d",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#98a5be",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#2c6675",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry.stroke",
+    stylers: [
+      {
+        color: "#255763",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#b0d5ce",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#023e58",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#98a5be",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#1d2c4d",
+      },
+    ],
+  },
+  {
+    featureType: "transit.line",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#283d6a",
+      },
+    ],
+  },
+  {
+    featureType: "transit.station",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#3a4762",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#0e1626",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#4e6d70",
+      },
+    ],
+  },
+];
 function Maps() {
+  const { theme } = useAppContext();
   const { workersLocations } = useContext(WorkersContext);
   const navigate = useNavigate();
   const [currentPosition, setCurrentPosition] = useState(null);
+  const [selectedWorker, setSelectedWorker] = useState(null);
   const [showInfo, setShowInfo] = useState(false);
 
   const { isLoaded, loadError } = useLoadScript({
@@ -52,7 +428,10 @@ function Maps() {
   }, []);
 
   if (loadError) return <div>Error loading maps</div>;
-  if (!isLoaded) return null;
+  if (!isLoaded)
+    return (
+      <div className="bg-primaryLight w-full h-full animate-pulse transition-all duration-300"></div>
+    );
 
   return (
     <div className="flex justify-center items-center">
@@ -64,8 +443,9 @@ function Maps() {
           disableDefaultUI: true,
           zoomControl: false,
           streetViewControl: false,
-          mapTypeControl: true,
+          mapTypeControl: false,
           fullscreenControl: false,
+          styles: theme ? lightStyle : mapStyle,
         }}
       >
         {currentPosition && (
@@ -92,14 +472,14 @@ function Maps() {
                   className="font-outfit  overflow-hidden px-2"
                   style={{
                     width: "90px",
-                    height: "50px",
+                    height: "48px",
                   }}
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 >
-                  <p className="text-[15px] font-[400] mb-2 animate-pulse transition-all duration-700">
+                  <p className="text-[15px] font-[400] mb-1 animate-pulse transition-all duration-700">
                     I am here
                   </p>
                   <motion.p
@@ -119,8 +499,53 @@ function Maps() {
             key={worker.id}
             position={{ lat: worker.lat, lng: worker.lng }}
             title={worker.name}
+            onClick={() => setSelectedWorker(worker)}
           />
         ))}
+
+        {selectedWorker && (
+          <InfoWindow
+            position={{
+              lat: selectedWorker.lat + 0.0002,
+              lng: selectedWorker.lng,
+            }}
+            onCloseClick={() => setSelectedWorker(null)}
+          >
+            <motion.div
+              className="font-outfit  overflow-hidden px-2"
+              style={{
+                width: "180px",
+                height: "80px",
+              }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              <div className="flex items-center justify-between  ">
+                <img
+                  src={selectedWorker.image}
+                  alt=""
+                  className="w-12 h-12 rounded-full border-[1px] border-primary self-start object-cover"
+                />
+                <div className="flex flex-col items-center justify-between mb-2">
+                  <p className="text-[15px] font-[400] mb-1 tracking-tight capitalize">
+                    {selectedWorker.name}
+                  </p>
+                  <p className="text-[14px] font-[400] text-primaryLight italic">
+                    {selectedWorker.category}
+                  </p>
+                </div>
+              </div>
+              <motion.p
+                onClick={() => navigate(`/booking/${selectedWorker.id}`)}
+                className="capitalize flex justify-end text-[16px]  bg-primary px-3 py-1 text-white w-fit ml-auto rounded-full hover:bg-blue-900 cursor-pointer"
+              >
+                Book
+              </motion.p>
+            </motion.div>
+          </InfoWindow>
+        )}
       </GoogleMap>
     </div>
   );
