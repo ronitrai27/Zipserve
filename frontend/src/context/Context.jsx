@@ -1,6 +1,6 @@
 import { createContext, useState } from "react";
 import run from "../utils/gemini";
-
+import { companyInfo } from "../utils/CompanyInfo";
 export const Context = createContext();
 
 const ContextProvider = (props) => {
@@ -19,15 +19,16 @@ const ContextProvider = (props) => {
   };
 
   const onSent = async (prompt) => {
+    const fullPrompt = `${companyInfo}\n\nUser: ${input}\n\nPlease respond based on the provided company information and solve the user's query.`;
     setresultdata("");
     setloading(true);
     setshowresult(true);
     setrecentprompt(input);
-    const responsevariable = await run(input); // calling gemini
+    const responsevariable = await run(fullPrompt); // calling gemini
     let responseArray = responsevariable.split("**");
     let newResponse = "";
     for (let i = 0; i < responseArray.length; i++) {
-      if (1 === 0 || i % 2 !== 1) {
+      if (i === 0 || i % 2 !== 1) {
         newResponse += responseArray[i];
       } else {
         newResponse += "<b>" + responseArray[i] + "</b>";

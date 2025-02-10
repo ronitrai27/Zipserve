@@ -1,4 +1,3 @@
-// --lazy loading ---------------___________________________________________________
 import React, { useState, useEffect, useMemo, Suspense, lazy } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useAppContext } from "./context/AppContext";
@@ -42,14 +41,11 @@ const App = () => {
 
   const themeClass = theme ? "bg-white" : "bg-slate-900";
 
-  // State to track if all lazy components are loaded
   const [isAppReady, setIsAppReady] = useState(false);
 
   useEffect(() => {
-    // Preload all lazy components
     const preloadComponents = async () => {
       try {
-        // List all lazy components to preload
         const components = [
           import("./pages/Home"),
           import("./pages/Bookings"),
@@ -63,9 +59,8 @@ const App = () => {
           import("./pages/NotFound"),
         ];
 
-        // Wait for all components to load
         await Promise.all(components);
-        setIsAppReady(true); // Mark app as ready
+        setIsAppReady(true);
       } catch (error) {
         console.error("Failed to preload components:", error);
       }
@@ -74,7 +69,6 @@ const App = () => {
     preloadComponents();
   }, []);
 
-  // Show loader until all components are ready
   if (!isAppReady) {
     return <Loader />;
   }
@@ -83,11 +77,9 @@ const App = () => {
     <div
       className={`w-full select-none fixed h-full flex flex-col ${themeClass}`}
     >
-      {/* Conditionally render Navbar based on route */}
       {shouldShowNavbar && <Navbar />}
 
       <div className="flex flex-1">
-        {/* Conditionally render Sidebar */}
         {shouldShowSidebar && <Sidebar />}
 
         <div className="flex-1">
