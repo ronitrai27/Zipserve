@@ -32,9 +32,9 @@ const LeftBar = () => {
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
             <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
-          <span className="absolute z-50 top-0 right-full mr-2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          {/* <span className="absolute z-50 top-0 right-full mr-2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
             Home
-          </span>
+          </span> */}
         </button>
 
         {/* ------------------------------button2--------------------------- */}
@@ -47,9 +47,9 @@ const LeftBar = () => {
           }transition-all hover:-translate-x-2 hover:scale-110 ease-linear duration-300 z-50 `}
         >
           <assets.GoInfo />
-          <span className="absolute z-50 top-0 right-full mr-2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          {/* <span className="absolute z-50 top-0 right-full mr-2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
             About us
-          </span>
+          </span> */}
         </button>
 
         {/* ------------------------------------button4-------------------------------- */}
@@ -61,9 +61,9 @@ const LeftBar = () => {
           }transition-all hover:-translate-x-2 hover:scale-110 ease-linear duration-300 z-50 `}
         >
           <assets.BsWallet2 />
-          <span className="absolute z-50 top-0 right-full mr-2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          {/* <span className="absolute z-50 top-0 right-full mr-2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
             Wallet
-          </span>
+          </span> */}
         </button>
       </div>
     </div>

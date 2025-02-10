@@ -94,7 +94,6 @@ const lightStyle = [
     ],
   },
 ];
-
 //------------------
 const mapStyle = [
   {
@@ -398,6 +397,301 @@ const mapStyle = [
     ],
   },
 ];
+const greyStyle = [
+  {
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#f5f5f5",
+      },
+    ],
+  },
+  {
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#ffffff",
+      },
+    ],
+  },
+  {
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#616161",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.stroke",
+    stylers: [
+      {
+        color: "#f5f5f5",
+      },
+    ],
+  },
+  {
+    featureType: "administrative",
+    elementType: "geometry",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.land_parcel",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.land_parcel",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#bdbdbd",
+      },
+    ],
+  },
+  {
+    featureType: "administrative.neighborhood",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#eeeeee",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "poi",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#757575",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#e5e5e5",
+      },
+    ],
+  },
+  {
+    featureType: "poi.park",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#9e9e9e",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#ffffff",
+      },
+      {
+        weight: 2,
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#d6d6d6",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road",
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road.arterial",
+    elementType: "labels",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road.arterial",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#757575",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#dadada",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#616161",
+      },
+    ],
+  },
+  {
+    featureType: "road.local",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "road.local",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#9e9e9e",
+      },
+    ],
+  },
+  {
+    featureType: "transit",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "transit.line",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#e5e5e5",
+      },
+    ],
+  },
+  {
+    featureType: "transit.station",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#eeeeee",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry",
+    stylers: [
+      {
+        color: "#c9c9c9",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#567ac2",
+      },
+      {
+        weight: 1.5,
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        color: "#9e9e9e",
+      },
+    ],
+  },
+];
 function Maps() {
   const { theme } = useAppContext();
   const { workersLocations } = useContext(WorkersContext);
@@ -512,28 +806,51 @@ function Maps() {
             onCloseClick={() => setSelectedWorker(null)}
           >
             <motion.div
-              className="font-outfit  overflow-hidden px-2"
+              className="font-inter  overflow-hidden px-1 bg-gray-50 rounded-lg"
               style={{
-                width: "180px",
-                height: "80px",
+                width: "240px",
+                height: "130px",
               }}
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              <div className="flex items-center justify-between  ">
+              <div className="flex items-center justify-between px-6 ">
+                <img
+                  src={selectedWorker.image}
+                  alt=""
+                  className="w-12 h-12 rounded-full border-[1px] border-primary self-start object-cover"
+                />{" "}
+                <p className="text-[16px] font-medium mb-1 tracking-tight capitalize">
+                  {selectedWorker.name}
+                </p>
+              </div>
+              <hr className="border-b-[.3px] border-gray-300 w-[70%] mx-auto my-2" />
+              <p className="text-[14px] font-[400] text-gray-800 text-center">
+                Category: {selectedWorker.category}
+              </p>
+              <div className="flex items-center justify-evenly mt-2">
+                <p className="text-[14px] font-[400] text-gray-800 ">
+                  Price: {selectedWorker.price}
+                </p>
+                <button className="bg-primary text-white font-medium text-[16px] animate-pulse transition-all duration-1000 px-3 py-2 rounded-full hover:bg-blue-700 hover:animate-none">
+                  Book
+                </button>
+              </div>
+
+              {/* <div className="flex items-center justify-between  ">
                 <img
                   src={selectedWorker.image}
                   alt=""
                   className="w-12 h-12 rounded-full border-[1px] border-primary self-start object-cover"
                 />
                 <div className="flex flex-col items-center justify-between mb-2">
-                  <p className="text-[15px] font-[400] mb-1 tracking-tight capitalize">
+                  <p className="text-[16px] font-medium mb-1 tracking-tight capitalize">
                     {selectedWorker.name}
                   </p>
                   <p className="text-[14px] font-[400] text-primaryLight italic">
-                    {selectedWorker.category}
+                    Category: {selectedWorker.category}
                   </p>
                 </div>
               </div>
@@ -542,7 +859,7 @@ function Maps() {
                 className="capitalize flex justify-end text-[16px]  bg-primary px-3 py-1 text-white w-fit ml-auto rounded-full hover:bg-blue-900 cursor-pointer"
               >
                 Book
-              </motion.p>
+              </motion.p> */}
             </motion.div>
           </InfoWindow>
         )}

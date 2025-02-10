@@ -58,6 +58,8 @@ const WorkerCards = ({ category, sortOption }) => {
             name: worker.name,
             category: worker.category,
             image: worker.profileImage,
+            price: worker.price,
+            star: worker.stars,
             ...JSON.parse(cachedLocation), // Use cached location
           });
           continue; // Skip fetching if the location is cached
@@ -77,6 +79,8 @@ const WorkerCards = ({ category, sortOption }) => {
               name: worker.name,
               category: worker.category,
               image: worker.profileImage,
+              price: worker.price,
+              star: worker.stars,
               ...geolocation,
             });
           }
