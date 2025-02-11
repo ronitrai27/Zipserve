@@ -178,9 +178,9 @@ const Main = () => {
           <div className="w-full py-2 text-center">
             <button
               onClick={() => navigate("/workers")}
-              className="px-6 py-1 text-[16px] border-[1px] border-gray-200 rounded-lg font-medium hover:scale-110  text-primary hover:bg-primaryLight hover:text-white transition-all duration-700"
+              className="text-[16px] font-medium text-gray-800  px-5 py-1 rounded-full tracking-wide font-inter border-[1px] hover:text-white hover:bg-primary transition-colors duration-300 "
             >
-              More...
+              More
             </button>
           </div>
         </div>

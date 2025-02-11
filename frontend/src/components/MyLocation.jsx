@@ -9,7 +9,7 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import sideUserLogo from "../assets/boy.png";
-import { WorkersContext } from "../context/WorkerContext";
+import { LocationContext } from "../context/LocationContext";
 import { useAppContext } from "../context/AppContext";
 
 const mapContainerStyle = {
@@ -694,7 +694,7 @@ const greyStyle = [
 ];
 function Maps() {
   const { theme } = useAppContext();
-  const { workersLocations } = useContext(WorkersContext);
+  const { workersLocations } = useContext(LocationContext);
   const navigate = useNavigate();
   const [currentPosition, setCurrentPosition] = useState(null);
   const [selectedWorker, setSelectedWorker] = useState(null);
@@ -719,6 +719,7 @@ function Maps() {
         }
       );
     }
+    // console.log("my position:", currentPosition); holding my current position.
   }, []);
 
   if (loadError) return <div>Error loading maps</div>;
@@ -731,7 +732,7 @@ function Maps() {
     <div className="flex justify-center items-center">
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
-        zoom={13}
+        zoom={14}
         center={currentPosition || center}
         options={{
           disableDefaultUI: true,
@@ -750,14 +751,14 @@ function Maps() {
                 url: sideUserLogo,
                 scaledSize: window.google
                   ? new window.google.maps.Size(35, 35)
-                  : undefined, // Prevents crash
+                  : undefined,
               }}
               onClick={() => setShowInfo(true)}
             />
             {showInfo && (
               <InfoWindow
                 position={{
-                  lat: currentPosition.lat + 0.0002, // Adjust this value to move the InfoWindow higher
+                  lat: currentPosition.lat + 0.0002,
                   lng: currentPosition.lng,
                 }}
                 onCloseClick={() => setShowInfo(false)}

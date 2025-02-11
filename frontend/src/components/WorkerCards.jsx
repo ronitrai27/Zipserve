@@ -3,13 +3,13 @@ import { assets } from "../assets/assets";
 import Rating from "@mui/material/Rating";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
-import { WorkersContext } from "../context/WorkerContext";
+import { LocationContext } from "../context/LocationContext";
 import { getGeolocation } from "../utils/Geolocation";
 
 const WorkerCards = ({ category, sortOption }) => {
   const { workers } = useAppContext();
   const [filteredWorkers, setFilteredWorkers] = useState([]);
-  const { workersLocations, setWorkersLocations } = useContext(WorkersContext);
+  const { workersLocations, setWorkersLocations } = useContext(LocationContext);
   const navigate = useNavigate();
 
   // Filtering and sorting workers
