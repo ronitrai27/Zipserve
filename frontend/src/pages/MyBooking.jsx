@@ -4,7 +4,7 @@ import { assets } from "../assets/assets";
 import RelatedWorkers from "../components/RelatedWorkers";
 import { useAppContext } from "../context/AppContext";
 import Rating from "@mui/material/Rating";
-
+import { LuPenLine } from "react-icons/lu";
 const NewMyBooking = () => {
   const { id } = useParams(); // storing _id of selected worker
   const [workerInfo, setWorkerInfo] = useState(null); // Stores information about the currently selected worker
@@ -54,6 +54,7 @@ const NewMyBooking = () => {
           throw new Error("Invalid response format - expected array");
         }
         setReviews(data);
+        console.log(data);
       } catch (error) {
         console.error("Error fetching reviews:", error.message);
         setReviews([]); // Set empty array on error
@@ -203,41 +204,54 @@ const NewMyBooking = () => {
                 </div>
 
                 <div className="flex flex-col gap-4 w-full h-[300px] overflow-y-auto font-outfit">
-                  {reviews
-                    ?.sort((a, b) => {
-                      if (sortOrder === "newest") {
-                        return new Date(b.createdAt) - new Date(a.createdAt);
-                      } else {
-                        return new Date(a.createdAt) - new Date(b.createdAt);
-                      }
-                    })
-                    .slice(0, visibleReviews)
-                    .map((review, index) => (
-                      <div
-                        key={review._id || index}
-                        className=" border-b-[1px] rounded-md px-4 py-2 w-[90%] mx-auto bg-gray-50/40"
-                      >
-                        <div className="flex justify-between items-center mb-1">
-                          <h3 className="font-medium text-[14px] text-gray-800 font-inter capitalize">
-                            {review.customerName}
-                          </h3>
-                          <span className="text-sm text-gray-500">
-                            {new Date(review.createdAt).toLocaleDateString()}
-                          </span>
+                  {reviews && reviews.length > 0 ? (
+                    reviews
+                      ?.sort((a, b) => {
+                        if (sortOrder === "newest") {
+                          return new Date(b.createdAt) - new Date(a.createdAt);
+                        } else {
+                          return new Date(a.createdAt) - new Date(b.createdAt);
+                        }
+                      })
+                      .slice(0, visibleReviews)
+                      .map((review, index) => (
+                        <div
+                          key={review._id || index}
+                          className="border-b-[1px] rounded-md px-4 py-2 w-[90%] mx-auto bg-gray-50/40"
+                        >
+                          <div className="flex justify-between items-center mb-1">
+                            <h3 className="font-medium text-[14px] text-gray-800 font-inter capitalize">
+                              {review.customerName}
+                            </h3>
+                            <span className="text-sm text-gray-500">
+                              {new Date(review.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                          <p className="text-[14px] text-gray-600 font-light break-words max-w-full overflow-hidden">
+                            {review.comment}
+                          </p>
                         </div>
-                        <p className="text-[14px] text-gray-600 font-light break-words max-w-full overflow-hidden">
-                          {review.comment}
-                        </p>
-                      </div>
-                    ))}
-                  {reviews && visibleReviews < reviews.length && (
-                    <button
-                      onClick={() => setVisibleReviews((prev) => prev + 4)}
-                      className="bg-gray-100 text-gray-800 px-2 py-1 hover:bg-gray-200 rounded-md  transition-colors w-fit mx-auto"
-                    >
-                      Load More
-                    </button>
+                      ))
+                  ) : (
+                    // Show message when there are no reviews
+                    <div className="">
+                      <p className=" text-gray-500 text-lg italic flex items-center gap-2 justify-center mt-6 capitalize font-outfit">
+                        <LuPenLine className="text-2xl" /> Be the first to book
+                        and provide a review!
+                      </p>
+                    </div>
                   )}
+
+                  {reviews &&
+                    reviews.length > 0 &&
+                    visibleReviews < reviews.length && (
+                      <button
+                        onClick={() => setVisibleReviews((prev) => prev + 4)}
+                        className="bg-primary text-white px-2 py-1 hover:bg-blue-700 rounded-lg shadow-lg transition-all w-fit mx-auto hover:scale-105 duration-200"
+                      >
+                        Load More
+                      </button>
+                    )}
                 </div>
               </div>
             </div>

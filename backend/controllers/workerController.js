@@ -1,6 +1,8 @@
 const EmployeeModel = require("../models/workerModel.js");
-
-// get workers by paginated
+require("dotenv").config();
+const axios = require("axios");
+const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+// get workers by paginated--------------------------------------------------
 const getAllWorkers = async (req, res) => {
   try {
     const {
@@ -64,20 +66,64 @@ const getAllWorkers = async (req, res) => {
   }
 };
 
-// ------------------------ Controller to Get All Workers (No Pagination) -----------------
+// ------------------------ Controller to Get All Workers (No Pagination) (NEARBY 6KM) -----------------
 const getAllWorkersNoPage = async (req, res) => {
   try {
-    const workers = await EmployeeModel.find(); // No pagination, returns all workers
-    res.status(200).json({ workers });
+    const { latitude, longitude } = req.query; // Get user location from query params
+    // console.log("Received Query Params:", { latitude, longitude }); // debugging logs-----
+
+    if (!latitude || !longitude) {
+      return res
+        .status(400)
+        .json({ message: "Latitude and longitude are required" });
+    }
+
+    const userLocation = [parseFloat(longitude), parseFloat(latitude)];
+
+    const workers = await EmployeeModel.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: userLocation,
+          },
+          $maxDistance: 6000, //6km----------------
+        },
+      },
+    });
+
+    res.status(200).json({ count: workers.length, workers });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching all workers" });
+    console.error("Error fetching nearby workers:", error);
+    res.status(500).json({ message: "Error fetching nearby workers" });
   }
 };
 
 // ------------------------Controller to create a new worker-----------------------------
+const getGeolocation = async (address) => {
+  try {
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+      address
+    )}&key=${apiKey}`;
+    console.log("Fetching location for:", address);
+    const response = await axios.get(url);
+    console.log("Google Maps Response:", response.data);
+    if (response.data.status === "OK") {
+      const { lat, lng } = response.data.results[0].geometry.location;
+      return { lat, lng };
+    } else {
+      console.error("Google Maps API Error:", response.data.status);
+    }
+  } catch (error) {
+    console.error("Error fetching geolocation:", error);
+  }
+  return null;
+};
+
 const createWorker = async (req, res) => {
   try {
+    console.log(" Bhai Received Worker Data:", req.body);
+    console.log("Ye bhi Received File:", req.file); // --- for debugging log only
     const {
       name,
       email,
@@ -92,11 +138,9 @@ const createWorker = async (req, res) => {
       experience,
     } = req.body;
 
-    // Check if required file is present
     if (!req.file) {
       return res.status(400).json({ message: "Profile image is required" });
     }
-
     const profileImageUrl = req.file.path;
 
     // Validate required fields
@@ -117,14 +161,17 @@ const createWorker = async (req, res) => {
         .json({ message: "All required fields must be provided" });
     }
 
-    // Validate numeric fields
-    if (isNaN(price) || isNaN(stars) || isNaN(age) || isNaN(experience)) {
+    // Fetch geolocation using the address
+    const geoLocation = await getGeolocation(address);
+
+    if (!geoLocation) {
       return res
         .status(400)
-        .json({ message: "Price, stars, age and experience must be numbers" });
+        .json({ error: "Invalid address or failed to fetch location" });
     }
 
-    const newEmployee = new EmployeeModel({
+    // Create new worker with location
+    const newWorker = new EmployeeModel({
       name,
       email,
       phone,
@@ -137,19 +184,23 @@ const createWorker = async (req, res) => {
       profileImage: profileImageUrl,
       age,
       experience,
+      location: {
+        type: "Point",
+        coordinates: [geoLocation.lng, geoLocation.lat],
+      },
     });
 
-    await newEmployee.save();
+    await newWorker.save();
     res
       .status(201)
-      .json({ message: "Employee created successfully", worker: newEmployee });
+      .json({ message: "Worker created successfully", worker: newWorker });
   } catch (error) {
     // Handle specific MongoDB errors
     if (error.code === 11000) {
       return res.status(400).json({ message: "Email already exists" });
     }
     console.error(error);
-    res.status(500).json({ message: "Error creating employee" });
+    res.status(500).json({ message: "Error creating worker" });
   }
 };
 

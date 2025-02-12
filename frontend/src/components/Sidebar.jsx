@@ -79,7 +79,7 @@ const Sidebar = () => {
           {/* 1 */}
           <div className="cursor-pointer pl-2 lg:pl-4 relative group">
             <NavLink
-              onClick={() => setExpended(false)}
+              // onClick={() => setExpended(true)}
               to="/"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full px-1 py-1.5 lg:py-2 rounded-xl transition-all ease-in-out duration-200 ${
@@ -119,7 +119,7 @@ const Sidebar = () => {
           {/* 2 */}
           <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
-              onClick={() => setExpended(false)}
+              // onClick={() => setExpended(false)}
               to="/workers"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
@@ -157,7 +157,7 @@ const Sidebar = () => {
 
           <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
-              onClick={() => setExpended(false)}
+              // onClick={() => setExpended(false)}
               to="/messages"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
@@ -195,7 +195,7 @@ const Sidebar = () => {
           {/* 4 */}
           <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
-              onClick={() => setExpended(false)}
+              // onClick={() => setExpended(false)}
               to="/bookings"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
@@ -232,7 +232,7 @@ const Sidebar = () => {
           {/* 5 */}
           <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
-              onClick={() => setExpended(false)}
+              // onClick={() => setExpended(false)}
               to="/bookinghistory"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${

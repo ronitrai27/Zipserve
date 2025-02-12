@@ -9,14 +9,14 @@ import ContextProvider from "./context/Context.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <AppProvider>
-      <SearchProvider>
-        <LocationProvider>
+    <LocationProvider>
+      <AppProvider>
+        <SearchProvider>
           <ContextProvider>
             <App />
           </ContextProvider>
-        </LocationProvider>
-      </SearchProvider>
-    </AppProvider>
+        </SearchProvider>
+      </AppProvider>
+    </LocationProvider>
   </BrowserRouter>
 );

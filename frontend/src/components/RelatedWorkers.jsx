@@ -1,34 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 import Rating from "@mui/material/Rating";
 const RelatedWorkers = ({ id, category }) => {
-  const [workers, setWorkers] = useState([]);
+  const { workers, loading } = useAppContext();
   const [relWorkers, setRelWorkers] = useState([]);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
-
-  // fetching workers from database----------------
-  useEffect(() => {
-    const fetchWorkers = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/workers/all");
-        if (!response.ok) {
-          throw new Error("Failed to fetch workers");
-        }
-        const data = await response.json();
-
-        // Fix: Extract workers from API response
-        const workersArray = data.workers || [];
-        setWorkers(workersArray);
-        setError(null);
-      } catch (error) {
-        console.error("Error fetching workers:", error);
-        setError("Failed to load workers. Please try again later.");
-      }
-    };
-
-    fetchWorkers();
-  }, []);
 
   // Setting related workers by category and id
   useEffect(() => {
@@ -38,10 +15,8 @@ const RelatedWorkers = ({ id, category }) => {
           (wor) => wor.category === category && wor._id !== id // id is from params
         );
         setRelWorkers(workersData);
-        setError(null);
       } catch (error) {
         console.error("Error filtering workers:", error);
-        setError("Failed to filter related workers.");
       }
     }
   }, [workers, category, id]);

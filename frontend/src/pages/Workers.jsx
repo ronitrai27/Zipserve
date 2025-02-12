@@ -346,7 +346,7 @@ const Workers = () => {
               </div>
             </div>
           </div>
-          {/* All the filters ----------------- */}
+          {/* ------------------------All the filters ----------------- */}
           <div className="w-full h-[35px]  rounded-xl mt-1 mb-1">
             <div className="flex items-center justify-start gap-6">
               {category && (
@@ -397,6 +397,15 @@ const Workers = () => {
                 </p>
               )}
             </div>
+            {!category &&
+              !sortOption &&
+              availOption === null &&
+              priceRange[0] === 0 &&
+              priceRange[1] === 150 && (
+                <div className="text-gray-500 font-light italic text-center text-[18px] opacity-50 font-outfit">
+                  ! No filters are applied
+                </div>
+              )}
           </div>
           {/* All selected Workers--------- */}
           <AnimatePresence mode="wait">

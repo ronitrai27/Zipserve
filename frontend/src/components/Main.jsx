@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/AppContext";
 import WorkerCards from "./WorkerCards.jsx";
@@ -6,15 +6,20 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Maps from "./MyLocation";
 import Chatbot from "../chatbot/chatbot.jsx";
+import { LocationContext } from "../context/LocationContext";
 import {
   LuCalendarSearch,
   LuCalendar,
   LuCircleFadingPlus,
+  LuMapPin,
+  LuMapPinOff,
+  LuMapPinCheckInside,
 } from "react-icons/lu";
 
 const Main = () => {
   const navigate = useNavigate();
   const { theme } = useAppContext();
+  const { userAddress } = useContext(LocationContext);
   const [category, setCategory] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [visible, setVisible] = useState(false);
@@ -189,6 +194,20 @@ const Main = () => {
           <div className="w-full rounded-xl overflow-hidden relative ">
             <Maps />
 
+            {/* user address--------- */}
+            <div className="absolute top-1 left-2">
+              <div className="group relative flex items-center overflow-hidden rounded-lg transition-all duration-300  hover:bg-primary text-white hover:shadow-md opacity-80 hover:opacity-90 p-1">
+                {/* Icon with scaling effect */}
+                <div className="bg-white rounded-full w-10 h-10 flex items-center justify-center ">
+                  <LuMapPinCheckInside className="text-primary text-[28px]  hover:cursor-pointer transition-transform duration-300 hover:scale-110 " />
+                </div>
+
+                {/* Address appearing on hover */}
+                <p className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pr-2 pl-3 text-[15px] font-[400] tracking-tight">
+                  {userAddress}
+                </p>
+              </div>
+            </div>
             {/* bookings------ */}
 
             <div className="absolute bottom-3 left-3 bg-white text-gray-800 font-inter  opacity-80 hover:opacity-100 shadow-xl rounded-lg px-4 w-[56%] py-2">

@@ -835,32 +835,13 @@ function Maps() {
                 <p className="text-[14px] font-[400] text-gray-800 ">
                   Price: {selectedWorker.price}
                 </p>
-                <button className="bg-primary text-white font-medium text-[16px] animate-pulse transition-all duration-1000 px-3 py-2 rounded-full hover:bg-blue-700 hover:animate-none">
+                <button
+                  onClick={() => navigate(`/booking/${selectedWorker.id}`)}
+                  className="bg-primary text-white font-medium text-[16px]  px-3 py-2 rounded-full hover:bg-blue-700 hover:animate-none"
+                >
                   Book
                 </button>
               </div>
-
-              {/* <div className="flex items-center justify-between  ">
-                <img
-                  src={selectedWorker.image}
-                  alt=""
-                  className="w-12 h-12 rounded-full border-[1px] border-primary self-start object-cover"
-                />
-                <div className="flex flex-col items-center justify-between mb-2">
-                  <p className="text-[16px] font-medium mb-1 tracking-tight capitalize">
-                    {selectedWorker.name}
-                  </p>
-                  <p className="text-[14px] font-[400] text-primaryLight italic">
-                    Category: {selectedWorker.category}
-                  </p>
-                </div>
-              </div>
-              <motion.p
-                onClick={() => navigate(`/booking/${selectedWorker.id}`)}
-                className="capitalize flex justify-end text-[16px]  bg-primary px-3 py-1 text-white w-fit ml-auto rounded-full hover:bg-blue-900 cursor-pointer"
-              >
-                Book
-              </motion.p> */}
             </motion.div>
           </InfoWindow>
         )}

@@ -1,44 +1,46 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { LocationContext } from "./LocationContext";
 
 const AppContext = createContext();
-// problem is here only , page wise worker are being fetched for main , workerCard , RelatedWorker
 export const AppProvider = ({ children }) => {
   const [theme, setTheme] = useState(true);
   const [workers, setWorkers] = useState([]);
-  const [filteredWorkers, setFilteredWorkers] = useState([]);
-
+  const { userLocation } = useContext(LocationContext);
+  const [loading, setLoading] = useState(true);
   const toggleTheme = () => {
     setTheme(!theme);
   };
 
   useEffect(() => {
+    if (!userLocation || !userLocation.latitude || !userLocation.longitude)
+      return;
     const fetchWorkers = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/workers/all");
-        if (!response.ok) {
-          throw new Error("Failed to fetch workers");
-        }
+        setLoading(true);
+        console.log("Fetching workers with location:", userLocation);
+
+        const response = await fetch(
+          `http://localhost:8080/api/workers/all?latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`
+        );
+        if (!response.ok) throw new Error("Failed to fetch workers");
+
         const data = await response.json();
-
-        // Fix: Ensure workers is extracted from response object
-        const workersArray = data.workers || [];
-
-        setWorkers(workersArray);
-        setFilteredWorkers(workersArray);
+        setWorkers(data.workers || []);
       } catch (error) {
         console.error("Error fetching workers:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchWorkers();
-  }, []);
+  }, [userLocation]); // Only run when userLocation is set-----
 
   const value = {
     theme,
     toggleTheme,
-    workers, // fetched workers from backend
-    filteredWorkers, // filtered workers
-    setFilteredWorkers, // set filtered workers
+    workers, // fetched workers from backend-----
+    loading,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
