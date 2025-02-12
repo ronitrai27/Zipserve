@@ -74,8 +74,8 @@ const WorkerCards = ({ category, sortOption }) => {
     }
   }, [loading, filteredWorkers]);
   //-----------------------------------------
-  console.log("Fetched workers------------", workers); // debugging logs -------------
-  console.log("filteredWorkers------------", filteredWorkers); // debugging logs ---------------
+  // console.log("Fetched workers------------", workers); // debugging logs -------------
+  // console.log("filteredWorkers------------", filteredWorkers); // debugging logs ------
 
   return (
     <div className="worker-box flex flex-col gap-4 px-3 font-inter">
