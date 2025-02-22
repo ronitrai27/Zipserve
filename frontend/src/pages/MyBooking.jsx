@@ -1,22 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
 import RelatedWorkers from "../components/RelatedWorkers";
 import { useAppContext } from "../context/AppContext";
 import Rating from "@mui/material/Rating";
-import { LuPenLine } from "react-icons/lu";
+import { LuPenLine, LuBookmarkPlus, LuBookmarkCheck } from "react-icons/lu";
+import { motion } from "framer-motion";
+import axios from "axios";
 const NewMyBooking = () => {
-  const { id } = useParams(); // storing _id of selected worker
+  const { id } = useParams();
+  // storing _id of selected worker
   const [workerInfo, setWorkerInfo] = useState(null); // Stores information about the currently selected worker
   const [workers, setWorkers] = useState([]); // Stores the full list of all workers
   const [about, setAbout] = useState(false);
   const [sortOrder, setSortOrder] = useState("newest");
   const [isLoading, setIsLoading] = useState(true);
   const [toggleDetail, setToggleDetail] = useState(true);
-  const [visibleReviews, setVisibleReviews] = useState(4); // Added missing state for pagination
-  // Fetching worker info from context
-  const { workers: contextWorkers } = useAppContext();
+  const [visibleReviews, setVisibleReviews] = useState(4);
+  //to select favourite workers---
+  const {
+    // favoriteWorkers,
+    user,
+    toggleFavoriteWorker,
+    workers: contextWorkers,
+  } = useAppContext();
+  const [isFavorite, setIsFavorite] = useState(false);
 
+  //-------------
   useEffect(() => {
     // Only run if we have workers data from context
     if (contextWorkers.length > 0) {
@@ -36,7 +46,7 @@ const NewMyBooking = () => {
     }
   }, [contextWorkers, id]);
 
-  // Fetching review for selected worker
+  // Fetching review for selected worker----------
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
@@ -54,7 +64,7 @@ const NewMyBooking = () => {
           throw new Error("Invalid response format - expected array");
         }
         setReviews(data);
-        console.log(data);
+        // console.log(data); reviews debugging log
       } catch (error) {
         console.error("Error fetching reviews:", error.message);
         setReviews([]); // Set empty array on error
@@ -63,7 +73,28 @@ const NewMyBooking = () => {
 
     fetchReviews();
   }, [id]);
+  //-----------------------------
+  // console.log("logged in , user id-----", user._id); debugging logs
+  const checkIfFavorite = async () => {
+    if (!user?._id || !workerInfo?._id) return;
 
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/api/users/is-favorite/${user._id}/${workerInfo._id}`
+      );
+      setIsFavorite(res.data.isFavorited);
+    } catch (error) {
+      console.error("Error checking favorite status:", error);
+    }
+  };
+
+  // Call this when component loads
+  useEffect(() => {
+    checkIfFavorite();
+  }, [workerInfo]); // Runs whenever workerInfo changes
+
+  // debugging logs to check the deatils of selected worker --------------->
+  // console.log("WorkerInfo ----------->", workerInfo);
   if (isLoading) {
     return <div>Loading...</div>; // Added loading state handling
   }
@@ -83,12 +114,32 @@ const NewMyBooking = () => {
                 />
                 <div
                   className="worker-basic-details font-inter text-gray-800  flex-1 flex-col rounded-xl px-3 py-1 bg-gradient-to-br
-                 from-primaryLight/20 via-primaryLight/70 to-primary w-[30rem]"
+                 from-blue-200 via-primary/60 to-primary w-[30rem]"
                 >
                   <div className="flex justify-between items-center">
-                    <p className="text-[18px] pl-6 font-medium capitalize tracking-wide ">
-                      {workerInfo.name}
-                    </p>
+                    <div className="flex items-center gap-3 bg-gray-50/50 backdrop-blur-lg rounded-lg px-2 py-[2px] mt-1">
+                      <p className="text-[18px] pl-6 font-medium capitalize tracking-wide ">
+                        {workerInfo.name}
+                      </p>
+                      <motion.button
+                        onClick={async () => {
+                          await toggleFavoriteWorker(workerInfo); // Toggle favorite
+                          checkIfFavorite(); // Re-fetch updated favorite status
+                        }}
+                        whileHover={{ scale: 1.2 }}
+                        whileTap={{ scale: 0.7 }}
+                        animate={isFavorite ? { scale: [1, 1] } : {}}
+                        transition={{ duration: 0.3 }}
+                        className="favorite-button"
+                      >
+                        {isFavorite ? (
+                          <LuBookmarkCheck className="text-3xl text-gray-100 fill-yellow-400" />
+                        ) : (
+                          <LuBookmarkPlus className="text-3xl text-gray-100 fill-yellow-400" />
+                        )}
+                      </motion.button>
+                    </div>
+
                     <Rating
                       name="half-rating-read"
                       size="small"

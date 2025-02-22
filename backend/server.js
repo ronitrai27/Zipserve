@@ -1,20 +1,34 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
-const app = express();
-require("./models/db");
+require("./models/db"); // Ensure DB connection
 
-app.use(cors());
+const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Allow frontend origin
+    credentials: true, // Allow cookies & authorization headers
+  })
+);
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()); // Use cookie-parser after express.json()
+
+//ROUTES--------
 const workerRoutes = require("./routes/workersRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
-
-// Middleware for parsing JSON
-app.use(express.json());
-
-// Use routes----------------------------
+const authRoutes = require("./routes/AuthRoutes");
+const userRoutes = require("./routes/UserRoutes");
+//  Use Routes
 app.use("/api", workerRoutes);
 app.use("/api", serviceRoutes);
-
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+// Global Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({
@@ -22,7 +36,9 @@ app.use((err, req, res, next) => {
     error: err.message,
   });
 });
-// Server running...
-app.listen(process.env.PORT || 8080, () => {
-  console.log(`Server is running on port ${process.env.PORT || 8080}`);
+
+//  Start Server
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(` Server is running on port ${PORT}`);
 });

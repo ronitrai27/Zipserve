@@ -13,52 +13,74 @@ const getAllWorkers = async (req, res) => {
       available,
       minPrice,
       maxPrice,
+      latitude,
+      longitude,
     } = req.query;
 
-    // Build query filter
-    const filter = {};
-    if (category) {
-      filter.category = category;
+    if (!latitude || !longitude) {
+      return res
+        .status(400)
+        .json({ message: "Latitude and longitude are required" });
     }
 
-    // Filter only available workers if 'available=true' is passed
-    if (available === "true") {
-      filter.available = true;
-    }
-
-    // Apply price range filter if provided
-    if (minPrice && maxPrice) {
-      filter.price = { $gte: parseInt(minPrice), $lte: parseInt(maxPrice) };
-    }
-
-    // Build sorting options
-    let sortOptions = {};
-    if (sort === "price_asc") {
-      sortOptions = { price: 1 }; // Sort by price in ascending order
-    } else if (sort === "stars_desc") {
-      sortOptions = { stars: -1 }; // Sort by stars in descending order
-    }
-
-    // Convert page and limit to numbers
+    const userLocation = [parseFloat(longitude), parseFloat(latitude)];
     const pageNumber = parseInt(page);
     const limitNumber = parseInt(limit);
     const skip = (pageNumber - 1) * limitNumber;
 
-    // Fetch all workers first (filtering + sorting)
-    const allWorkers = await EmployeeModel.find(filter).sort(sortOptions);
+    // Convert distance to radians (5km / 6378.1km Earth's radius)
+    const maxDistanceInRadians = 5 / 6378.1;
 
-    // Apply pagination
-    const workers = allWorkers.slice(skip, skip + limitNumber);
+    // Step 1: Fetch total workers **within 5km**
+    const locationFilter = {
+      location: {
+        $geoWithin: {
+          $centerSphere: [userLocation, maxDistanceInRadians],
+        },
+      },
+    };
+    const totalWorkersInRadius = await EmployeeModel.countDocuments(
+      locationFilter
+    );
 
-    // Count total workers for the current filter
-    const totalWorkers = allWorkers.length;
+    // Step 2: Apply additional filters (category, availability, price, etc.)
+    const filter = { ...locationFilter };
 
-    // Return paginated response
+    if (category) filter.category = category;
+    if (available === "true") filter.available = true;
+    if (minPrice && maxPrice) {
+      filter.price = { $gte: parseInt(minPrice), $lte: parseInt(maxPrice) };
+    }
+
+    // Fetch workers after applying all filters
+    let workers = await EmployeeModel.find(filter)
+      .skip(skip)
+      .limit(limitNumber);
+
+    // Step 3: Count workers **after filters**
+    const filteredWorkersCount = await EmployeeModel.countDocuments(filter);
+
+    // Manual sorting in JavaScript (since MongoDB sorting is blocked)
+    if (sort === "price_asc") {
+      workers = workers.sort((a, b) => a.price - b.price);
+    } else if (sort === "stars_desc") {
+      workers = workers.sort((a, b) => b.stars - a.stars);
+    }
+
     res.status(200).json({
       workers,
-      totalWorkers,
-      totalPages: Math.ceil(totalWorkers / limitNumber),
+      totalWorkers: totalWorkersInRadius,
+      filteredWorkers: filteredWorkersCount,
+      totalPages: Math.ceil(filteredWorkersCount / limitNumber),
       currentPage: pageNumber,
+    });
+    // debugging log ------------------------------------
+    console.log("Backend Response:", {
+      // totalWorkers: totalWorkersInRadius,
+      // filteredWorkers: filteredWorkersCount,
+      // totalPages: Math.ceil(filteredWorkersCount / limitNumber),
+      // currentPage: pageNumber,
+      // workers: workers.length,
     });
   } catch (error) {
     console.error(error);
@@ -69,7 +91,7 @@ const getAllWorkers = async (req, res) => {
 // ------------------------ Controller to Get All Workers (No Pagination) (NEARBY 6KM) -----------------
 const getAllWorkersNoPage = async (req, res) => {
   try {
-    const { latitude, longitude } = req.query; // Get user location from query params
+    const { latitude, longitude } = req.query;
     // console.log("Received Query Params:", { latitude, longitude }); // debugging logs-----
 
     if (!latitude || !longitude) {
@@ -87,7 +109,7 @@ const getAllWorkersNoPage = async (req, res) => {
             type: "Point",
             coordinates: userLocation,
           },
-          $maxDistance: 6000, //6km----------------
+          $maxDistance: 60000, //5km----------------
         },
       },
     });

@@ -79,7 +79,7 @@ const WorkerCards = ({ category, sortOption }) => {
 
   return (
     <div className="worker-box flex flex-col gap-4 px-3 font-inter">
-      {/* <AnimatePresence> */}
+      {/* if no category and sort is applied then filtered worker is same as of worker state ..... */}
       {loading ? (
         [...Array(3)].map((_, index) => (
           <div
@@ -112,15 +112,17 @@ const WorkerCards = ({ category, sortOption }) => {
             </div>
           </div>
         ))
-      ) : !loading && filteringDone && filteredWorkers.length === 0 ? (
+      ) : !loading &&
+        filteringDone &&
+        filteredWorkers.filter((worker) => worker.available).length === 0 ? (
         //  Show message when no workers are available-------------------------
         <div className="flex flex-col items-center  mt-4 gap-3">
           <p className="flex items-center gap-4 text-gray-500 text-lg">
             <LuFrown className="text-[20px]" />
-            oops , we coudn't find {category}
+            oops , we coudn't find {category || "workers"}
           </p>
           <p className="text-center text-gray-500 text-lg ">
-            ! No {category} ara available currently in your area .
+            ! No {category || "workers"} are available currently in your area .
           </p>
         </div>
       ) : (
@@ -189,7 +191,6 @@ const WorkerCards = ({ category, sortOption }) => {
             </div>
           ))
       )}
-      {/* </AnimatePresence> */}
     </div>
   );
 };

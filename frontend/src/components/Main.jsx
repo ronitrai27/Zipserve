@@ -14,8 +14,8 @@ import {
   LuMapPin,
   LuMapPinOff,
   LuMapPinCheckInside,
+  LuArrowUpRight,
 } from "react-icons/lu";
-
 const Main = () => {
   const navigate = useNavigate();
   const { theme } = useAppContext();
@@ -180,13 +180,21 @@ const Main = () => {
             {/* <WorkerList category={category} sortOption={sortOption} /> */}
             <WorkerCards category={category} sortOption={sortOption} />
           </div>
-          <div className="w-full py-2 text-center">
-            <button
+
+          <div className="flex items-center justify-center my-2">
+            <div
+              className="group relative cursor-pointer w-32 border bg-white rounded-full overflow-hidden text-black font-semibold hover:shadow-lg transition-shadow duration-300"
               onClick={() => navigate("/workers")}
-              className="text-[16px] font-medium text-gray-800  px-5 py-1 rounded-full tracking-wide font-inter border-[1px] hover:text-white hover:bg-primary transition-colors duration-300 "
             >
-              More
-            </button>
+              <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-2 py-1">
+                More
+              </span>
+              <div className="flex gap-2 text-white z-10 items-center absolute top-0 h-full w-full justify-center translate-x-12 opacity-0 group-hover:-translate-x-1 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                <span>More</span>
+                <LuArrowUpRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </div>
+              <div className="absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg bg-[#3b75ef] scale-[1] dark:group-hover:bg-[#3b75ef] group-hover:bg-[#3b75ef] group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0"></div>
+            </div>
           </div>
         </div>
         {/* --------------------------MAP area -------------------------- */}
@@ -209,7 +217,6 @@ const Main = () => {
               </div>
             </div>
             {/* bookings------ */}
-
             <div className="absolute bottom-3 left-3 bg-white text-gray-800 font-inter  opacity-80 hover:opacity-100 shadow-xl rounded-lg px-4 w-[56%] py-2">
               <div className=" flex items-center justify-between px-3">
                 <p className="text-[18px] font-[400] tracking-tight ">

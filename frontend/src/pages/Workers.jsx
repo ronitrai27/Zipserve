@@ -6,16 +6,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { assets } from "../assets/assets.js";
 import Rating from "@mui/material/Rating";
 import MinimumDistanceSlider from "../components/Slider.jsx";
-// import { useSearchParams } from "react-router-dom";
-
+import { useLocationContext } from "../context/LocationContext";
+import { useAppContext } from "../context/AppContext";
 const Workers = () => {
   const [workers, setWorkers] = useState([]);
+  const [totalWorkersCount, setTotalWorkersCount] = useState(0);
+  const [filteredWorkersCount, setFilteredWorkersCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [enlargedWorker, setEnlargedWorker] = useState(null);
   const [searchTerm, setSearchTerm] = useState(""); // Added search state
   const { category } = useParams();
   const navigate = useNavigate();
+  const { user } = useAppContext();
   // filters ----------------------------------
   const [sortVisible, setSortVisible] = useState(false);
   const [sortOption, setSortOption] = useState(null);
@@ -23,6 +26,7 @@ const Workers = () => {
   const [availOption, setAvailOption] = useState(null);
   const [priceVisible, setPriceVisible] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 150]); // Initial min-max price
+  const { userLocation } = useLocationContext();
 
   const handleCheckboxChange = (value) => {
     setAvailOption(value);
@@ -35,7 +39,12 @@ const Workers = () => {
 
   const fetchWorkers = async (page = 1) => {
     try {
-      let url = `http://localhost:8080/api/workers?page=${page}&limit=7`;
+      if (!userLocation) {
+        console.warn("User location is not available yet");
+        return;
+      }
+
+      let url = `http://localhost:8080/api/workers?page=${page}&limit=7&latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`;
 
       if (category) {
         url += `&category=${category}`;
@@ -52,25 +61,32 @@ const Workers = () => {
           url += `&minPrice=${minprice}&maxPrice=${maxprice}`;
         }
       }
-      //  dont use min max as sort will not work !! need improvments
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
+
+      console.log("Frontend Received Data:", data); //--------- Debugging
+
       setWorkers(data.workers);
+      setTotalWorkersCount(data.totalWorkers);
+      setFilteredWorkersCount(data.filteredWorkers);
       setCurrentPage(data.currentPage);
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error("Error fetching workers:", error);
-      // Could add error state and UI feedback here
     }
   };
 
   useEffect(() => {
-    fetchWorkers();
-  }, [category, sortOption, availOption, priceRange]); // Added sortOption , category to dependency array
+    if (userLocation) {
+      fetchWorkers();
+    }
+  }, [category, sortOption, availOption, priceRange, userLocation]);
 
+  //---------
   const handleEnlargeClick = (workerId) => {
     setEnlargedWorker(enlargedWorker === workerId ? null : workerId);
   };
@@ -187,8 +203,8 @@ const Workers = () => {
               <AuroraText className="ml-2 font-outfit">{category}</AuroraText>
             </p>
           ) : (
-            <p className="flex items-center justify-center pr-24 text-[20px] font-[400] text-gray-800 tracking-wider mb-4">
-              Hey John ! Lets start booking , try{" "}
+            <p className="flex items-center justify-center pr-24 text-[20px] font-[400] text-gray-800 tracking-wide mb-4 capitalize">
+              Hey {user.name} ! Lets start booking , try{" "}
               <span className="ml-3 text-primary">
                 <MorphingTextDemo />
               </span>
@@ -420,7 +436,16 @@ const Workers = () => {
               exit={{ opacity: 0, x: currentPage > 1 ? -50 : 50, scale: 1.1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <div className="flex flex-col gap-3 font-inter  bg-white rounded-2xl px-6 py-4">
+              <div className="flex flex-col gap-3 font-inter  bg-white rounded-2xl px-6 py-1">
+                {totalWorkersCount !== undefined &&
+                filteredWorkersCount !== undefined ? (
+                  <p className="text-gray-500 font-extralight text-sm tracking-tighter font-outfit">
+                    Showing <strong>( {filteredWorkersCount} )</strong> Results
+                    of <strong>( {totalWorkersCount} )</strong>
+                  </p>
+                ) : (
+                  <p className="text-gray-600">Loading workers...</p>
+                )}
                 {workers.length === 0 ? (
                   <div className="flex flex-col gap-3">
                     <div className="bg-gray-100 pl-2 pr-6 py-[6px] rounded-lg hover:bg-gray-200 transition-all hover:scale-105 duration-200 flex items-center justify-between">

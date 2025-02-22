@@ -3,9 +3,9 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 export const LocationContext = createContext();
 
 export const LocationProvider = ({ children }) => {
-  const [userLocation, setUserLocation] = useState(null);
-  const [workersLocations, setWorkersLocations] = useState([]);
-  const [userAddress, setUserAddress] = useState("Fetching Address...");
+  const [userLocation, setUserLocation] = useState(null); // location of mine/ user
+  const [workersLocations, setWorkersLocations] = useState([]); // to display all the workers on map
+  const [userAddress, setUserAddress] = useState("Fetching Address..."); // gecoding location to get my / user address
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {

@@ -3,7 +3,6 @@ import { assets } from "../assets/assets";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import { Context } from "../context/Context";
-
 const Sidebar = () => {
   const { setOpened } = useContext(Context); // for AI
   const [expended, setExpended] = useState(true);
@@ -12,6 +11,20 @@ const Sidebar = () => {
   };
   const navigate = useNavigate();
   const { theme } = useAppContext();
+  const { user } = useAppContext();
+  // console.log("user details ->", user); debugging log---
+
+  const shortenEmail = (email, maxLength = 10) => {
+    if (!email) return "Guest";
+
+    const [name, domain] = email.split("@");
+
+    if (name.length > maxLength) {
+      return `${name.slice(0, 6)}...@${domain}`;
+    }
+
+    return email;
+  };
   return (
     <div className="h-full ">
       <div
@@ -30,13 +43,13 @@ const Sidebar = () => {
           </div>
           <div className={`flex flex-col items-center`}>
             <p
-              className={`font-semibold text-base lg:text-lg w-auto transition-all ease-in-out duration-200 ${
+              className={`font-semibold text-base lg:text-lg w-auto transition-all ease-in-out duration-200 capitalize ${
                 expended
                   ? "opacity-100 max-w-full"
                   : "opacity-0 max-w-0 overflow-hidden"
               } ${theme ? "text-gray-900" : "text-white"}`}
             >
-              John Parker
+              {user ? user.name : "Guest"}
             </p>
             <p
               className={`font-light text-xs lg:text-sm italic transition-all ease-in-out duration-200 ${
@@ -45,7 +58,7 @@ const Sidebar = () => {
                   : "opacity-0 max-w-0 overflow-hidden"
               } ${theme ? "text-gray-900" : "text-gray-300"}`}
             >
-              John12@gmail.com
+              {user ? shortenEmail(user.email) : "Guest"}
             </p>
           </div>
           {expended ? (
@@ -80,7 +93,7 @@ const Sidebar = () => {
           <div className="cursor-pointer pl-2 lg:pl-4 relative group">
             <NavLink
               // onClick={() => setExpended(true)}
-              to="/"
+              to="/home"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full px-1 py-1.5 lg:py-2 rounded-xl transition-all ease-in-out duration-200 ${
                   isActive
@@ -350,7 +363,7 @@ const Sidebar = () => {
             <div
               onClick={() => {
                 setOpened(true);
-                navigate("/");
+                navigate("/home");
               }}
               className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all ease-in-out duration-200 hover:text-gray-700`}
             >

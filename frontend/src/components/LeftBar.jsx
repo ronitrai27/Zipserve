@@ -11,7 +11,7 @@ const LeftBar = () => {
       <div className="leftBar flex flex-col items-center gap-6 hover:gap-7  transition-all duration-500 px-3 hover:px-6 ">
         {/* ----------------------------------BUTTON1----------------------------- */}
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           className={`group relative cursor-pointer ${
             theme
               ? "text-gray-800 hover:text-primary"

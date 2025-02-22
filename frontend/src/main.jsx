@@ -4,16 +4,20 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
 import { LocationProvider } from "./context/LocationContext.jsx";
-import { SearchProvider } from "./context/SearchContext"; // Import SearchContext
+import { SearchProvider } from "./context/SearchContext";
 import ContextProvider from "./context/Context.jsx";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
+const CLIENT_ID =
+  "561432114508-s3oglnra3qbf1ul35955d6hv2v9ig2d5.apps.googleusercontent.com";
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <LocationProvider>
       <AppProvider>
         <SearchProvider>
           <ContextProvider>
-            <App />
+            <GoogleOAuthProvider clientId={CLIENT_ID}>
+              <App />
+            </GoogleOAuthProvider>
           </ContextProvider>
         </SearchProvider>
       </AppProvider>
