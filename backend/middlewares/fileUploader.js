@@ -20,4 +20,3 @@ const storage = new CloudinaryStorage({
 const cloudinaryFileUploader = multer({ storage: storage }); // telling multer to use the storage as cloudinary storage
 
 module.exports = cloudinaryFileUploader;
-// further enhancements like support for multiple file format and setting limit of file like 5mb.

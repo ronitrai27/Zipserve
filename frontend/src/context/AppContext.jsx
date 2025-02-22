@@ -62,7 +62,7 @@ export const AppProvider = ({ children }) => {
       );
 
       const updatedFavorites = res.data.favouriteWorkers || [];
-      setFavoriteWorkers(updatedFavorites); // ✅ Update favorite workers globally
+      setFavoriteWorkers(updatedFavorites);
 
       // Show toast based on action
       const isFavorited = updatedFavorites.some((w) => w._id === worker._id);

@@ -59,10 +59,10 @@ const Register = () => {
         </p>
         {/* -----------form--------------- */}
         <form
-          className="flex flex-col items-center justify-center mt-5 bg-gray-50 py-4 rounded-3xl"
+          className="flex flex-col gap-2 items-center justify-center mt-5 bg-gray-50 py-4 rounded-3xl"
           onSubmit={handleLogin}
         >
-          <div className="mb-3">
+          <div className="mb-4">
             <GoogleLogin
               // onSuccess={handleGoogleLogin}
               onError={() => toast.error("Google Login Failed")}

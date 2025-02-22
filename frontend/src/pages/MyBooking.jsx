@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState, useRef } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { assets } from "../assets/assets";
 import RelatedWorkers from "../components/RelatedWorkers";
 import { useAppContext } from "../context/AppContext";
@@ -11,21 +11,26 @@ const NewMyBooking = () => {
   const { id } = useParams();
   // storing _id of selected worker
   const [workerInfo, setWorkerInfo] = useState(null); // Stores information about the currently selected worker
-  const [workers, setWorkers] = useState([]); // Stores the full list of all workers
   const [about, setAbout] = useState(false);
   const [sortOrder, setSortOrder] = useState("newest");
   const [isLoading, setIsLoading] = useState(true);
   const [toggleDetail, setToggleDetail] = useState(true);
   const [visibleReviews, setVisibleReviews] = useState(4);
-  //to select favourite workers---
   const {
-    // favoriteWorkers,
     user,
     toggleFavoriteWorker,
     workers: contextWorkers,
   } = useAppContext();
   const [isFavorite, setIsFavorite] = useState(false);
 
+  const location = useLocation();
+  const parentContainerRef = useRef(null);
+
+  useEffect(() => {
+    if (parentContainerRef.current) {
+      parentContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [location.pathname]);
   //-------------
   useEffect(() => {
     // Only run if we have workers data from context
@@ -37,7 +42,6 @@ const NewMyBooking = () => {
           throw new Error("Worker not found");
         }
         setWorkerInfo(workerInfo);
-        setWorkers(contextWorkers);
       } catch (error) {
         console.error("Error:", error);
       } finally {
@@ -91,7 +95,24 @@ const NewMyBooking = () => {
   // Call this when component loads
   useEffect(() => {
     checkIfFavorite();
-  }, [workerInfo]); // Runs whenever workerInfo changes
+  }, [workerInfo]);
+
+  // SUBSERVICES ---------------------------
+  const [subservices, setSubservices] = useState([]);
+  useEffect(() => {
+    if (workerInfo?.category) {
+      fetchSubservices(workerInfo.category);
+    }
+  }, [workerInfo]);
+
+  const fetchSubservices = async (category) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/${category}`);
+      setSubservices(response.data);
+    } catch (error) {
+      console.error("Error fetching subservices:", error);
+    }
+  };
 
   // debugging logs to check the deatils of selected worker --------------->
   // console.log("WorkerInfo ----------->", workerInfo);
@@ -103,9 +124,12 @@ const NewMyBooking = () => {
     <>
       {workerInfo ? (
         <div className="booking-page w-full min-h-screen bg-gray-100 py-5  rounded-tr-3xl">
-          <div className="max-w-[90%] mx-auto flex flex-col md:flex-row justify-between gap-5 md:gap-10">
+          <div className="max-w-[90%] mx-auto flex flex-col sm:flex-row justify-between gap-5 md:gap-10">
             {/* ------------ Worker Details ------------ */}
-            <div className="px-8 py-4 flex flex-col gap-5  h-[90vh] overflow-y-scroll scroll-smooth w-[55rem]">
+            <div
+              ref={parentContainerRef}
+              className="px-8 py-4 flex flex-col gap-5 h-[90vh] overflow-y-auto scroll-smooth w-[55rem] overflow-x-hidden  min-h-0"
+            >
               <div className="worker-top flex flex-row gap-8">
                 <img
                   src={workerInfo.profileImage}
@@ -123,7 +147,7 @@ const NewMyBooking = () => {
                       </p>
                       <motion.button
                         onClick={async () => {
-                          await toggleFavoriteWorker(workerInfo); // Toggle favorite
+                          await toggleFavoriteWorker(workerInfo);
                           checkIfFavorite(); // Re-fetch updated favorite status
                         }}
                         whileHover={{ scale: 1.2 }}
@@ -241,7 +265,7 @@ const NewMyBooking = () => {
                 </div>
               </div>
               {/* ------------ Reviews ------------ */}
-              <div className="flex flex-col gap-4 pl-4 ">
+              <div className="flex flex-col gap-4 pl-4  mb-4">
                 <div className="flex items-center justify-between">
                   <h1 className="text-[18px] font-medium">Reviews</h1>
                   <select
@@ -254,7 +278,11 @@ const NewMyBooking = () => {
                   </select>
                 </div>
 
-                <div className="flex flex-col gap-4 w-full h-[300px] overflow-y-auto font-outfit">
+                <div
+                  className={`flex flex-col gap-4 w-full mt-3 ${
+                    reviews && reviews.length > 0 ? "h-[300px]" : "h-[250px]"
+                  }  overflow-y-auto font-outfit`}
+                >
                   {reviews && reviews.length > 0 ? (
                     reviews
                       ?.sort((a, b) => {
@@ -271,22 +299,22 @@ const NewMyBooking = () => {
                           className="border-b-[1px] rounded-md px-4 py-2 w-[90%] mx-auto bg-gray-50/40"
                         >
                           <div className="flex justify-between items-center mb-1">
-                            <h3 className="font-medium text-[14px] text-gray-800 font-inter capitalize">
+                            <h3 className="font-medium text-[16px] text-gray-800 font-inter capitalize">
                               {review.customerName}
                             </h3>
                             <span className="text-sm text-gray-500">
                               {new Date(review.createdAt).toLocaleDateString()}
                             </span>
                           </div>
-                          <p className="text-[14px] text-gray-600 font-light break-words max-w-full overflow-hidden">
+                          <p className="text-[15px] text-gray-600 font-light break-words max-w-full overflow-hidden">
                             {review.comment}
                           </p>
                         </div>
                       ))
                   ) : (
                     // Show message when there are no reviews
-                    <div className="">
-                      <p className=" text-gray-500 text-lg italic flex items-center gap-2 justify-center mt-6 capitalize font-outfit">
+                    <div className="flex justify-center items-center h-full">
+                      <p className=" text-gray-500 text-lg italic flex items-center gap-2 justify-center capitalize font-outfit">
                         <LuPenLine className="text-2xl" /> Be the first to book
                         and provide a review!
                       </p>
@@ -303,6 +331,52 @@ const NewMyBooking = () => {
                         Load More
                       </button>
                     )}
+                </div>
+              </div>
+              {/*-------------------- SUB-SERVICES--------------- */}
+              <p className=" text-center text-[20px] font-medium text-primary mb-6 font-inter">
+                Select <span className=" capitalize">services to book</span>{" "}
+                <span className="w-6 h-6 rounded-full bg-primary"></span>
+              </p>
+
+              <div className="w-full overflow-x-auto flex-shrink-0 mb-20 px-5">
+                <div className="subcategories flex items-center gap-4 flex-nowrap w-max flex-shrink-0 h-[12.5rem]">
+                  {subservices.length > 0 ? (
+                    subservices.map((service) => (
+                      <div
+                        key={service._id}
+                        className="relative border border-primary rounded-lg min-w-[180px] bg-primary/40 cursor-pointer text-center font-inter overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-110"
+                      >
+                        {/* Image Section */}
+                        <div className="bg-gray-50 p-3 mb-3">
+                          <img
+                            src={service.image}
+                            alt={service.name}
+                            className="w-20 object-cover mx-auto"
+                          />
+                        </div>
+
+                        {/* Content Section */}
+                        <div className="px-1 mb-3 flex flex-col justify-between">
+                          <h4 className="text-[16px] text-black font-[400] tracking-tight capitalize">
+                            {service.name}
+                          </h4>
+                          <p className="text-white font-medium text-[15px] uppercase">
+                            Price: ${service.price}
+                          </p>
+                        </div>
+
+                        {/* Hover Overlay */}
+                        <div className="absolute inset-0 bg-primary/35 flex items-center justify-center opacity-0 hover:opacity-100 transition-all duration-300">
+                          <button className="bg-primary text-white font-semibold px-4 py-1 rounded-md shadow-md hover:bg-blue-700 transition-all">
+                            Add
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No services available for this category.</p>
+                  )}
                 </div>
               </div>
             </div>
