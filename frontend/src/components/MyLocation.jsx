@@ -25,24 +25,26 @@ const center = {
 //Json style
 const lightStyle = [
   {
-    featureType: "administrative",
-    elementType: "geometry",
+    elementType: "labels.icon",
     stylers: [
       {
-        visibility: "off",
+        color: "#3d6eff",
+      },
+      {
+        visibility: "on",
+      },
+    ],
+  },
+  {
+    elementType: "labels.text.fill",
+    stylers: [
+      {
+        weight: 1,
       },
     ],
   },
   {
     featureType: "administrative.neighborhood",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
     stylers: [
       {
         visibility: "off",
@@ -61,23 +63,6 @@ const lightStyle = [
   {
     featureType: "road",
     elementType: "labels",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "labels.icon",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "transit",
     stylers: [
       {
         visibility: "off",
@@ -397,309 +382,16 @@ const mapStyle = [
     ],
   },
 ];
-const greyStyle = [
-  {
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#f5f5f5",
-      },
-    ],
-  },
-  {
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        color: "#ffffff",
-      },
-    ],
-  },
-  {
-    elementType: "labels.icon",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#616161",
-      },
-    ],
-  },
-  {
-    elementType: "labels.text.stroke",
-    stylers: [
-      {
-        color: "#f5f5f5",
-      },
-    ],
-  },
-  {
-    featureType: "administrative",
-    elementType: "geometry",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.land_parcel",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.land_parcel",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#bdbdbd",
-      },
-    ],
-  },
-  {
-    featureType: "administrative.neighborhood",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#eeeeee",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    elementType: "labels.text",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "poi",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#757575",
-      },
-    ],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#e5e5e5",
-      },
-    ],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#9e9e9e",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#ffffff",
-      },
-      {
-        weight: 2,
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        color: "#d6d6d6",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "road",
-    elementType: "labels.icon",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "road.arterial",
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "road.arterial",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#757575",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#dadada",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "labels",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#616161",
-      },
-    ],
-  },
-  {
-    featureType: "road.local",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "road.local",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#9e9e9e",
-      },
-    ],
-  },
-  {
-    featureType: "transit",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "transit.line",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#e5e5e5",
-      },
-    ],
-  },
-  {
-    featureType: "transit.station",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#eeeeee",
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "geometry",
-    stylers: [
-      {
-        color: "#c9c9c9",
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "geometry.fill",
-    stylers: [
-      {
-        color: "#567ac2",
-      },
-      {
-        weight: 1.5,
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "labels.text",
-    stylers: [
-      {
-        visibility: "off",
-      },
-    ],
-  },
-  {
-    featureType: "water",
-    elementType: "labels.text.fill",
-    stylers: [
-      {
-        color: "#9e9e9e",
-      },
-    ],
-  },
-];
+
 function Maps() {
   const { theme } = useAppContext();
-  const { workersLocations } = useContext(LocationContext);
+  const { workersLocations } = useContext(LocationContext); // all those workers shown on map
   const navigate = useNavigate();
-  const [currentPosition, setCurrentPosition] = useState(null);
-  const [selectedWorker, setSelectedWorker] = useState(null);
+  const [currentPosition, setCurrentPosition] = useState(null); // user position
+  const [selectedWorker, setSelectedWorker] = useState(null); // for info window
   const [showInfo, setShowInfo] = useState(false);
 
+  // console.log("worker location ->", workersLocations); // debugging log ----
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ",
   });
@@ -774,15 +466,12 @@ function Maps() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 >
-                  <p className="text-[15px] font-[400] mb-1 animate-pulse transition-all duration-700">
+                  <p
+                    onClick={() => navigate("/my-profile")}
+                    className="text-[14px] font-[400] animate-pulse transition-all duration-700 underline-offset-4 underline decoration-primary text-primary font-inter uppercase tracking-tight"
+                  >
                     I am here
                   </p>
-                  <motion.p
-                    onClick={() => navigate("/my-profile")}
-                    className="capitalize text-[14px] font-light text-blue-500 cursor-pointer hover:text-gray-800 hover:scale-105 transition-all"
-                  >
-                    Profile
-                  </motion.p>
                 </motion.div>
               </InfoWindow>
             )}
@@ -794,6 +483,11 @@ function Maps() {
             key={worker.id}
             position={{ lat: worker.lat, lng: worker.lng }}
             title={worker.name}
+            // icon={{
+            //   url: worker.image, // Use worker image as icon
+            //   scaledSize: new window.google.maps.Size(50, 50), // Adjust size
+            //   anchor: new window.google.maps.Point(25, 25), // Center the image
+            // }}
             onClick={() => setSelectedWorker(worker)}
           />
         ))}

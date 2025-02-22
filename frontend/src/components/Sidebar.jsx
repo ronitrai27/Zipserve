@@ -5,7 +5,7 @@ import { useAppContext } from "../context/AppContext";
 import { Context } from "../context/Context";
 
 const Sidebar = () => {
-  const { setOpened } = useContext(Context);
+  const { setOpened } = useContext(Context); // for AI
   const [expended, setExpended] = useState(true);
   const handleSidebar = () => {
     setExpended(!expended);
