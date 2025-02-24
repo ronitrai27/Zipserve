@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BorderBeam } from "../components/ui/border-beam.jsx";
-import { useSearch } from "../context/SearchContext.jsx";
 const ServiceSearch = () => {
   const navigate = useNavigate();
-  const { recentSearch, setRecentSearch } = useSearch();
   const [input, setInput] = useState(""); // Track user input
   const [suggestions, setSuggestions] = useState([]); // Track suggestion results
   const [bestMatch, setBestMatch] = useState(null); // Track the best match result
@@ -75,7 +73,6 @@ const ServiceSearch = () => {
 
   // Handle suggestion click
   const handleSuggestionClick = (selectedService, professional) => {
-    setRecentSearch((prevSearches) => [...prevSearches, selectedService]); // Add search to recent searches
     setInput(""); // Clear the input field
     setBestMatch(null); // Clear suggestions after selection
     setSuggestions([]); // Clear suggestions

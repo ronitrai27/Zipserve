@@ -109,7 +109,7 @@ const getAllWorkersNoPage = async (req, res) => {
             type: "Point",
             coordinates: userLocation,
           },
-          $maxDistance: 60000, //5km----------------
+          $maxDistance: 5000, //5km----------------
         },
       },
     });

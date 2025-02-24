@@ -3,10 +3,26 @@ import { useParams, useLocation } from "react-router-dom";
 import { assets } from "../assets/assets";
 import RelatedWorkers from "../components/RelatedWorkers";
 import { useAppContext } from "../context/AppContext";
+import { useBooking } from "../context/BookingContext";
+import { LocationContext } from "../context/LocationContext";
 import Rating from "@mui/material/Rating";
-import { LuPenLine, LuBookmarkPlus, LuBookmarkCheck } from "react-icons/lu";
-import { motion } from "framer-motion";
+import { IoClose } from "react-icons/io5";
+import {
+  LuPenLine,
+  LuBookmarkPlus,
+  LuBookmarkCheck,
+  LuCircleCheckBig,
+  LuCircleFadingPlus,
+  LuCalendarClock,
+  LuBriefcase,
+  LuCalendarPlus,
+  LuClock10,
+} from "react-icons/lu";
+import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import { toast } from "react-toastify";
+import GoogleMapComponent from "../components/GoogleDirection";
+
 const NewMyBooking = () => {
   const { id } = useParams();
   // storing _id of selected worker
@@ -22,18 +38,35 @@ const NewMyBooking = () => {
     workers: contextWorkers,
   } = useAppContext();
   const [isFavorite, setIsFavorite] = useState(false);
-
   const location = useLocation();
   const parentContainerRef = useRef(null);
 
+  const {
+    selectedServices,
+    setSelectedServices,
+    slotTime,
+    setSlotTime,
+    selectedDayDate,
+    setSelectedDayDate,
+    getCurrentDayDate,
+  } = useBooking();
+
+  const { workersLocations, userLocation, userAddress } =
+    useContext(LocationContext);
+
+  // ------------------DEFAULT EVERYTHING ON PAGE LOAD
   useEffect(() => {
     if (parentContainerRef.current) {
       parentContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      setSelectedServices([]);
+      setSlotTime("");
+      setSelectedDayDate(getCurrentDayDate());
     }
   }, [location.pathname]);
-  //-------------
+  //-------------------------------------------------
+  //-------------FIND THE WORKER DETAILS FROM BACKEND
+  //--------------------------------------------------
   useEffect(() => {
-    // Only run if we have workers data from context
     if (contextWorkers.length > 0) {
       setIsLoading(true);
       try {
@@ -49,8 +82,9 @@ const NewMyBooking = () => {
       }
     }
   }, [contextWorkers, id]);
-
-  // Fetching review for selected worker----------
+  //--------------------------------------------------------------------
+  // ------------------------------Fetching review for selected worker
+  //--------------------------------------------------------------------
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
@@ -71,14 +105,15 @@ const NewMyBooking = () => {
         // console.log(data); reviews debugging log
       } catch (error) {
         console.error("Error fetching reviews:", error.message);
-        setReviews([]); // Set empty array on error
+        setReviews([]);
       }
     };
 
     fetchReviews();
   }, [id]);
-  //-----------------------------
-  // console.log("logged in , user id-----", user._id); debugging logs
+  //-----------------------------------------------------
+  //-----------------------------BOOKMARKING FAVOURITE WORKERS
+  //------------------------------------------------------
   const checkIfFavorite = async () => {
     if (!user?._id || !workerInfo?._id) return;
 
@@ -92,13 +127,14 @@ const NewMyBooking = () => {
     }
   };
 
-  // Call this when component loads
   useEffect(() => {
     checkIfFavorite();
   }, [workerInfo]);
+  //------------------------------------------------------
+  // ------------------------------------------SUB SERVICES
+  //------------------------------------------------------
 
-  // SUBSERVICES ---------------------------
-  const [subservices, setSubservices] = useState([]);
+  const [subservices, setSubservices] = useState([]); //SHOW ALL SERVICES FOR CATEGORY
   useEffect(() => {
     if (workerInfo?.category) {
       fetchSubservices(workerInfo.category);
@@ -113,11 +149,135 @@ const NewMyBooking = () => {
       console.error("Error fetching subservices:", error);
     }
   };
+  // const [selectedServices, setSelectedServices] = useState([]); // CONTAINS SELECTED SERVICE ID
+  const handleClick = (serviceId) => {
+    setSelectedServices((prev) =>
+      prev.includes(serviceId)
+        ? prev.filter((id) => id !== serviceId)
+        : [...prev, serviceId]
+    );
+  };
+  //------TIME SLOTS --------
+  const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  const monthsOfYear = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
+  const [workerSlot, setWorkerSlot] = useState([]); // Stores all available slots
+  const [slotIndex, setSlotIndex] = useState(0); // Tracks selected day index
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // drawer
+  const toggleDrawer = () => {
+    if (!selectedDayDate.day || !selectedDayDate.date) {
+      toast.info("Please select a valid day and date");
+      return;
+    }
 
-  // debugging logs to check the deatils of selected worker --------------->
+    if (!selectedServices || selectedServices.length === 0) {
+      toast.info("Please select at least one service");
+      return;
+    }
+
+    if (!slotTime) {
+      toast.info("Please select a time slot");
+      return;
+    }
+
+    // If all checks pass, open the drawer
+    setIsDrawerOpen(true);
+  };
+  //-----
+  const getAvailableSlots = async () => {
+    setWorkerSlot([]);
+
+    let today = new Date();
+
+    for (let i = 0; i < 7; i++) {
+      let currentDate = new Date(today);
+      currentDate.setDate(today.getDate() + i);
+
+      let endtime = new Date(currentDate);
+      endtime.setHours(20, 0, 0, 0); // Set closing time to 7:00 PM
+
+      // Adjust start time for today (round to next 30-min mark)
+      if (i === 0) {
+        let minutes = currentDate.getMinutes();
+        let nextSlotMinutes = minutes < 60 ? 30 : 0;
+        let nextSlotHour =
+          minutes < 30 ? currentDate.getHours() : currentDate.getHours() + 1;
+
+        // Ensure that first slot is at least 30 min in the future
+        if (
+          nextSlotHour < today.getHours() ||
+          (nextSlotHour === today.getHours() &&
+            nextSlotMinutes <= today.getMinutes())
+        ) {
+          nextSlotHour += 1;
+          nextSlotMinutes = 0;
+        }
+
+        currentDate.setHours(nextSlotHour);
+        currentDate.setMinutes(nextSlotMinutes);
+      } else {
+        currentDate.setHours(10, 0, 0, 0); // Other days start from 10:00 AM
+      }
+
+      let timeslots = [];
+
+      while (currentDate < endtime) {
+        let formattedTime = currentDate.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        timeslots.push({
+          datetime: new Date(currentDate),
+          time: formattedTime,
+        });
+
+        // Increment by 30 minutes
+        currentDate.setMinutes(currentDate.getMinutes() + 30);
+      }
+
+      setWorkerSlot((prev) => [...prev, timeslots]);
+    }
+  };
+
+  useEffect(() => {
+    getAvailableSlots();
+  }, []);
+
+  // DEBUGGING LOGS ------------------------------->
+  // console.log("logged in , user id-----", user._id);
   // console.log("WorkerInfo ----------->", workerInfo);
+  // console.log(selectedDayDate);y
+  console.log("selected services---->", selectedServices);
+  // console.log("check-->", slotIndex);
+  // console.log("check-->", slotTime);s
+  // console.log("worker-------->", workerSlot);
+  // console.log("USER Locations->", userLocation);
+  // console.log("Locations->", userAddress);
+  // console.log("WORKERS Locations->", workersLocations);
+  // console.log(
+  //   "User Location----------->",
+  //   userLocation?.latitude,
+  //   userLocation?.longitude
+  // );
+  // console.log("Worker Location---------->", workerInfo?.location?.coordinates);
+  // console.log("WORKER LAT-------->", workerInfo?.location?.coordinates[1]);
+  // console.log("WORKER LON-------->", workerInfo?.location?.coordinates[0]);
+
   if (isLoading) {
-    return <div>Loading...</div>; // Added loading state handling
+    return <div>Loading...</div>;
   }
 
   return (
@@ -265,7 +425,7 @@ const NewMyBooking = () => {
                 </div>
               </div>
               {/* ------------ Reviews ------------ */}
-              <div className="flex flex-col gap-4 pl-4  mb-4">
+              <div className="flex flex-col gap-4 pl-4  mb-6">
                 <div className="flex items-center justify-between">
                   <h1 className="text-[18px] font-medium">Reviews</h1>
                   <select
@@ -334,20 +494,22 @@ const NewMyBooking = () => {
                 </div>
               </div>
               {/*-------------------- SUB-SERVICES--------------- */}
-              <p className=" text-center text-[20px] font-medium text-primary mb-6 font-inter">
-                Select <span className=" capitalize">services to book</span>{" "}
-                <span className="w-6 h-6 rounded-full bg-primary"></span>
+
+              <p className=" flex items-center gap-2 justify-center text-[20px] font-medium text-primary mb-3 font-inter">
+                <LuBriefcase className="text-2xl text-primary" />
+                Select <span className=" capitalize">
+                  services to book
+                </span>{" "}
               </p>
 
-              <div className="w-full overflow-x-auto flex-shrink-0 mb-20 px-5">
+              <div className="w-full overflow-x-auto flex-shrink-0 mb-10 px-6">
                 <div className="subcategories flex items-center gap-4 flex-nowrap w-max flex-shrink-0 h-[12.5rem]">
                   {subservices.length > 0 ? (
                     subservices.map((service) => (
                       <div
                         key={service._id}
-                        className="relative border border-primary rounded-lg min-w-[180px] bg-primary/40 cursor-pointer text-center font-inter overflow-hidden hover:shadow-lg transition-all duration-300 hover:scale-110"
+                        className="border-[1px] border-primary rounded-lg min-w-[180px] bg-primary/40 cursor-pointer text-center font-inter overflow-hidden relative group transition-all duration-300 hover:scale-110 hover:shadow-lg"
                       >
-                        {/* Image Section */}
                         <div className="bg-gray-50 p-3 mb-3">
                           <img
                             src={service.image}
@@ -356,7 +518,6 @@ const NewMyBooking = () => {
                           />
                         </div>
 
-                        {/* Content Section */}
                         <div className="px-1 mb-3 flex flex-col justify-between">
                           <h4 className="text-[16px] text-black font-[400] tracking-tight capitalize">
                             {service.name}
@@ -366,10 +527,28 @@ const NewMyBooking = () => {
                           </p>
                         </div>
 
-                        {/* Hover Overlay */}
-                        <div className="absolute inset-0 bg-primary/35 flex items-center justify-center opacity-0 hover:opacity-100 transition-all duration-300">
-                          <button className="bg-primary text-white font-semibold px-4 py-1 rounded-md shadow-md hover:bg-blue-700 transition-all">
-                            Add
+                        <div
+                          className={`absolute inset-0 bg-primary/35 flex items-center justify-center transition-opacity duration-300 ${
+                            selectedServices.includes(service._id)
+                              ? "opacity-100"
+                              : "opacity-0 group-hover:opacity-100"
+                          }`}
+                        >
+                          <button
+                            onClick={() => handleClick(service._id)}
+                            className="bg-primary/85 text-white font-semibold px-3 py-1 rounded-md shadow-md hover:bg-blue-700 transition-all flex items-center gap-2"
+                          >
+                            {selectedServices.includes(service._id) ? (
+                              <>
+                                <LuCircleCheckBig className="text-[15px]" />{" "}
+                                Remove
+                              </>
+                            ) : (
+                              <>
+                                <LuCircleFadingPlus className="text-[15px]" />{" "}
+                                Add
+                              </>
+                            )}
                           </button>
                         </div>
                       </div>
@@ -377,6 +556,84 @@ const NewMyBooking = () => {
                   ) : (
                     <p>No services available for this category.</p>
                   )}
+                </div>
+              </div>
+
+              {/* -------------BOOKINGS SLOT -------------------------- */}
+              <div className="flex items-center gap-2 justify-center mb-4">
+                <LuCalendarClock className="text-2xl text-primary" />
+                <p className=" capitalize text-primary font-medium font-inter tracking-tight text-[20px]">
+                  Schedule Your Booking
+                </p>
+              </div>
+
+              <div className="w-full mb-5 flex justify-center">
+                <div className="flex items-center gap-4 flex-nowrap  ">
+                  {workerSlot.length &&
+                    workerSlot.map((item, index) => (
+                      <div
+                        onClick={() => {
+                          setSlotIndex(index);
+                          setSlotTime("");
+
+                          if (item[0]?.datetime) {
+                            const selectedDate = item[0].datetime;
+                            setSelectedDayDate({
+                              day: daysOfWeek[selectedDate.getDay()], // Store only the day (e.g., "SUN")
+                              date: selectedDate.getDate().toString(), // Store only the date (e.g., "23")
+                              month: monthsOfYear[selectedDate.getMonth()], // Store only the month (e.g., "FEB")
+                              year: selectedDate.getFullYear().toString(), // Store only the year (e.g., "2025")
+                            });
+                          }
+                        }}
+                        className={`text-center p-3 min-w-16 rounded-full cursor-pointer hover:-translate-y-2 transition-all duration-300 ${
+                          slotIndex === index
+                            ? "bg-primary text-white"
+                            : "border-[1px] border-primary bg-white text-gray-800"
+                        }`}
+                        key={index}
+                      >
+                        <p>
+                          {item[0] && daysOfWeek[item[0].datetime.getDay()]}
+                        </p>
+                        <p>{item[0] && item[0].datetime.getDate()}</p>
+                      </div>
+                    ))}
+                </div>
+              </div>
+              {/* time */}
+              <div className="flex items-center gap-3 w-full overflow-x-scroll flex-shrink-0 mb-6 h-16 px-2">
+                {workerSlot.length &&
+                  workerSlot[slotIndex].map((item, index) => (
+                    <p
+                      onClick={() => setSlotTime(item.time)}
+                      className={`text-sm font-medium flex-shrink-0 px-5 py-2 rounded-full cursor-pointer hover:scale-105 hover:shadow-lg transition-all duration-300 flex items-center gap-1 ${
+                        item.time === slotTime
+                          ? "bg-primary text-white"
+                          : "text-gray-800 border-[1px] border-primary bg-white"
+                      }`}
+                      key={index}
+                    >
+                      <LuClock10 className="text-xl" />{" "}
+                      {item.time.toLowerCase()}
+                    </p>
+                  ))}
+              </div>
+
+              {/* ---------continue button-------------- */}
+              <div className="flex items-center justify-center my-2 mb-10">
+                <div
+                  className="group relative cursor-pointer w-40 border bg-white rounded-full overflow-hidden text-primary font-semibold hover:shadow-lg transition-shadow duration-300"
+                  onClick={toggleDrawer}
+                >
+                  <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-3 py-2">
+                    Continue
+                  </span>
+                  <div className="flex gap-2 text-white z-10 items-center absolute top-0 h-full w-full justify-center translate-x-12 opacity-0 group-hover:-translate-x-1 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                    <span>Continue</span>
+                    <LuCalendarPlus className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </div>
+                  <div className="absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg bg-[#3b75ef] scale-[1] dark:group-hover:bg-[#3b75ef] group-hover:bg-[#3b75ef] group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0"></div>
                 </div>
               </div>
             </div>
@@ -390,6 +647,49 @@ const NewMyBooking = () => {
               <RelatedWorkers id={id} category={workerInfo.category} />
             </div>
           </div>
+          {/* Sliding Drawer */}
+          {/* {selectedDayDate.day} */}
+          <AnimatePresence>
+            {isDrawerOpen && (
+              <motion.div
+                initial={{ x: "100%", opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: "100%", opacity: 0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="fixed top-0 right-0 h-full w-[500px] bg-white shadow-2xl px-5 py-5 z-[999] border-l-[2px] border-gray-200"
+              >
+                <img src={assets.z} alt="" className="w-8" />
+                <div className="">
+                  {userLocation?.latitude &&
+                  userLocation?.longitude &&
+                  workerInfo?.location?.coordinates?.[0] !== undefined &&
+                  workerInfo?.location?.coordinates?.[1] !== undefined ? (
+                    <GoogleMapComponent
+                      userLocation={{
+                        lat: Number(userLocation.latitude),
+                        lng: Number(userLocation.longitude),
+                      }}
+                      workerLocation={{
+                        lat: Number(workerInfo.location.coordinates[1]),
+                        lng: Number(workerInfo.location.coordinates[0]),
+                      }}
+                    />
+                  ) : (
+                    <p>Loading map...</p>
+                  )}
+                </div>
+
+                {/* Close Button */}
+                <motion.button
+                  onClick={() => setIsDrawerOpen(false)}
+                  whileTap={{ scale: 0.9 }}
+                  className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+                >
+                  <IoClose className="text-3xl text-primary" />
+                </motion.button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       ) : (
         <div>Worker not found</div> // Added meaningful message

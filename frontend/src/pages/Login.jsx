@@ -48,100 +48,103 @@ const Register = () => {
   return (
     <div className="flex  font-inter p-1">
       {/* leftside */}
-      <div className="min-w-[36%] max-w-[38%]  flex flex-col justify-center px-4">
-        <img src={logo} alt="" className="w-[11rem] mb-8" />
-        <h1 className="text-[30px] text-black font-medium tracking-tight capitalize px-8 leading-8 mb-2 text-center">
-          <span className="text-primary text-[34px]">Welcome </span>
-          Back!
-        </h1>
-        <p className="text-gray-400 italic text-[18px] font-medium text-center text-pretty">
-          Zipserve commits to deliver transparency and comfort to customers.
-        </p>
-        {/* -----------form--------------- */}
-        <form
-          className="flex flex-col gap-2 items-center justify-center mt-5 bg-gray-50 py-4 rounded-3xl"
-          onSubmit={handleLogin}
-        >
-          <div className="mb-4">
-            <GoogleLogin
-              // onSuccess={handleGoogleLogin}
-              onError={() => toast.error("Google Login Failed")}
-            />
-          </div>
+      <div className="min-w-[36%] max-w-[38%] px-4 py-8">
+        <img src={logo} alt="" className="w-[11rem] " />
 
-          <StyledWrapper>
-            {/* email */}
-            <div className="form mb-2">
-              <input
-                className="input"
-                placeholder="EMAIL"
-                value={email}
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <span className="input-border" />
-            </div>
-
-            {/* Pass */}
-            <div className="form">
-              <input
-                className="input"
-                placeholder="PASSWORD"
-                value={pass}
-                type="text"
-                onChange={(e) => setPass(e.target.value)}
-              />
-              <span className="input-border" />
-            </div>
-          </StyledWrapper>
-          {/* terms and condition */}
-          <div className="mt-4 flex items-center">
-            <StyledWrapper>
-              <label className="container">
-                <input type="checkbox" />
-                <svg viewBox="0 0 64 64" height="1em" width="1em">
-                  <path
-                    d="M 0 16 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 16 L 32 48 L 64 16 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 16"
-                    pathLength="575.0541381835938"
-                    className="path"
-                  />
-                </svg>
-              </label>
-            </StyledWrapper>
-            {
-              <label class="ml-2 text-sm text-gray-600" for="terms">
-                I agree to the
-                <a class="text-blue-600 hover:underline" href="#">
-                  Terms and Conditions
-                </a>
-              </label>
-            }
-          </div>
-          {/* submit button */}
-          <button
-            type="submit"
-            className="group relative cursor-pointer w-36 border bg-white rounded-full overflow-hidden text-black font-semibold hover:shadow-lg transition-shadow duration-300 mt-6"
-            // onClick={() => navigate("/workers")}
+        <div className=" flex flex-col justify-center h-full">
+          <h1 className="text-[30px] text-black font-medium tracking-tight capitalize px-8 leading-8 mb-2 text-center">
+            <span className="text-primary text-[34px]">Welcome </span>
+            Back!
+          </h1>
+          <p className="text-gray-400 italic text-[18px] font-medium text-center text-pretty">
+            Zipserve commits to deliver transparency and comfort to customers.
+          </p>
+          {/* -----------form--------------- */}
+          <form
+            className="flex flex-col gap-2 items-center justify-center mt-5 bg-gray-50 py-4 rounded-3xl"
+            onSubmit={handleLogin}
           >
-            <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-2 py-2">
-              Login
-            </span>
-            <div className="flex gap-2 text-white z-10 items-center absolute top-0 h-full w-full justify-center translate-x-12 opacity-0 group-hover:-translate-x-1 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-              <span>Login</span>
-              <LuLogIn className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+            <div className="mb-4">
+              <GoogleLogin
+                // onSuccess={handleGoogleLogin}
+                onError={() => toast.error("Google Login Failed")}
+              />
             </div>
-            <div className="absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg bg-[#3b75ef] scale-[1] dark:group-hover:bg-[#3b75ef] group-hover:bg-[#3b75ef] group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0"></div>
-          </button>
-        </form>
-        <p
-          onClick={() => navigate("/register")}
-          className="text-[14px] font-light mt-6 tracking-tight pl-8 text-gray-500"
-        >
-          New To Zipserve?{" "}
-          <span className="text-primary underline underline-offset-4 cursor-pointer hover:text-blue-700">
-            Register
-          </span>
-        </p>
+
+            <StyledWrapper>
+              {/* email */}
+              <div className="form mb-2">
+                <input
+                  className="input"
+                  placeholder="EMAIL"
+                  value={email}
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <span className="input-border" />
+              </div>
+
+              {/* Pass */}
+              <div className="form">
+                <input
+                  className="input"
+                  placeholder="PASSWORD"
+                  value={pass}
+                  type="text"
+                  onChange={(e) => setPass(e.target.value)}
+                />
+                <span className="input-border" />
+              </div>
+            </StyledWrapper>
+            {/* terms and condition */}
+            <div className="mt-4 flex items-center">
+              <StyledWrapper>
+                <label className="container">
+                  <input type="checkbox" />
+                  <svg viewBox="0 0 64 64" height="1em" width="1em">
+                    <path
+                      d="M 0 16 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 16 L 32 48 L 64 16 V 8 A 8 8 90 0 0 56 0 H 8 A 8 8 90 0 0 0 8 V 56 A 8 8 90 0 0 8 64 H 56 A 8 8 90 0 0 64 56 V 16"
+                      pathLength="575.0541381835938"
+                      className="path"
+                    />
+                  </svg>
+                </label>
+              </StyledWrapper>
+              {
+                <label class="ml-2 text-sm text-gray-600" for="terms">
+                  I agree to the
+                  <a class="text-blue-600 hover:underline" href="#">
+                    Terms and Conditions
+                  </a>
+                </label>
+              }
+            </div>
+            {/* submit button */}
+            <button
+              type="submit"
+              className="group relative cursor-pointer w-36 border bg-white rounded-full overflow-hidden text-black font-semibold hover:shadow-lg transition-shadow duration-300 mt-6"
+              // onClick={() => navigate("/workers")}
+            >
+              <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-2 py-2">
+                Login
+              </span>
+              <div className="flex gap-2 text-white z-10 items-center absolute top-0 h-full w-full justify-center translate-x-12 opacity-0 group-hover:-translate-x-1 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                <span>Login</span>
+                <LuLogIn className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </div>
+              <div className="absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg bg-[#3b75ef] scale-[1] dark:group-hover:bg-[#3b75ef] group-hover:bg-[#3b75ef] group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0"></div>
+            </button>
+          </form>
+          <p
+            onClick={() => navigate("/register")}
+            className="text-[14px] font-light mt-6 tracking-tight pl-8 text-gray-500"
+          >
+            New To Zipserve?{" "}
+            <span className="text-primary underline underline-offset-4 cursor-pointer hover:text-blue-700">
+              Register
+            </span>
+          </p>
+        </div>
       </div>
       {/* rightside */}
       <div className="background flex-1 rounded-xl">

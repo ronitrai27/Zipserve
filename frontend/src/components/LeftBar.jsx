@@ -16,7 +16,7 @@ const LeftBar = () => {
             theme
               ? "text-gray-800 hover:text-primary"
               : "text-white hover:text-primary"
-          }  transition-all hover:-translate-x-2 hover:scale-125 ease-linear duration-300 z-50`}
+          }  transition-all hover:-translate-x-2 hover:scale-125 ease-linear duration-300 `}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +44,7 @@ const LeftBar = () => {
             theme
               ? "text-gray-800 hover:text-primary"
               : "text-white hover:text-primary"
-          }transition-all hover:-translate-x-2 hover:scale-110 ease-linear duration-300 z-50 `}
+          }transition-all hover:-translate-x-2 hover:scale-110 ease-linear duration-300  `}
         >
           <assets.GoInfo />
           {/* <span className="absolute z-50 top-0 right-full mr-2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -58,7 +58,7 @@ const LeftBar = () => {
             theme
               ? "text-gray-800 hover:text-primary"
               : "text-white hover:text-primary"
-          }transition-all hover:-translate-x-2 hover:scale-110 ease-linear duration-300 z-50 `}
+          }transition-all hover:-translate-x-2 hover:scale-110 ease-linear duration-300  `}
         >
           <assets.BsWallet2 />
           {/* <span className="absolute z-50 top-0 right-full mr-2 bg-primaryLight text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">

@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { LuArrowUpRight } from "react-icons/lu";
 import { MdOutlineDiscount } from "react-icons/md";
-import { useSearch } from "../context/SearchContext";
+// import { useSearch } from "../context/SearchContext";
 
 const MyProfile = () => {
-  const { recentSearch } = useSearch(); // Access recent searches
+  // const { recentSearch } = useSearch(); // Access recent searches
   // console.log("Recent Searches:", recentSearch);
   const [userData, setUserData] = useState({
     name: "John Parker",
@@ -130,9 +130,9 @@ const MyProfile = () => {
             </p>
 
             <ul className="mt-4 px-2 text-[20px] font-[400] text-gray-800 font-inter flex flex-col gap-5 items-center justify-center">
-              {recentSearch.map((search, index) => (
+              {/* {recentSearch.map((search, index) => (
                 <li key={index}>{search}</li>
-              ))}
+              ))} */}
             </ul>
           </div>
         </div>

@@ -4,7 +4,7 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
 import { LocationProvider } from "./context/LocationContext.jsx";
-import { SearchProvider } from "./context/SearchContext";
+import { BookingProvider } from "./context/BookingContext";
 import ContextProvider from "./context/Context.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 const CLIENT_ID =
@@ -13,13 +13,13 @@ createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <LocationProvider>
       <AppProvider>
-        <SearchProvider>
+        <BookingProvider>
           <ContextProvider>
             <GoogleOAuthProvider clientId={CLIENT_ID}>
               <App />
             </GoogleOAuthProvider>
           </ContextProvider>
-        </SearchProvider>
+        </BookingProvider>
       </AppProvider>
     </LocationProvider>
   </BrowserRouter>
