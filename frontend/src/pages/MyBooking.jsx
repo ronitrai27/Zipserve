@@ -17,6 +17,7 @@ import {
   LuBriefcase,
   LuCalendarPlus,
   LuClock10,
+  LuMapPinCheck,
 } from "react-icons/lu";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -656,10 +657,10 @@ const NewMyBooking = () => {
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: "100%", opacity: 0 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="fixed top-0 right-0 h-full w-[500px] bg-white shadow-2xl px-5 py-5 z-[999] border-l-[2px] border-gray-200"
+                className="fixed top-0 right-0 h-full w-[520px] bg-white shadow-2xl px-4 py-5 z-[999] border-l-[2px] border-gray-200"
               >
                 <img src={assets.z} alt="" className="w-8" />
-                <div className="">
+                <div className="mt-5 bg-gray-200 p-2 rounded-xl">
                   {userLocation?.latitude &&
                   userLocation?.longitude &&
                   workerInfo?.location?.coordinates?.[0] !== undefined &&
@@ -677,6 +678,21 @@ const NewMyBooking = () => {
                   ) : (
                     <p>Loading map...</p>
                   )}
+                </div>
+                <div className="coupons-details font-rubik">
+                  <p className="flex items-center gap-2 font-extralight text-sm text-gray-500 tracking-tighter my-1 font-inter ">
+                    <LuMapPinCheck className="text-2xl text-primaryLight" />
+                    {userAddress}{" "}
+                  </p>
+                  <div className="coupons flex items-center gap-3 py-1 justify-center mx-auto  w-[280px] rounded-full bg-gradient-to-r from-blue-300 via-primary/90 to-blue-700 mt-4 shadow-lg">
+                    <img src={assets.gameCoins} alt="" className="w-8" />
+                    <p className=" capitalize text-[16px] text-white tracking-tighter font-[400]">
+                      use coins to avail discounts!
+                    </p>
+                  </div>
+                  <p className="worker-id text-gray-600 font-light tracking-tighter font-inter text-[14px] mt-8">
+                    Worker ID: {workerInfo?._id}
+                  </p>
                 </div>
 
                 {/* Close Button */}

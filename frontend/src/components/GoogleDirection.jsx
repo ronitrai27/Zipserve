@@ -63,6 +63,7 @@ const GoogleMapComponent = ({ userLocation, workerLocation }) => {
   // Use the useLoadScript hook to load the Google Maps API
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ",
+    // AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ
   });
 
   useEffect(() => {
@@ -97,7 +98,7 @@ const GoogleMapComponent = ({ userLocation, workerLocation }) => {
     <GoogleMap
       center={workerLocation}
       zoom={14}
-      mapContainerStyle={{ width: "100%", height: "400px" }}
+      mapContainerStyle={{ width: "100%", height: "260px" }}
       options={{
         disableDefaultUI: true,
         zoomControl: false,
