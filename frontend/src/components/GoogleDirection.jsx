@@ -98,7 +98,7 @@ const GoogleMapComponent = ({ userLocation, workerLocation }) => {
     <GoogleMap
       center={workerLocation}
       zoom={14}
-      mapContainerStyle={{ width: "100%", height: "260px" }}
+      mapContainerStyle={{ width: "100%", height: "280px" }}
       options={{
         disableDefaultUI: true,
         zoomControl: false,

@@ -7,6 +7,7 @@ import { useBooking } from "../context/BookingContext";
 import { LocationContext } from "../context/LocationContext";
 import Rating from "@mui/material/Rating";
 import { IoClose } from "react-icons/io5";
+import { PiCoinsLight } from "react-icons/pi";
 import {
   LuPenLine,
   LuBookmarkPlus,
@@ -50,6 +51,12 @@ const NewMyBooking = () => {
     selectedDayDate,
     setSelectedDayDate,
     getCurrentDayDate,
+    servicePrice,
+    setServicePrice,
+    commission,
+    setCommission,
+    totalPrice,
+    setTotalPrice,
   } = useBooking();
 
   const { workersLocations, userLocation, userAddress } =
@@ -58,7 +65,7 @@ const NewMyBooking = () => {
   // ------------------DEFAULT EVERYTHING ON PAGE LOAD
   useEffect(() => {
     if (parentContainerRef.current) {
-      parentContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      // parentContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
       setSelectedServices([]);
       setSlotTime("");
       setSelectedDayDate(getCurrentDayDate());
@@ -132,10 +139,10 @@ const NewMyBooking = () => {
     checkIfFavorite();
   }, [workerInfo]);
   //------------------------------------------------------
-  // ------------------------------------------SUB SERVICES
+  // ------------------------------------------Fetching SUB SERVICES
   //------------------------------------------------------
 
-  const [subservices, setSubservices] = useState([]); //SHOW ALL SERVICES FOR CATEGORY
+  const [subservices, setSubservices] = useState([]); //SHOW ALL SERVICES from Backend FOR CATEGORY
   useEffect(() => {
     if (workerInfo?.category) {
       fetchSubservices(workerInfo.category);
@@ -150,7 +157,6 @@ const NewMyBooking = () => {
       console.error("Error fetching subservices:", error);
     }
   };
-  // const [selectedServices, setSelectedServices] = useState([]); // CONTAINS SELECTED SERVICE ID
   const handleClick = (serviceId) => {
     setSelectedServices((prev) =>
       prev.includes(serviceId)
@@ -206,30 +212,47 @@ const NewMyBooking = () => {
       let currentDate = new Date(today);
       currentDate.setDate(today.getDate() + i);
 
+      // Set start time to 10:00 AM for all days
+      currentDate.setHours(10, 0, 0, 0);
+
+      // Set end time to 8:00 PM for all days
       let endtime = new Date(currentDate);
-      endtime.setHours(20, 0, 0, 0); // Set closing time to 7:00 PM
+      endtime.setHours(20, 0, 0, 0);
 
-      // Adjust start time for today (round to next 30-min mark)
+      // If it's today, adjust the start time based on the current time
       if (i === 0) {
-        let minutes = currentDate.getMinutes();
-        let nextSlotMinutes = minutes < 60 ? 30 : 0;
-        let nextSlotHour =
-          minutes < 30 ? currentDate.getHours() : currentDate.getHours() + 1;
+        let currentTime = new Date();
 
-        // Ensure that first slot is at least 30 min in the future
-        if (
-          nextSlotHour < today.getHours() ||
-          (nextSlotHour === today.getHours() &&
-            nextSlotMinutes <= today.getMinutes())
-        ) {
-          nextSlotHour += 1;
-          nextSlotMinutes = 0;
+        // If the current time is before 10:00 AM, ensure the first slot is at least 30 minutes ahead
+        if (currentTime < currentDate) {
+          let timeDifference = currentDate - currentTime;
+          if (timeDifference < 30 * 60 * 1000) {
+            // If less than 30 minutes to 10:00 AM, start from 10:30 AM
+            currentDate.setMinutes(currentDate.getMinutes() + 30);
+          }
+        } else {
+          // If the current time is after 10:00 AM, start from the next 30-minute slot
+          let minutes = currentTime.getMinutes();
+          let nextSlotMinutes = minutes < 30 ? 30 : 0;
+          let nextSlotHour =
+            minutes < 30 ? currentTime.getHours() : currentTime.getHours() + 1;
+
+          // Set the next slot time
+          let nextSlotTime = new Date(currentTime);
+          nextSlotTime.setHours(nextSlotHour, nextSlotMinutes, 0, 0);
+
+          // Ensure the next slot is at least 30 minutes ahead
+          if (nextSlotTime - currentTime < 30 * 60 * 1000) {
+            nextSlotTime.setMinutes(nextSlotTime.getMinutes() + 30);
+          }
+
+          // If the next slot is before 10:00 AM, default to 10:00 AM
+          if (nextSlotTime < currentDate) {
+            nextSlotTime = currentDate;
+          }
+
+          currentDate = nextSlotTime;
         }
-
-        currentDate.setHours(nextSlotHour);
-        currentDate.setMinutes(nextSlotMinutes);
-      } else {
-        currentDate.setHours(10, 0, 0, 0); // Other days start from 10:00 AM
       }
 
       let timeslots = [];
@@ -253,17 +276,58 @@ const NewMyBooking = () => {
     }
   };
 
+  // Automatically update slots every minute
   useEffect(() => {
-    getAvailableSlots();
-  }, []);
+    getAvailableSlots(); // Initial call
 
+    const interval = setInterval(() => {
+      getAvailableSlots();
+    }, 60 * 1000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
+  //--------------------------------------------------------
+  //------------------------Filtering all data from service id
+  //--------------------------------------------------------
+
+  const selectedServiceDetails = subservices.filter((service) =>
+    selectedServices.includes(service._id)
+  );
+  // total price
+  useEffect(() => {
+    const total = selectedServiceDetails.reduce(
+      (sum, service) => sum + service.price,
+      0
+    );
+    setServicePrice(total);
+  }, [selectedServiceDetails]);
+  //-----------------------------------------------------------
+  //-----------------------------COMMISIION AND TOTAL
+  //-----------------------------------------------------------
+  useEffect(() => {
+    // Calculate commission: 15% of (worker fee + service price + platform fee)
+    const baseTotal = workerInfo?.price + servicePrice + 10;
+    const calculatedCommission = baseTotal * 0.15;
+
+    setCommission(calculatedCommission);
+  }, [workerInfo, servicePrice]);
+
+  useEffect(() => {
+    // Calculate total price: worker fee + service price + platform fee + commission
+    setTotalPrice(workerInfo?.price + servicePrice + 10 + commission);
+  }, [workerInfo, servicePrice, commission]);
   // DEBUGGING LOGS ------------------------------->
+
+  // console.log("details of services ->", selectedServiceDetails);
   // console.log("logged in , user id-----", user._id);
   // console.log("WorkerInfo ----------->", workerInfo);
-  // console.log(selectedDayDate);y
-  console.log("selected services---->", selectedServices);
+  console.log("comissions---->", commission);
+  console.log("TOTALPRICE---->", totalPrice);
+
+  // console.log(selectedDayDate);
+  // console.log("selected services---->", selectedServices);
   // console.log("check-->", slotIndex);
-  // console.log("check-->", slotTime);s
+  // console.log("check-->", slotTime);
   // console.log("worker-------->", workerSlot);
   // console.log("USER Locations->", userLocation);
   // console.log("Locations->", userAddress);
@@ -524,7 +588,7 @@ const NewMyBooking = () => {
                             {service.name}
                           </h4>
                           <p className="text-white font-medium text-[15px] uppercase">
-                            Price: ${service.price}
+                            Price: ₹{service.price}
                           </p>
                         </div>
 
@@ -657,10 +721,10 @@ const NewMyBooking = () => {
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: "100%", opacity: 0 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="fixed top-0 right-0 h-full w-[520px] bg-white shadow-2xl px-4 py-5 z-[999] border-l-[2px] border-gray-200"
+                className="fixed top-0 right-0 h-full w-[520px] overflow-x-auto scroll-smooth bg-white shadow-2xl px-4 py-5 z-[999] border-l-[2px] border-gray-200"
               >
                 <img src={assets.z} alt="" className="w-8" />
-                <div className="mt-5 bg-gray-200 p-2 rounded-xl">
+                <div className="mt-3 bg-gray-200 p-2 rounded-xl">
                   {userLocation?.latitude &&
                   userLocation?.longitude &&
                   workerInfo?.location?.coordinates?.[0] !== undefined &&
@@ -679,22 +743,136 @@ const NewMyBooking = () => {
                     <p>Loading map...</p>
                   )}
                 </div>
-                <div className="coupons-details font-rubik">
-                  <p className="flex items-center gap-2 font-extralight text-sm text-gray-500 tracking-tighter my-1 font-inter ">
-                    <LuMapPinCheck className="text-2xl text-primaryLight" />
+                <div className="coupons-details font-inter">
+                  <p className="flex items-center gap-2 font-extralight text-sm text-gray-600 tracking-tighter mt-2 mb-3 font-inter ">
+                    <LuMapPinCheck className="text-2xl text-primary" />
                     {userAddress}{" "}
                   </p>
-                  <div className="coupons flex items-center gap-3 py-1 justify-center mx-auto  w-[280px] rounded-full bg-gradient-to-r from-blue-300 via-primary/90 to-blue-700 mt-4 shadow-lg">
-                    <img src={assets.gameCoins} alt="" className="w-8" />
-                    <p className=" capitalize text-[16px] text-white tracking-tighter font-[400]">
+                  <div className="coupons flex items-center gap-3 py-2 justify-center mx-auto  w-[300px] rounded-full bg-gradient-to-r from-blue-300 via-primary/90 to-blue-700 mt-4 mb-8 shadow-lg">
+                    <img src={assets.gameCoins} alt="" className="w-10" />
+                    <p className=" capitalize text-[17px] text-white tracking-tighter font-[500]">
                       use coins to avail discounts!
                     </p>
                   </div>
-                  <p className="worker-id text-gray-600 font-light tracking-tighter font-inter text-[14px] mt-8">
-                    Worker ID: {workerInfo?._id}
-                  </p>
+                </div>
+                {/* bookings details */}
+                <div className="px-6 font-inter pt-4">
+                  <motion.table
+                    className="w-full"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    {/* Table Header */}
+                    <thead>
+                      <tr className=" border-b border-gray-300">
+                        <th className="text-[16px] text-gray-600 font-medium py-1 px-4 text-left">
+                          Service
+                        </th>
+                        <th className="text-[16px] text-gray-600 font-medium py-1 px-4 text-left">
+                          Price
+                        </th>
+                      </tr>
+                    </thead>
+
+                    {/* Table Body */}
+                    <tbody>
+                      {selectedServiceDetails.map((service, index) => (
+                        <motion.tr
+                          key={service._id}
+                          className="border-b border-gray-100 last:border-none mt-3"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.4, delay: index * 0.1 }}
+                        >
+                          <td className="text-[15px] text-gray-800 font-light tracking-tight py-3 px-4">
+                            {service.name}
+                          </td>
+                          <td className="text-[16px] text-gray-800 font-medium tracking-tight py-3 px-4">
+                            ₹{service.price}
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </motion.table>
+
+                  <motion.div
+                    className="mt-5 flex justify-between items-center bg-gray-200/50 px-12 py-2  rounded-full max-w-64 mx-auto"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <span>Services Price:</span>
+                    <span>₹{servicePrice}</span>
+                  </motion.div>
+                </div>
+                <p className="worker-id text-gray-600 font-light tracking-tighter font-inter text-[14px] mt-8 mb-3">
+                  Worker ID: {workerInfo?._id}
+                </p>
+                <div className="worker-Details mx-auto  flex  gap-6  font-inter font-medium text-[15px] bg-primary/90 text-white px-2 py-2   max-w-[22rem] rounded-lg mb-10">
+                  <img
+                    src={workerInfo?.profileImage}
+                    alt=""
+                    className="object-cover w-12 rounded-full border-[1px] border-gray-200 bg-white"
+                  />
+                  <div className="flex flex-col">
+                    <p className=" capitalize">{workerInfo?.name}</p>
+                    <p className="">{workerInfo?.phone}</p>
+                  </div>
+
+                  <p className=" capitalize">{workerInfo?.category}</p>
+                  <p className="text-[16px] text-white">₹{workerInfo?.price}</p>
                 </div>
 
+                {/* PRICING AND BOOKING DETAILS */}
+                <div className="px-10 mx-auto">
+                  <div className="flex items-center gap-5">
+                    <p className="text-[15px] font-inter flex items-center gap-3">
+                      <LuCalendarClock className="text-xl text-primary" />
+                      {selectedDayDate.date} {selectedDayDate.month}{" "}
+                      {selectedDayDate.year}
+                    </p>
+
+                    <p className="border-[1px] bg-gray-100 text-gray-600 font-inter font-medium rounded-full w-fit px-2 py-1 text-[14px]">
+                      {slotTime ? slotTime : "Select time"}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2  border-[1px] rounded-full border-gray-200 w-fit px-3 py-1 mt-2 mb-3">
+                    <PiCoinsLight className="text-xl text-yellow-500" />
+                    <p className="text-gray-600 font-medium">
+                      {user?.coins ?? 0.0}
+                    </p>
+                    {user?.coins >= 10 ? (
+                      <p className="">use coins</p>
+                    ) : (
+                      <p className="text-200 font-extralight text-sm">
+                        use coins
+                      </p>
+                    )}
+                  </div>
+                  {/* Pricing--- */}
+                  <div className="flex items-center justify-between border-b-[1px] border-gray-100 text-gray-800 mb-2 font-inter">
+                    <p className="text-[15px] tracking-tight">Service Price:</p>
+                    <p className="">₹{servicePrice}</p>
+                  </div>
+                  <div className="flex items-center justify-between border-b-[1px] border-gray-100 text-gray-800 mb-2 font-inter">
+                    <p className="text-[15px] tracking-tight">Visiting Fee:</p>
+                    <p className="">₹{workerInfo?.price}</p>
+                  </div>
+                  <div className="flex items-center justify-between border-b-[1px] border-gray-100 text-gray-800 mb-2 font-inter">
+                    <p className="text-[15px] tracking-tight">Comission 15%:</p>
+                    <p className="">₹{commission}</p>
+                  </div>
+                  <div className="flex items-center justify-between border-b-[1px] border-gray-100 text-gray-800 mb-2 font-inter">
+                    <p className="text-[15px] tracking-tight">Platform Fee:</p>
+                    <p className="">₹10</p>
+                  </div>
+                  <div className="flex items-center justify-between mt-4 bg-gray-100 px-3 py-2 w-44 mx-auto rounded-full font-inter">
+                    <p className="text-[16px] tracking-tight">TOTAL:</p>
+                    <p className="">₹{totalPrice}</p>
+                  </div>
+                </div>
                 {/* Close Button */}
                 <motion.button
                   onClick={() => setIsDrawerOpen(false)}

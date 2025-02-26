@@ -34,6 +34,9 @@ export const BookingProvider = ({ children }) => {
   const [selectedServices, setSelectedServices] = useState([]); // Stores selected service IDs
   const [slotTime, setSlotTime] = useState(""); // Tracks selected time slot
   const [selectedDayDate, setSelectedDayDate] = useState(getCurrentDayDate()); // Stores selected day & date
+  const [servicePrice, setServicePrice] = useState(0); // stores total service price
+  const [commission, setCommission] = useState(0); // 15% commisiion of total price
+  const [totalPrice, setTotalPrice] = useState(0); // totalPrice
 
   return (
     <BookingContext.Provider
@@ -45,6 +48,12 @@ export const BookingProvider = ({ children }) => {
         selectedDayDate,
         setSelectedDayDate,
         getCurrentDayDate,
+        servicePrice,
+        setServicePrice,
+        commission,
+        setCommission,
+        totalPrice,
+        setTotalPrice,
       }}
     >
       {children}
