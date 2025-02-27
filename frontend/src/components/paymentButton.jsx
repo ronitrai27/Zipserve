@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext";
+import { useBooking } from "../context/BookingContext";
 import { motion } from "framer-motion";
 import {
   LuCalendarPlus,
@@ -16,8 +17,11 @@ import { RiSecurePaymentLine } from "react-icons/ri";
 import { PiContactlessPayment } from "react-icons/pi";
 const PaymentButton = ({ totalPrice }) => {
   const { user } = useAppContext();
-  const [paymentMethod, setPaymentMethod] = useState("");
+  // const [paymentMethod, setPaymentMethod] = useState("");
   const [showMore, setShowMore] = useState(false);
+
+  const { paymentMethod, setPaymentMethod } = useBooking();
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";

@@ -165,7 +165,10 @@ const NewMyBooking = () => {
         : [...prev, serviceId]
     );
   };
-  //------TIME SLOTS --------
+  //------------------------------------------------------------
+  //---------------------------TIME SLOTS
+  //------------------------------------------------------------
+
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const monthsOfYear = [
     "JAN",
@@ -306,7 +309,6 @@ const NewMyBooking = () => {
   //-----------------------------COMMISIION AND TOTAL
   //-----------------------------------------------------------
   useEffect(() => {
-    // Calculate commission: 15% of (worker fee + service price + platform fee)
     const baseTotal = workerInfo?.price + servicePrice + 10;
     const calculatedCommission = baseTotal * 0.15;
 
@@ -314,12 +316,11 @@ const NewMyBooking = () => {
   }, [workerInfo, servicePrice]);
 
   useEffect(() => {
-    // Calculate total price: worker fee + service price + platform fee + commission
     setTotalPrice(workerInfo?.price + servicePrice + 10 + commission);
   }, [workerInfo, servicePrice, commission]);
   // DEBUGGING LOGS ------------------------------->
 
-  console.log("details of services ->", selectedServiceDetails);
+  // console.log("details of services ->", selectedServiceDetails);
   // console.log("logged in , user id-----", user._id);
   // console.log("WorkerInfo ----------->", workerInfo);
   // console.log("comissions---->", commission);
