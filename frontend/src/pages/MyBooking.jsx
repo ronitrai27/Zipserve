@@ -8,6 +8,7 @@ import { LocationContext } from "../context/LocationContext";
 import Rating from "@mui/material/Rating";
 import { IoClose } from "react-icons/io5";
 import { PiCoinsLight } from "react-icons/pi";
+import PaymentButton from "../components/paymentButton";
 import {
   LuPenLine,
   LuBookmarkPlus,
@@ -65,7 +66,7 @@ const NewMyBooking = () => {
   // ------------------DEFAULT EVERYTHING ON PAGE LOAD
   useEffect(() => {
     if (parentContainerRef.current) {
-      // parentContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
+      parentContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
       setSelectedServices([]);
       setSlotTime("");
       setSelectedDayDate(getCurrentDayDate());
@@ -318,12 +319,11 @@ const NewMyBooking = () => {
   }, [workerInfo, servicePrice, commission]);
   // DEBUGGING LOGS ------------------------------->
 
-  // console.log("details of services ->", selectedServiceDetails);
+  console.log("details of services ->", selectedServiceDetails);
   // console.log("logged in , user id-----", user._id);
   // console.log("WorkerInfo ----------->", workerInfo);
-  console.log("comissions---->", commission);
-  console.log("TOTALPRICE---->", totalPrice);
-
+  // console.log("comissions---->", commission);
+  // console.log("TOTALPRICE---->", totalPrice);
   // console.log(selectedDayDate);
   // console.log("selected services---->", selectedServices);
   // console.log("check-->", slotIndex);
@@ -780,15 +780,15 @@ const NewMyBooking = () => {
                       {selectedServiceDetails.map((service, index) => (
                         <motion.tr
                           key={service._id}
-                          className="border-b border-gray-100 last:border-none mt-3"
+                          className="border-b border-gray-100 last:border-none mt-3 bg-gray-50 rounded-xl"
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: index * 0.1 }}
                         >
-                          <td className="text-[15px] text-gray-800 font-light tracking-tight py-3 px-4">
+                          <td className="text-[15px] text-gray-800 font-light tracking-tight py-2 px-4">
                             {service.name}
                           </td>
-                          <td className="text-[16px] text-gray-800 font-medium tracking-tight py-3 px-4">
+                          <td className="text-[16px] text-gray-800 font-medium tracking-tight py-2 px-4">
                             ₹{service.price}
                           </td>
                         </motion.tr>
@@ -797,19 +797,19 @@ const NewMyBooking = () => {
                   </motion.table>
 
                   <motion.div
-                    className="mt-5 flex justify-between items-center bg-gray-200/50 px-12 py-2  rounded-full max-w-64 mx-auto"
+                    className="mt-5 flex justify-between items-center bg-gray-200/50 px-6 py-2  rounded-full max-w-56 mx-auto"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <span>Services Price:</span>
+                    <span className="text-[14px]">Services Price:</span>
                     <span>₹{servicePrice}</span>
                   </motion.div>
                 </div>
-                <p className="worker-id text-gray-600 font-light tracking-tighter font-inter text-[14px] mt-8 mb-3">
+                <p className="worker-id text-gray-600 font-light tracking-tighter font-inter text-[14px] mt-8 mb-4">
                   Worker ID: {workerInfo?._id}
                 </p>
-                <div className="worker-Details mx-auto  flex  gap-6  font-inter font-medium text-[15px] bg-primary/90 text-white px-2 py-2   max-w-[22rem] rounded-lg mb-10">
+                <div className="worker-Details mx-auto  flex  gap-6  font-inter font-medium text-[15px] bg-primary/90 text-white px-2 py-2   max-w-[22rem] rounded-lg mb-12">
                   <img
                     src={workerInfo?.profileImage}
                     alt=""
@@ -861,18 +861,21 @@ const NewMyBooking = () => {
                     <p className="">₹{workerInfo?.price}</p>
                   </div>
                   <div className="flex items-center justify-between border-b-[1px] border-gray-100 text-gray-800 mb-2 font-inter">
-                    <p className="text-[15px] tracking-tight">Comission 15%:</p>
+                    <p className="text-[15px] tracking-tight">
+                      Comission & Tax:
+                    </p>
                     <p className="">₹{commission}</p>
                   </div>
                   <div className="flex items-center justify-between border-b-[1px] border-gray-100 text-gray-800 mb-2 font-inter">
                     <p className="text-[15px] tracking-tight">Platform Fee:</p>
                     <p className="">₹10</p>
                   </div>
-                  <div className="flex items-center justify-between mt-4 bg-gray-100 px-3 py-2 w-44 mx-auto rounded-full font-inter">
-                    <p className="text-[16px] tracking-tight">TOTAL:</p>
+                  <div className="flex items-center justify-between mt-4 bg-gray-100 px-6 py-2 w-44 mx-auto rounded-full font-inter">
+                    <p className="text-[14px] tracking-tight ">TOTAL:</p>
                     <p className="">₹{totalPrice}</p>
                   </div>
                 </div>
+                <PaymentButton totalPrice={totalPrice} />
                 {/* Close Button */}
                 <motion.button
                   onClick={() => setIsDrawerOpen(false)}

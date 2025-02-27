@@ -24,12 +24,14 @@ const serviceRoutes = require("./routes/serviceRoutes");
 const authRoutes = require("./routes/AuthRoutes");
 const userRoutes = require("./routes/UserRoutes");
 const subServiceRoutes = require("./routes/SubServiceRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 //  Use Routes
 app.use("/api", workerRoutes);
 app.use("/api", serviceRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api", subServiceRoutes);
+app.use("/api/payments", paymentRoutes); // Payment Routes
 // Global Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
