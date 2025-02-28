@@ -16,10 +16,21 @@ exports.registerUser = async (req, res) => {
 
     if (!email) return res.status(400).json({ message: "Email required" });
     if (!validator.isEmail(email))
-      return res.status(400).json({ message: "Invalid email" });
+      return res.status(400).json({ message: "Invalid Email" });
+
+    if (!email.endsWith("@gmail.com")) {
+      return res.status(400).json({ message: "Invalid Email" });
+    }
 
     if (!password)
       return res.status(400).json({ message: "Password required" });
+
+    if (/^\d+$/.test(password)) {
+      return res
+        .status(400)
+        .json({ message: "Password must include letters & numbers" });
+    }
+
     if (password.length < 8)
       return res.status(400).json({ message: "Password Too Short" });
 

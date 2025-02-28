@@ -6,6 +6,7 @@ import styled from "styled-components";
 import logo from "../assets/newZipserveBlack-removebg-preview.png";
 import "../components/Register.css";
 import { LuLogIn } from "react-icons/lu";
+import { FaFacebook } from "react-icons/fa";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useAppContext } from "../context/AppContext";
@@ -19,6 +20,28 @@ const Register = () => {
 
   const navigate = useNavigate();
   const { setUser } = useAppContext();
+
+  //--------------------------------------------------
+  //---------------------PASSWORD - METER
+  //--------------------------------------------------
+  const getStrength = (password) => {
+    if (!password) return -1; // If empty, return -1 to hide meter
+
+    let strength = 0;
+    if (/[a-z]/.test(password)) strength++; // Lowercase check
+    if (/[A-Z]/.test(password)) strength++; // Uppercase check
+    if (/\d/.test(password)) strength++; // Numbers check
+    if (/[@$!%*?&]/.test(password)) strength++; // Special character check
+
+    return strength; // Strength will now range from 0 to 4
+  };
+
+  const strength = getStrength(pass);
+  const strengthLevels = ["Weak", "Fair", "Good", "Strong"];
+  const strengthColors = ["red", "yellow", "orange", "green"];
+  //----------------------------------------------------------------
+  //--------------------------SENDING DATA TO BACKEND
+  //----------------------------------------------------------------
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -72,11 +95,17 @@ const Register = () => {
             className="flex flex-col items-center justify-center mt-5 bg-gray-50 py-4 rounded-3xl"
             onSubmit={onSubmitHandler}
           >
-            <div className="mb-3">
+            <div className="mb-3 flex items-center justify-between gap-3">
               <GoogleLogin
                 // onSuccess={handleGoogleLogin}
                 onError={() => toast.error("Google Login Failed")}
               />
+
+              {/* facebook */}
+              <button className="flex items-center gap-2 px-3 py-[9px] bg-white text-black border-[.8px] border-gray-300 rounded-md hover:bg-blue-50 transition-all">
+                <FaFacebook size={20} className="text-blue-600" />
+                <span className="text-[14px]">Sign in with Facebook</span>
+              </button>
             </div>
             <StyledWrapper>
               {/* username */}
@@ -118,11 +147,32 @@ const Register = () => {
                   className="input"
                   placeholder="PASSWORD"
                   value={pass}
-                  type="text"
+                  type="password"
                   onChange={(e) => setPass(e.target.value)}
                 />
                 <span className="input-border" />
               </div>
+              {/* ----------------Password Strength Meter--------------------- */}
+              {strength >= 0 && (
+                <>
+                  <div className="w-full h-2 bg-gray-200 rounded mt-2">
+                    <div
+                      className="h-full rounded transition-all duration-300"
+                      style={{
+                        width: `${(strength / 4) * 100}%`,
+                        backgroundColor: strengthColors[strength - 1],
+                      }}
+                    ></div>
+                  </div>
+                  <p
+                    className={`text-${
+                      strengthColors[strength - 1]
+                    }-300 text-sm mt-1 text-gray-500/80`}
+                  >
+                    {strengthLevels[strength - 1]}
+                  </p>
+                </>
+              )}
             </StyledWrapper>
             {/* terms and condition */}
             <div className="mt-4 flex items-center">
@@ -140,7 +190,7 @@ const Register = () => {
               </StyledWrapper>
               {
                 <label class="ml-2 text-sm text-gray-600" for="terms">
-                  I agree to the
+                  I agree to the{" "}
                   <a class="text-blue-600 hover:underline" href="#">
                     Terms and Conditions
                   </a>
@@ -237,7 +287,7 @@ const StyledWrapper = styled.div`
   /* styling of Input */
   .input {
     color: black;
-    font-size: 0.9rem;
+    font-size: 0.84rem;
     background-color: transparent;
     width: 100%;
     box-sizing: border-box;

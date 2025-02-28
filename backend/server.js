@@ -9,7 +9,7 @@ const app = express();
 app.use(
   cors({
     origin: "http://localhost:3000", // Allow frontend origin
-    credentials: true, // Allow cookies & authorization headers
+    credentials: true,
   })
 );
 
