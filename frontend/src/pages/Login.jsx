@@ -102,6 +102,9 @@ const Register = () => {
                 />
                 <span className="input-border" />
               </div>
+              <p className="text-[14px] text-primary flex w-full justify-end my-1 capitalize cursor-pointer">
+                forget password?
+              </p>
             </StyledWrapper>
             {/* terms and condition */}
             <div className="mt-4 flex items-center">
@@ -185,7 +188,7 @@ const Register = () => {
                 <LuBadgeCheck className="text-3xl" /> 24/7 customer care
               </p>
             </div>
-            <div className=" rotate-3 -mt-20">
+            <div className=" -mt-20">
               <img src={img} alt="" className="" />
             </div>
           </div>

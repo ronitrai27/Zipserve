@@ -256,7 +256,7 @@ const Register = () => {
                 <LuBadgeCheck className="text-3xl" /> 24/7 customer care
               </p>
             </div>
-            <div className=" rotate-3 -mt-20">
+            <div className=" -mt-20">
               <img src={img} alt="" className="" />
             </div>
           </div>

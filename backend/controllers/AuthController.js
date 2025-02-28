@@ -2,7 +2,7 @@ const User = require("../models/UserModel.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
-
+const sendEmail = require("../utils/emailService.js");
 /**
  * @desc   Register a new user (Traditional Sign-Up)
  * @route  POST /api/auth/register
@@ -67,6 +67,37 @@ exports.registerUser = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
+    // 4️⃣ **Send Welcome Email** (Place it before sending response)
+    if (!existingUser) {
+      sendEmail(
+        email,
+        "Welcome to Zipserve! 🚀 | Your Trusted Professional Service Partner",
+        `Dear ${name},
+      
+      Welcome to Zipserve, India's first platform that ensures complete transparency when booking professionals. We are thrilled to have you on board!
+      
+       Why Choose Zipserve?  
+      ✅ Verified Professionals - Book only trusted and skilled service providers.\n  
+      ✅ Transparent Pricing - No hidden charges, pay only what you see. \n 
+      ✅ Seamless Booking - Quick, hassle-free, and secure service reservations.\n  
+      ✅ Real-time Updates - Track your service requests effortlessly. \n 
+      
+       Next Steps:  
+      👉 Explore Services: Browse through our vast range of professional services.  
+      👉 Book a Professional: Select your required service and schedule a booking.  
+      👉 Enjoy Seamless Service: Experience hassle-free and high-quality service delivery.  
+      
+      For any assistance, feel free to contact our support team:  
+      📞 Customer Support: +91-6280620947  
+      📧 Email: support@zipserve.com  
+      
+      Thank you for choosing Zipserve! We look forward to serving you.  
+      
+      Best Regards,  
+      Team Zipserve 
+      🚀 Empowering Smart Bookings`
+      ).catch((error) => console.error("Email sending failed:", error));
+    }
 
     res.status(201).json({
       message: "User registered successfully",
@@ -124,6 +155,17 @@ exports.loginUser = async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
+
+    //email--
+    const loginTime = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
+
+    sendEmail(
+      email,
+      "New Login Alert 🛡️",
+      `Hello ${user.name},\n\nYou just logged in to your account at: ${loginTime}.\n\nIf this wasn't you, please reset your password immediately.\n\nBest Regards,\nZipserve Team`
+    ).catch((error) => console.error("Email sending failed:", error));
 
     // Send Response
     res.status(200).json({
