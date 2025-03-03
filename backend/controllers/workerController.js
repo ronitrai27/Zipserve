@@ -2,7 +2,8 @@ const EmployeeModel = require("../models/workerModel.js");
 require("dotenv").config();
 const axios = require("axios");
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-// get workers by paginated--------------------------------------------------
+// ------------------get workers by paginated----------------------
+//getting all these parameters only if user wants otherwise , no need to provide these parameter , latitude and longitude is must required
 const getAllWorkers = async (req, res) => {
   try {
     const {
@@ -31,7 +32,7 @@ const getAllWorkers = async (req, res) => {
     // Convert distance to radians (5km / 6378.1km Earth's radius)
     const maxDistanceInRadians = 5 / 6378.1;
 
-    // Step 1: Fetch total workers **within 5km**
+    // ----------------FETCHING ALL WORKERS WITHINN 5KM---------------------------
     const locationFilter = {
       location: {
         $geoWithin: {
@@ -43,7 +44,7 @@ const getAllWorkers = async (req, res) => {
       locationFilter
     );
 
-    // Step 2: Apply additional filters (category, availability, price, etc.)
+    // ------------ Apply additional filters (category, availability, price, etc.)---------------
     const filter = { ...locationFilter };
 
     if (category) filter.category = category;
@@ -60,7 +61,7 @@ const getAllWorkers = async (req, res) => {
     // Step 3: Count workers **after filters**
     const filteredWorkersCount = await EmployeeModel.countDocuments(filter);
 
-    // Manual sorting in JavaScript (since MongoDB sorting is blocked)
+    // Manual sorting in JavaScript
     if (sort === "price_asc") {
       workers = workers.sort((a, b) => a.price - b.price);
     } else if (sort === "stars_desc") {

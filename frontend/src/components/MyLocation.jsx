@@ -86,7 +86,7 @@ function Maps() {
   const [selectedWorker, setSelectedWorker] = useState(null); // for info window
   const [showInfo, setShowInfo] = useState(false);
 
-  console.log("worker location from mylocation->", workersLocations); // debugging log ----
+  // console.log("worker location from mylocation->", workersLocations); // debugging log ----
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ",
   });

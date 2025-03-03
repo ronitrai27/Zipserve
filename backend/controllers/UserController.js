@@ -1,5 +1,5 @@
 const User = require("../models/UserModel.js");
-
+// this controller is for marking fav workers...
 // Toggle favorite worker (Add/Remove)
 const toggleFavoriteWorker = async (req, res) => {
   try {

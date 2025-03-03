@@ -58,6 +58,10 @@ const NewMyBooking = () => {
     setCommission,
     totalPrice,
     setTotalPrice,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    subservices,
+    setSubservices,
   } = useBooking();
 
   const { workersLocations, userLocation, userAddress } =
@@ -140,10 +144,9 @@ const NewMyBooking = () => {
     checkIfFavorite();
   }, [workerInfo]);
   //------------------------------------------------------
-  // ------------------------------------------Fetching SUB SERVICES
+  // ----------------------------Fetching SUB SERVICES
   //------------------------------------------------------
 
-  const [subservices, setSubservices] = useState([]); //SHOW ALL SERVICES from Backend FOR CATEGORY
   useEffect(() => {
     if (workerInfo?.category) {
       fetchSubservices(workerInfo.category);
@@ -158,6 +161,8 @@ const NewMyBooking = () => {
       console.error("Error fetching subservices:", error);
     }
   };
+
+  //selecting services from subService
   const handleClick = (serviceId) => {
     setSelectedServices((prev) =>
       prev.includes(serviceId)
@@ -186,7 +191,6 @@ const NewMyBooking = () => {
   ];
   const [workerSlot, setWorkerSlot] = useState([]); // Stores all available slots
   const [slotIndex, setSlotIndex] = useState(0); // Tracks selected day index
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // drawer
   const toggleDrawer = () => {
     if (!selectedDayDate.day || !selectedDayDate.date) {
       toast.info("Please select a valid day and date");
@@ -320,9 +324,9 @@ const NewMyBooking = () => {
   }, [workerInfo, servicePrice, commission]);
   // DEBUGGING LOGS ------------------------------->
 
-  // console.log("details of services ->", selectedServiceDetails);
+  // console.log("details of services from Bookings ->", selectedServiceDetails);
   // console.log("logged in , user id-----", user._id);
-  // console.log("WorkerInfo ----------->", workerInfo);
+  // console.log("WorkerInfo ----------->", workerInfo?._id);
   // console.log("comissions---->", commission);
   // console.log("TOTALPRICE---->", totalPrice);
   // console.log(selectedDayDate);
@@ -776,7 +780,7 @@ const NewMyBooking = () => {
                       </tr>
                     </thead>
 
-                    {/* Table Body */}
+                    {/* ----------Table Body----------- */}
                     <tbody>
                       {selectedServiceDetails.map((service, index) => (
                         <motion.tr
@@ -825,7 +829,7 @@ const NewMyBooking = () => {
                   <p className="text-[16px] text-white">₹{workerInfo?.price}</p>
                 </div>
 
-                {/* PRICING AND BOOKING DETAILS */}
+                {/* --------PRICING AND BOOKING DETAILS-------------- */}
                 <div className="px-10 mx-auto">
                   <div className="flex items-center gap-5">
                     <p className="text-[15px] font-inter flex items-center gap-3">
@@ -852,7 +856,7 @@ const NewMyBooking = () => {
                       </p>
                     )}
                   </div>
-                  {/* Pricing--- */}
+                  {/*-------------- Pricing--- */}
                   <div className="flex items-center justify-between border-b-[1px] border-gray-100 text-gray-800 mb-2 font-inter">
                     <p className="text-[15px] tracking-tight">Service Price:</p>
                     <p className="">₹{servicePrice}</p>
@@ -876,7 +880,12 @@ const NewMyBooking = () => {
                     <p className="">₹{totalPrice}</p>
                   </div>
                 </div>
-                <PaymentButton totalPrice={totalPrice} />
+                {/* payment -------------- */}
+                <PaymentButton
+                  // totalPrice={totalPrice}
+                  userId={user._id}
+                  workerId={workerInfo._id}
+                />
                 {/* Close Button */}
                 <motion.button
                   onClick={() => setIsDrawerOpen(false)}

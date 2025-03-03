@@ -38,6 +38,8 @@ export const BookingProvider = ({ children }) => {
   const [commission, setCommission] = useState(0); // 15% commisiion of total price
   const [totalPrice, setTotalPrice] = useState(0); // totalPrice
   const [paymentMethod, setPaymentMethod] = useState(""); // payment method eg - cash
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // drawer
+  const [subservices, setSubservices] = useState([]); //SHOW ALL SERVICES from Backend FOR CATEGORY
 
   return (
     <BookingContext.Provider
@@ -57,6 +59,10 @@ export const BookingProvider = ({ children }) => {
         setTotalPrice,
         paymentMethod,
         setPaymentMethod,
+        isDrawerOpen,
+        setIsDrawerOpen,
+        subservices,
+        setSubservices,
       }}
     >
       {children}

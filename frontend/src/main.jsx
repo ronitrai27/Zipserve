@@ -7,6 +7,7 @@ import { LocationProvider } from "./context/LocationContext.jsx";
 import { BookingProvider } from "./context/BookingContext";
 import ContextProvider from "./context/Context.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { BookedProvider } from "./context/BookedContext";
 const CLIENT_ID =
   "561432114508-s3oglnra3qbf1ul35955d6hv2v9ig2d5.apps.googleusercontent.com";
 createRoot(document.getElementById("root")).render(
@@ -15,9 +16,11 @@ createRoot(document.getElementById("root")).render(
       <AppProvider>
         <BookingProvider>
           <ContextProvider>
-            <GoogleOAuthProvider clientId={CLIENT_ID}>
-              <App />
-            </GoogleOAuthProvider>
+            <BookedProvider>
+              <GoogleOAuthProvider clientId={CLIENT_ID}>
+                <App />
+              </GoogleOAuthProvider>
+            </BookedProvider>
           </ContextProvider>
         </BookingProvider>
       </AppProvider>

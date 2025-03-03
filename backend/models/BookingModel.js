@@ -18,7 +18,12 @@ const bookingSchema = new mongoose.Schema(
       },
     ],
     totalPrice: { type: Number, required: true },
-    date: { type: String, required: true }, // Format: "YYYY-MM-DD"
+    date: {
+      day: { type: String, required: true }, // e.g., "SUN"
+      date: { type: Number, required: true }, // e.g., 2
+      month: { type: String, required: true }, // e.g., "MAR"
+      year: { type: Number, required: true }, // e.g., 2025
+    },
     time: { type: String, required: true }, // Format: "12:00 PM"
     paymentMethod: { type: String, required: true },
     status: {

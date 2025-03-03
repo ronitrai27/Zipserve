@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { useAppContext } from "../context/AppContext";
 import { useBooking } from "../context/BookingContext";
+import { useBooked } from "../context/BookedContext";
 import { motion } from "framer-motion";
 import {
   LuCalendarPlus,
@@ -15,13 +17,87 @@ import { MdOutlinePayments } from "react-icons/md";
 import { LiaAddressCardSolid } from "react-icons/lia";
 import { RiSecurePaymentLine } from "react-icons/ri";
 import { PiContactlessPayment } from "react-icons/pi";
-const PaymentButton = ({ totalPrice }) => {
+const PaymentButton = ({ userId, workerId }) => {
   const { user } = useAppContext();
-  // const [paymentMethod, setPaymentMethod] = useState("");
+
   const [showMore, setShowMore] = useState(false);
 
-  const { paymentMethod, setPaymentMethod } = useBooking();
+  const {
+    setCurrentBookingId,
+    currentBookingId,
+    userBookDetails,
+    fetchUserBookings,
+  } = useBooked();
+  //----
+  useEffect(() => {
+    fetchUserBookings(); // Fetch bookings when component mounts
+  }, []);
 
+  useEffect(() => {
+    if (userBookDetails) {
+      console.log("User's Booking Details:", userBookDetails);
+    }
+  }, [userBookDetails]);
+  //----
+  const {
+    paymentMethod,
+    setPaymentMethod,
+    totalPrice,
+    setTotalPrice,
+    setIsDrawerOpen,
+    selectedServices,
+    setSelectedServices,
+    slotTime,
+    setSlotTime,
+    selectedDayDate,
+    setSelectedDayDate,
+    subservices,
+  } = useBooking();
+
+  //----------------------------------------------------------------
+  //---------------------------FILTER SERVICES NAMES
+  //----------------------------------------------------------------
+
+  const getSelectedServiceNames = () => {
+    return selectedServices.map((id) => {
+      const service = subservices.find((s) => s._id === id); // Find service by ID
+      return service ? service.name : "Unknown"; // Return name or "Unknown"
+    });
+  };
+  //----------------------------------------------------------------------
+  //---------------------------SEND BOOKING DETAILS
+  //----------------------------------------------------------------------
+
+  const sendBookingDetails = async () => {
+    const selectedServiceNames = getSelectedServiceNames();
+
+    try {
+      const response = await axios.post("http://localhost:8080/api/bookings", {
+        userId,
+        workerId,
+        subservices: selectedServiceNames.map((name) => ({ name })),
+        totalPrice,
+        date: {
+          day: selectedDayDate.day, // "SUN"
+          date: Number(selectedDayDate.date), // 2
+          month: selectedDayDate.month, // "MAR"
+          year: Number(selectedDayDate.year), // 2025
+        },
+        time: slotTime,
+        paymentMethod,
+      });
+
+      const { bookingId } = response.data;
+      setCurrentBookingId(bookingId);
+      await fetchUserBookings();
+    } catch (error) {
+      console.error("Error making booking:", error);
+    }
+  };
+
+  //----------------------------------------------------------------
+  //-----------------------RAZORPAY-PAYMENT
+  //----------------------------------------------------------------
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
@@ -52,16 +128,29 @@ const PaymentButton = ({ totalPrice }) => {
         description: "Zipserve keep records of your each Transactions",
         order_id: data.id,
         handler: async function (response) {
-          const verifyResponse = await axios.post(
-            "http://localhost:8080/api/payments/verify-payment",
-            {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            }
-          );
+          try {
+            // Verify payment on backend
+            await axios.post(
+              "http://localhost:8080/api/payments/verify-payment",
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }
+            );
 
-          alert(verifyResponse.data.message);
+            // ------------------After successful payment---------------
+            await sendBookingDetails();
+            toast.success("Booking Request Confirmed");
+            setSlotTime("");
+            setSelectedServices([]);
+            setTotalPrice(0);
+            setPaymentMethod("");
+            setIsDrawerOpen(false);
+          } catch (error) {
+            console.error("Error verifying payment or booking:", error);
+            toast.error("Booking failed!");
+          }
         },
         prefill: {
           name: user?.name,
@@ -79,15 +168,49 @@ const PaymentButton = ({ totalPrice }) => {
       console.error("Payment error:", error);
     }
   };
+  //----------------------------------------------------------------
+  //---------------------------HANDLE-BOOKING
+  //----------------------------------------------------------------
+  const handleBooking = async () => {
+    if (!paymentMethod) {
+      toast.info("Please select a payment method.");
+      return;
+    }
+    if (selectedServices.length === 0) {
+      toast.info("Please select at least one service.");
+      return;
+    }
+    if (!slotTime) {
+      toast.info("Please select a time slot.");
+      return;
+    }
 
-  const handleBooking = () => {
     if (paymentMethod === "cash") {
-      console.log("Cash Payment Selected - No action for now.");
-      alert("Booking with cash selected. You will implement this later.");
+      try {
+        await sendBookingDetails(); // Sending data
+        toast.success("Booking Request Initiated");
+        setSlotTime("");
+        setSelectedServices([]);
+        setTotalPrice(0);
+        setPaymentMethod("");
+        setIsDrawerOpen(false);
+      } catch (error) {
+        console.error("Booking error:", error);
+        toast.error("Booking Request Failed");
+      }
     } else {
       handlePayment();
     }
   };
+
+  //------------------------------------------------------------------
+  //--------------------------DEBUGGING LGS
+  //------------------------------------------------------------------
+  // console.log("user id from paymentButton.jsx", userId);
+  // console.log("Worker id from paymentButton.jsx", workerId);
+  // console.log("subservices from backend:", subservices);
+  // console.log("selected services NAMES from paymentButton.jsx", selectedServiceNames);
+  console.log("current booking id", currentBookingId);
 
   return (
     <div className="">
