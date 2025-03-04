@@ -27,6 +27,8 @@ const PaymentButton = ({ userId, workerId }) => {
     currentBookingId,
     userBookDetails,
     fetchUserBookings,
+    bookingCongrats,
+    setBookingCongrats,
   } = useBooked();
   //----
   useEffect(() => {
@@ -141,12 +143,13 @@ const PaymentButton = ({ userId, workerId }) => {
 
             // ------------------After successful payment---------------
             await sendBookingDetails();
-            toast.success("Booking Request Confirmed");
+            toast.success("Booking Request Initiated");
             setSlotTime("");
             setSelectedServices([]);
             setTotalPrice(0);
             setPaymentMethod("");
             setIsDrawerOpen(false);
+            setBookingCongrats(true);
           } catch (error) {
             console.error("Error verifying payment or booking:", error);
             toast.error("Booking failed!");
@@ -194,6 +197,7 @@ const PaymentButton = ({ userId, workerId }) => {
         setTotalPrice(0);
         setPaymentMethod("");
         setIsDrawerOpen(false);
+        setBookingCongrats(true);
       } catch (error) {
         console.error("Booking error:", error);
         toast.error("Booking Request Failed");
@@ -210,7 +214,7 @@ const PaymentButton = ({ userId, workerId }) => {
   // console.log("Worker id from paymentButton.jsx", workerId);
   // console.log("subservices from backend:", subservices);
   // console.log("selected services NAMES from paymentButton.jsx", selectedServiceNames);
-  console.log("current booking id", currentBookingId);
+  // console.log("current booking id", currentBookingId);
 
   return (
     <div className="">

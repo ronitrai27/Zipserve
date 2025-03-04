@@ -1,14 +1,17 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import RelatedWorkers from "../components/RelatedWorkers";
 import { useAppContext } from "../context/AppContext";
 import { useBooking } from "../context/BookingContext";
 import { LocationContext } from "../context/LocationContext";
+import { useBooked } from "../context/BookedContext";
 import Rating from "@mui/material/Rating";
 import { IoClose } from "react-icons/io5";
 import { PiCoinsLight } from "react-icons/pi";
 import PaymentButton from "../components/paymentButton";
+import coins from "../assets/many-coins.png";
+import atm from "../assets/atm-card.png";
 import {
   LuPenLine,
   LuBookmarkPlus,
@@ -20,6 +23,7 @@ import {
   LuCalendarPlus,
   LuClock10,
   LuMapPinCheck,
+  LuCalendarCheck,
 } from "react-icons/lu";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -40,6 +44,15 @@ const NewMyBooking = () => {
     toggleFavoriteWorker,
     workers: contextWorkers,
   } = useAppContext();
+
+  const {
+    currentBookingId,
+    bookingCongrats,
+    setBookingCongrats,
+    currentBookingDetails,
+  } = useBooked();
+  const navigate = useNavigate();
+
   const [isFavorite, setIsFavorite] = useState(false);
   const location = useLocation();
   const parentContainerRef = useRef(null);
@@ -66,8 +79,9 @@ const NewMyBooking = () => {
 
   const { workersLocations, userLocation, userAddress } =
     useContext(LocationContext);
-
+  //----------------------------------------------------------
   // ------------------DEFAULT EVERYTHING ON PAGE LOAD
+  //----------------------------------------------------------
   useEffect(() => {
     if (parentContainerRef.current) {
       parentContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
@@ -76,6 +90,35 @@ const NewMyBooking = () => {
       setSelectedDayDate(getCurrentDayDate());
     }
   }, [location.pathname]);
+  //------------------------------------------------------------
+  //-----------------SHOWING BOOKING CONGRATS
+  //------------------------------------------------------------
+  const [showDiv, setShowDiv] = useState(false);
+  const [countdown, setCountdown] = useState(6);
+  useEffect(() => {
+    if (bookingCongrats) {
+      // Wait 2 seconds before showing the div
+      const delayTimer = setTimeout(() => {
+        setShowDiv(true);
+
+        const countdownTimer = setInterval(() => {
+          setCountdown((prev) => {
+            if (prev === 1) {
+              clearInterval(countdownTimer);
+              setShowDiv(false);
+              setBookingCongrats(false);
+              navigate("/bookings"); // Redirect after countdown ends
+            }
+            return prev - 1;
+          });
+        }, 1000);
+
+        return () => clearInterval(countdownTimer); // Cleanup timer
+      }, 2000); // 2-second delay
+
+      return () => clearTimeout(delayTimer); // Cleanup delay timer
+    }
+  }, [bookingCongrats, navigate, setBookingCongrats]);
   //-------------------------------------------------
   //-------------FIND THE WORKER DETAILS FROM BACKEND
   //--------------------------------------------------
@@ -897,9 +940,83 @@ const NewMyBooking = () => {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* CONGRATS DIV */}
+          <div
+            className={` fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-500 ${
+              showDiv ? "opacity-100 visible" : "opacity-0 invisible"
+            }`}
+          >
+            <div className="body bg-white rounded-xl overflow-hidden shadow-2xl transform transition-transform duration-500 scale-100 font-inter w-[35rem]">
+              <div className="top py-3 bg-gradient-to-r from-blue-500 from-20% via-blue-700 via-70% to-blue-500 to-100% flex flex-col gap-2 items-center justify-center">
+                <div className="bg-gray-200/30 p-2 rounded-full">
+                  <LuCalendarCheck className="text-3xl text-white  " />
+                </div>
+
+                <p className="text-white tracking-tight text-[24px]">
+                  Request Sent
+                </p>
+                <div className="flex items-center gap-3">
+                  <p className=" capitalize text-[18px] text-gray-300 tracking-tight">
+                    Your booking request is being processed
+                  </p>
+                  <p className="w-3 h-3  rounded-full bg-yellow-500 animate-pulse transition-all duration-1000"></p>
+                </div>
+              </div>
+              <div className="middle bg-white px-4">
+                <p className="text-gray-500 text-sm my-3 text-center">
+                  Redirecting in <span className="font-bold">{countdown}</span>{" "}
+                  seconds...
+                </p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <LuCalendarCheck className="text-3xl text-primary" />
+                    <div className="flex flex-col ">
+                      <p className="text-primary tracking-tighter font-medium">
+                        Booking ID
+                      </p>
+                      <p className="text-[15px] tracking-tighter text-gray-500">
+                        {currentBookingId}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="bg-yellow-500 rounded-full px-4 w-fit py-1">
+                    <p className="text-white text-[15px] font-[400] flex items-center gap-2">
+                      <LuClock10 className="text-xl" /> Pending
+                    </p>
+                  </div>
+                </div>
+                <hr className="w-[90%] mx-auto border-b-[.8px] border-primary/20 my-5" />
+                <div className="bottom flex items-center justify-between mb-5">
+                  <img src={atm} alt="" className="w-28" />
+                  <div className="flex flex-col items-center">
+                    <p className=" capitalize text-[22px] tracking-tighter text-gray-800 font-medium mb-3">
+                      Congratulations ! {user?.name}
+                    </p>
+                    <div className="flex items-center w-fit bg-yellow-300 px-4 rounded-full py-2 ">
+                      <div className="flex flex-col items-center gap-1 ">
+                        <p className="text-black ">Rewards</p>
+                        <p className="text-gray-800 tracking-tighter text-sm">
+                          Will be credited after confirmation
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <img src={coins} alt="" className="w-10" />
+                        <p className="text-4xl font-medium text-white">
+                          3.5 <span className="text-lg text-black">coins</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* ------------------------ */}
         </div>
       ) : (
-        <div>Worker not found</div> // Added meaningful message
+        <div>Worker not found</div>
       )}
     </>
   );

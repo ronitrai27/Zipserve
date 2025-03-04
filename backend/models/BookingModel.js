@@ -18,6 +18,7 @@ const bookingSchema = new mongoose.Schema(
       },
     ],
     totalPrice: { type: Number, required: true },
+    surgeCharge: { type: Number, default: 0 },
     date: {
       day: { type: String, required: true }, // e.g., "SUN"
       date: { type: Number, required: true }, // e.g., 2

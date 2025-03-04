@@ -7,9 +7,10 @@ const BookedContext = createContext();
 // Provider Component
 export const BookedProvider = ({ children }) => {
   const { user } = useAppContext();
-  const [currentBookingId, setCurrentBookingId] = useState(null);
-  const [userBookDetails, setUserBookDetails] = useState(null);
-
+  const [currentBookingId, setCurrentBookingId] = useState(null); // Booking ID of current booking
+  const [userBookDetails, setUserBookDetails] = useState(null); // all bookings of current user
+  const [currentBookingDetails, setCurrentBookingDetails] = useState(null); // booking details of current booking
+  const [bookingCongrats, setBookingCongrats] = useState(false); //For showing booking confirmation and coins
   const fetchUserBookings = async () => {
     try {
       if (!user?._id) return;
@@ -26,11 +27,19 @@ export const BookedProvider = ({ children }) => {
     fetchUserBookings();
   }, [user]);
 
-  //   useEffect(() => {
-  //     if (userBookDetails) {
-  //       console.log("All bookings for the user:", userBookDetails);
-  //     }
-  //   }, [userBookDetails]);
+  useEffect(() => {
+    if (userBookDetails && userBookDetails.length > 0) {
+      // Filter the booking that matches `currentBookingId`
+      const filteredBooking = userBookDetails.filter(
+        (booking) => booking._id === currentBookingId
+      );
+
+      // If found, set the booking details
+      if (filteredBooking.length > 0) {
+        setCurrentBookingDetails(filteredBooking[0]);
+      }
+    }
+  }, [userBookDetails, currentBookingId]); // Runs when bookings or ID updates
 
   return (
     <BookedContext.Provider
@@ -39,6 +48,10 @@ export const BookedProvider = ({ children }) => {
         setCurrentBookingId,
         userBookDetails,
         fetchUserBookings,
+        bookingCongrats,
+        setBookingCongrats,
+        currentBookingDetails,
+        setCurrentBookingDetails,
       }}
     >
       {children}
