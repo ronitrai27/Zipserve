@@ -6,10 +6,25 @@ require("./models/db"); // Ensure DB connection
 
 const app = express();
 
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000", // Allow frontend origin
+//     credentials: true,
+//   })
+// );
+
+const allowedOrigins = ["http://localhost:3000", "http://localhost:3010"];
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // Allow frontend origin
-    credentials: true,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Allow cookies if needed
   })
 );
 
@@ -26,14 +41,19 @@ const userRoutes = require("./routes/UserRoutes");
 const subServiceRoutes = require("./routes/SubServiceRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const bookingRoutes = require("./routes/BookingsRoute");
+const workerPannelRoutes = require("./workerRoutes/WorkerRoute.js");
+
 //  Use Routes
 app.use("/api", workerRoutes);
 app.use("/api", serviceRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api", subServiceRoutes);
-app.use("/api/payments", paymentRoutes); // Payment Routes
+app.use("/api/payments", paymentRoutes);
 app.use("/api/bookings", bookingRoutes);
+//worker Routes
+app.use("/api/workers", workerPannelRoutes);
+
 // Global Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

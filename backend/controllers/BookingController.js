@@ -61,20 +61,120 @@ const createBooking = async (req, res) => {
 // @access  Public (For now, userId is sent from frontend)
 const getUserBookings = async (req, res) => {
   try {
-    const { userId } = req.params; // Get userId from URL params
+    const { userId } = req.params;
 
     if (!userId) {
       return res.status(400).json({ message: "User ID is required." });
     }
 
-    // Fetch all bookings for the user
-    const bookings = await Booking.find({ userId }).sort({ createdAt: -1 });
+    // Define the statuses to fetch
+    const allowedStatuses = ["pending", "confirmed", "in-progress"];
 
-    res.status(200).json(bookings);
+    // Fetch only bookings with allowed statuses
+    const bookings = await Booking.find({
+      userId,
+      status: { $in: allowedStatuses },
+    }).sort({ createdAt: -1 });
+
+    // Count the number of bookings for each status
+    const pendingCount = await Booking.countDocuments({
+      userId,
+      status: "pending",
+    });
+    const confirmedCount = await Booking.countDocuments({
+      userId,
+      status: "confirmed",
+    });
+    const inProgressCount = await Booking.countDocuments({
+      userId,
+      status: "in-progress",
+    });
+
+    res.status(200).json({
+      bookings,
+      counts: {
+        pending: pendingCount,
+        confirmed: confirmedCount,
+        inProgress: inProgressCount,
+      },
+    });
   } catch (error) {
-    console.error("Error fetching bookings:", error);
+    console.error("Error fetching user bookings:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-module.exports = { createBooking, getUserBookings };
+//--------------------------------------------------------------
+//------------------------BOOKINGS BY ID
+//--------------------------------------------------------------
+const mongoose = require("mongoose");
+
+const getBookingById = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(bookingId)) {
+      return res.status(400).json({ message: "Invalid Booking ID format." });
+    }
+
+    const booking = await Booking.findById(bookingId);
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found." });
+    }
+
+    res.status(200).json(booking);
+  } catch (error) {
+    console.error("Error fetching booking by ID:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+//-------------------------------------------------------------
+//----------------------------FILTER BOOKINGS
+//-------------------------------------------------------------
+
+const getFilteredBookings = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { startDate, endDate, paymentMethod, status } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required." });
+    }
+
+    let filter = { userId };
+
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      filter["date.year"] = {
+        $gte: start.getFullYear(),
+        $lte: end.getFullYear(),
+      };
+      filter["date.month"] = {
+        $gte: start.toLocaleString("en-US", { month: "short" }).toUpperCase(),
+        $lte: end.toLocaleString("en-US", { month: "short" }).toUpperCase(),
+      };
+      filter["date.date"] = { $gte: start.getDate(), $lte: end.getDate() };
+    } else if (paymentMethod) {
+      filter.paymentMethod = paymentMethod;
+    } else if (status) {
+      filter.status = status;
+    }
+
+    const bookings = await Booking.find(filter).sort({ createdAt: -1 });
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    console.error("Error fetching filtered bookings:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  createBooking,
+  getUserBookings,
+  getBookingById,
+  getFilteredBookings,
+};

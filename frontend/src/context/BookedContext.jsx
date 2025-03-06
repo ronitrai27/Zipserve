@@ -9,15 +9,25 @@ export const BookedProvider = ({ children }) => {
   const { user } = useAppContext();
   const [currentBookingId, setCurrentBookingId] = useState(null); // Booking ID of current booking
   const [userBookDetails, setUserBookDetails] = useState(null); // all bookings of current user
-  const [currentBookingDetails, setCurrentBookingDetails] = useState(null); // booking details of current booking
   const [bookingCongrats, setBookingCongrats] = useState(false); //For showing booking confirmation and coins
+  const [bookingCounts, setBookingCounts] = useState({
+    pending: 0,
+    confirmed: 0,
+    inProgress: 0,
+  }); // Store counts
+  //-----------------------------------------
   const fetchUserBookings = async () => {
     try {
       if (!user?._id) return;
       const response = await axios.get(
         `http://localhost:8080/api/bookings/${user._id}`
       );
-      setUserBookDetails(response.data);
+
+      // Extracting bookings and counts separately
+      setUserBookDetails(response.data.bookings || []); // Store only bookings
+      setBookingCounts(
+        response.data.counts || { pending: 0, confirmed: 0, inProgress: 0 }
+      ); // Store counts
     } catch (error) {
       console.error("Error fetching user bookings:", error);
     }
@@ -26,20 +36,6 @@ export const BookedProvider = ({ children }) => {
   useEffect(() => {
     fetchUserBookings();
   }, [user]);
-
-  useEffect(() => {
-    if (userBookDetails && userBookDetails.length > 0) {
-      // Filter the booking that matches `currentBookingId`
-      const filteredBooking = userBookDetails.filter(
-        (booking) => booking._id === currentBookingId
-      );
-
-      // If found, set the booking details
-      if (filteredBooking.length > 0) {
-        setCurrentBookingDetails(filteredBooking[0]);
-      }
-    }
-  }, [userBookDetails, currentBookingId]); // Runs when bookings or ID updates
 
   return (
     <BookedContext.Provider
@@ -50,8 +46,7 @@ export const BookedProvider = ({ children }) => {
         fetchUserBookings,
         bookingCongrats,
         setBookingCongrats,
-        currentBookingDetails,
-        setCurrentBookingDetails,
+        bookingCounts,
       }}
     >
       {children}

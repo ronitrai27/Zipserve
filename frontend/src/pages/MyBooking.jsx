@@ -45,12 +45,7 @@ const NewMyBooking = () => {
     workers: contextWorkers,
   } = useAppContext();
 
-  const {
-    currentBookingId,
-    bookingCongrats,
-    setBookingCongrats,
-    currentBookingDetails,
-  } = useBooked();
+  const { currentBookingId, bookingCongrats, setBookingCongrats } = useBooked();
   const navigate = useNavigate();
 
   const [isFavorite, setIsFavorite] = useState(false);
@@ -993,10 +988,10 @@ const NewMyBooking = () => {
                     <p className=" capitalize text-[22px] tracking-tighter text-gray-800 font-medium mb-3">
                       Congratulations ! {user?.name}
                     </p>
-                    <div className="flex items-center w-fit bg-yellow-300 px-4 rounded-full py-2 ">
+                    <div className="flex items-center w-fit bg-yellow-200 px-4 rounded-full py-2 ">
                       <div className="flex flex-col items-center gap-1 ">
                         <p className="text-black ">Rewards</p>
-                        <p className="text-gray-800 tracking-tighter text-sm">
+                        <p className="text-black tracking-tighter text-sm">
                           Will be credited after confirmation
                         </p>
                       </div>

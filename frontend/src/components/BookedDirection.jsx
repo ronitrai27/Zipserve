@@ -57,12 +57,13 @@ const lightStyle = [
   },
 ];
 
-const GoogleMapComponent = ({ userLocation, workerLocation }) => {
+const BookedDirection = ({ userLocation, workerLocation }) => {
   const [directionsResponse, setDirectionsResponse] = useState(null);
 
   // Use the useLoadScript hook to load the Google Maps API
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ",
+    // AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ
   });
 
   useEffect(() => {
@@ -88,22 +89,24 @@ const GoogleMapComponent = ({ userLocation, workerLocation }) => {
     };
 
     getDirections();
-  }, [isLoaded, userLocation, workerLocation]);
-
+  }, [isLoaded]);
+  // isLoaded, userLocation, workerLocation
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
     <GoogleMap
       center={workerLocation}
-      zoom={14}
-      mapContainerStyle={{ width: "100%", height: "280px" }}
+      zoom={10}
+      mapContainerStyle={{ width: "100%", height: "100%" }}
       options={{
-        disableDefaultUI: true,
-        zoomControl: false,
+        disableDefaultUI: true, // Keeps UI minimal
+        zoomControl: true, // Enables zoom control
         streetViewControl: false,
         mapTypeControl: false,
         fullscreenControl: false,
+        draggable: true, // Enables dragging/movement
+        scrollwheel: true, // Allows zooming with mouse scroll
         styles: lightStyle,
       }}
     >
@@ -114,4 +117,4 @@ const GoogleMapComponent = ({ userLocation, workerLocation }) => {
   );
 };
 
-export default GoogleMapComponent;
+export default BookedDirection;

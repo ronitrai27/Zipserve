@@ -177,7 +177,6 @@ const Main = () => {
             <hr className="w-[90%] mx-auto mt-3 mb-2 border-gray-300 border-[.7px]" />
           </div>
           <div className="overflow-y-auto h-[calc(100vh-15rem)] scroll-smooth">
-            {/* <WorkerList category={category} sortOption={sortOption} /> */}
             <WorkerCards category={category} sortOption={sortOption} />
           </div>
 
