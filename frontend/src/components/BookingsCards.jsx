@@ -1,6 +1,9 @@
 import { useContext, useState, useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useBooked } from "../context/BookedContext";
 import { useAppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 import Rating from "@mui/material/Rating";
 import {
   LuCalendarCheck2,
@@ -9,7 +12,8 @@ import {
   LuCalendarX2,
 } from "react-icons/lu";
 const UserBookings = () => {
-  const { userBookDetails } = useBooked(); //contains all bookings of user
+  const navigate = useNavigate();
+  const { userBookDetails, fetchUserBookings } = useBooked(); //contains all bookings of user
   const [bookWorkers, setBookWorkers] = useState([]); //details of workers who are selected
   const { user, workers: contextWorkers } = useAppContext(); // all workers from context
   //-------------------------------------------------------------
@@ -26,6 +30,22 @@ const UserBookings = () => {
 
   //-----
   if (!userBookDetails) return <p>Fetching Your Bookings...</p>;
+  //-----------------------------------------------------------------
+  //-------------------------CANCEL BOOKING
+  //-----------------------------------------------------------------
+  const handleCancelBooking = async (bookingId) => {
+    try {
+      await axios.put(`http://localhost:8080/api/bookings/cancel/${bookingId}`);
+      toast.success("Booking cancelled successfully!");
+
+      // Refetch bookings after canceling
+      fetchUserBookings();
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
+      toast.error("Failed to cancel booking.");
+    }
+  };
+
   //----------------------------------------------------------------
   //-------------------------DEBUGGING LOGS-
   //----------------------------------------------------------------
@@ -151,7 +171,7 @@ const UserBookings = () => {
                 <div className="flex items-center justify-center ">
                   <div
                     className="group relative cursor-pointer w-28 border bg-white rounded-full overflow-hidden text-gray-800 text-[15px] font-medium hover:shadow-lg transition-shadow duration-300"
-                    onClick={() => navigate("")}
+                    onClick={() => handleCancelBooking(booking._id)}
                   >
                     <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-2 py-1">
                       cancel

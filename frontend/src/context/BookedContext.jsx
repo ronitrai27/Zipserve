@@ -1,7 +1,7 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useRef } from "react";
 import { useAppContext } from "../context/AppContext";
 import axios from "axios";
-
+import { toast } from "react-toastify";
 const BookedContext = createContext();
 
 // Provider Component
@@ -15,27 +15,70 @@ export const BookedProvider = ({ children }) => {
     confirmed: 0,
     inProgress: 0,
   }); // Store counts
-  //-----------------------------------------
+  const lastStatuses = useRef({});
+  //-----------------------------------------------
+  //---------------FETCH BOOINGS BY USER ID
+  //-----------------------------------------------
+  // const fetchUserBookings = async () => {
+  //   try {
+  //     if (!user?._id) return;
+  //     const response = await axios.get(
+  //       `http://localhost:8080/api/bookings/${user._id}`
+  //     );
+
+  //     // Extracting bookings and counts separately
+  //     setUserBookDetails(response.data.bookings || []); // Store only bookings
+  //     setBookingCounts(
+  //       response.data.counts || { pending: 0, confirmed: 0, inProgress: 0 }
+  //     ); // Store counts
+  //   } catch (error) {
+  //     console.error("Error fetching user bookings:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchUserBookings();
+  // }, [user]);
+
+  //--------------------------------------------------
   const fetchUserBookings = async () => {
     try {
       if (!user?._id) return;
+
       const response = await axios.get(
         `http://localhost:8080/api/bookings/${user._id}`
       );
+      const newBookings = response.data.bookings || [];
 
-      // Extracting bookings and counts separately
-      setUserBookDetails(response.data.bookings || []); // Store only bookings
-      setBookingCounts(
-        response.data.counts || { pending: 0, confirmed: 0, inProgress: 0 }
-      ); // Store counts
+      // Show toast notifications for status changes
+      newBookings.forEach((booking) => {
+        const prevStatus = lastStatuses.current[booking._id];
+
+        if (prevStatus && prevStatus !== booking.status) {
+          // toast.info(`Your booking ${booking._id} is now ${booking.status}`);
+          toast.info(`Your booking  is now ${booking.status}`);
+        }
+      });
+
+      // Store latest statuses for tracking
+      lastStatuses.current = newBookings.reduce((acc, booking) => {
+        acc[booking._id] = booking.status;
+        return acc;
+      }, {});
+
+      setUserBookDetails(newBookings);
     } catch (error) {
       console.error("Error fetching user bookings:", error);
     }
   };
 
   useEffect(() => {
-    fetchUserBookings();
+    fetchUserBookings(); // Initial fetch
+    const intervalId = setInterval(fetchUserBookings, 3000); // Poll every 3 sec
+
+    return () => clearInterval(intervalId); // Cleanup
   }, [user]);
+  //---------------------------------------------------
 
   return (
     <BookedContext.Provider

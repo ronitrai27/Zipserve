@@ -58,30 +58,29 @@ const createBooking = async (req, res) => {
     // Construct email message
     const subject = "Booking Confirmation - Your Request is Pending";
     const message = `
-        Dear ${user.name},
-  
-        Your booking request has been received and is currently pending approval.
-  
-        📌 Booking Details:
-        - Worker: ${worker.name}
-        - Date: ${date}
-        - Time: ${time}
-        - Services: ${subservices.join(", ")}
-        - Total Price: ₹${totalPrice}
-        - Payment Method: ${paymentMethod}
-  
-        You will receive a confirmation once the worker accepts your booking.
-  
-        Thank you for choosing our service!
-        
-        Regards,
-        [Your Service Name]
-      `;
+     Dear ${user.name},
+
+     Your booking request has been received and is currently pending approval.
+
+     📌 Booking Details:
+     - Worker: ${worker.name}
+     - Date: ${date}
+     - Time: ${time}
+     - Services: ${subservices.join(", ")}
+     - Total Price: ₹${totalPrice}
+     - Payment Method: ${paymentMethod}
+
+     You will receive a confirmation once the worker accepts your booking.
+
+     Thank you for choosing our service!
+     
+     Regards,
+     [Your Service Name]
+   `;
 
     // Send email
     // await sendEmail(user.email, subject, message);
     sendEmail(user.email, subject, message);
-
     // // Fetch the latest booking for this user
     // const latestBooking = await Booking.findOne({ userId })
     //   .sort({ createdAt: -1 }) // Sort by latest booking
@@ -239,6 +238,32 @@ const getUserBookingHistory = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+//-------------------------------------------------------------
+//----------------------------CANCEL BOOKING
+//-------------------------------------------------------------
+const cancelBooking = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+
+    // Find and update the booking status to "cancelled"
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      bookingId,
+      { status: "cancelled" },
+      { new: true }
+    );
+
+    if (!updatedBooking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Booking cancelled successfully", updatedBooking });
+  } catch (error) {
+    console.error("Error cancelling booking:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 //--------------------------------------------------------------
 //------------------------EXPORTS
 //--------------------------------------------------------------
@@ -248,4 +273,5 @@ module.exports = {
   getBookingById,
   getFilteredBookings,
   getUserBookingHistory,
+  cancelBooking,
 };
