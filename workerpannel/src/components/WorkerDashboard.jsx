@@ -21,7 +21,14 @@ const WorkerDashboard = ({ workerId }) => {
       }
     };
 
+    // Fetch bookings initially
     fetchBookings();
+
+    // Set an interval to fetch bookings every 3 seconds
+    const intervalId = setInterval(fetchBookings, 3000);
+
+    // Cleanup interval when the component is unmounted or workerId changes
+    return () => clearInterval(intervalId);
   }, [workerId]);
 
   //--------------------------------------------------------------

@@ -106,7 +106,7 @@ const UserBookings = () => {
                   </span>
                 </p>
 
-                <div className="flex items-center gap-5 px-2">
+                {/* <div className="flex items-center gap-5 px-2">
                   <p className="text-[15px] font-light shrink-0">
                     Selected services:
                   </p>
@@ -116,8 +116,8 @@ const UserBookings = () => {
                       {booking.subservices.map((s) => s.name).join(", ")}
                     </p>
                   </div>
-                </div>
-                <div className="flex items-center justify-between px-2 mt-1">
+                </div> */}
+                <div className="flex items-center justify-between px-2 mt-3">
                   <p className="text-[15px] font-light">
                     Total Price: ₹{booking.totalPrice}
                   </p>

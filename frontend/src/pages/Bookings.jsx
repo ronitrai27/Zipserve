@@ -83,7 +83,7 @@ const Bookings = () => {
         )}
         {/* div-container */}
         <div className="absolute pointer-events-none inset-0 right-4 flex justify-end items-center">
-          <div className="h-[calc(100vh-8rem)] max-w-[40%] w-[37%] bg-gray-50 z-[999] rounded-xl  shadow-lg hover:shadow-xl transition-all duration-300 px-1 py-2 pointer-events-auto">
+          <div className="h-[calc(100vh-8rem)] max-w-[40%] w-[37%] bg-gray-50  rounded-xl  shadow-lg hover:shadow-xl transition-all duration-300 px-1 py-2 pointer-events-auto">
             {/* top texts */}
             <div className="font-inter flex items-center justify-between px-2 pt-2 mb-2">
               <div className="flex items-center gap-2">
@@ -149,7 +149,7 @@ const Bookings = () => {
                 <input
                   type="text"
                   placeholder="Enter Booking ID..."
-                  className="w-full bg-inherit"
+                  className="w-full bg-inherit focus:outline-none font-inter"
                 />
                 <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center scale-125">
                   <IoSearchOutline className="text-white text-lg" />
@@ -182,6 +182,10 @@ const Bookings = () => {
             </div>
             <hr className="w-full border-b-[.6px] border-primary/30 mt-2" />
           </div>
+        </div>
+        {/* bookin-info-container */}
+        <div className=" absolute pointer-events-none inset-0 left-5 bottom-2 flex justify-start items-end">
+          <div className="h-[17rem] max-w-[46%] w-[35%] bg-gray-50  rounded-xl  shadow-lg hover:shadow-xl opacity-80 hover:opacity-100 transition-all duration-300 px-1 py-2 pointer-events-auto"></div>
         </div>
       </div>
     </div>

@@ -9,21 +9,11 @@ const getPendingBookingsForWorker = async (req, res) => {
       return res.status(400).json({ message: "Worker ID is required." });
     }
 
-    const checkForUpdates = async () => {
-      while (true) {
-        const pendingBookings = await Booking.find({
-          workerId,
-          status: "pending",
-        }).sort({ createdAt: -1 });
-        if (pendingBookings.length > 0) {
-          return res.status(200).json(pendingBookings);
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait 3 seconds before retrying
-      }
-    };
-
-    checkForUpdates();
+    const pendingBookings = await Booking.find({
+      workerId,
+      status: "pending",
+    }).sort({ createdAt: -1 });
+    return res.status(200).json(pendingBookings);
   } catch (error) {
     console.error("Error fetching pending bookings:", error);
     res.status(500).json({ message: "Internal Server Error" });
