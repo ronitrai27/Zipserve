@@ -49,7 +49,7 @@ const UserBookings = () => {
   //----------------------------------------------------------------
   //-------------------------DEBUGGING LOGS-
   //----------------------------------------------------------------
-  console.log("bookWorkers from BookingCards.jsx", bookWorkers); // all workers details filtered with id
+  // console.log("bookWorkers from BookingCards.jsx", bookWorkers); // all workers details filtered with id
   console.log("userBookDetails from BookingCards.jsx", userBookDetails); // all bookings of user
   return (
     <div className="min-w-[22rem] max-w-[26rem] flex flex-col  justify-center px-1 gap-3 mx-auto">
@@ -170,7 +170,12 @@ const UserBookings = () => {
                 {/* cancel */}
                 <div className="flex items-center justify-center ">
                   <div
-                    className="group relative cursor-pointer w-28 border bg-white rounded-full overflow-hidden text-gray-800 text-[15px] font-medium hover:shadow-lg transition-shadow duration-300"
+                    className={`group relative  w-28 border  rounded-full overflow-hidden text-gray-800 text-[15px] font-medium hover:shadow-lg transition-shadow duration-300 ${
+                      booking.status === "confirmed" ||
+                      booking.status === "in-progress"
+                        ? "cursor-not-allowed pointer-events-none bg-gray-300"
+                        : "cursor-pointer bg-white"
+                    }`}
                     onClick={() => handleCancelBooking(booking._id)}
                   >
                     <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-2 py-1">
@@ -180,7 +185,14 @@ const UserBookings = () => {
                       <span>sure?</span>
                       <LuCalendarX2 className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                     </div>
-                    <div className="absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg bg-red-500 scale-[1] dark:group-hover:bg-red-500 group-hover:bg-red-500 group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0"></div>
+                    <div
+                      className={`absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg  scale-[1] dark:group-hover:bg-red-500 group-hover:bg-red-500 group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0 ${
+                        booking.status === "confirmed" ||
+                        booking.status === "in-progress"
+                          ? "bg-gray-500"
+                          : "bg-red-500"
+                      }`}
+                    ></div>
                   </div>
                 </div>
               </div>
