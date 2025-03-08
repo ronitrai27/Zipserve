@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Maps from "./MyLocation";
 import Chatbot from "../chatbot/chatbot.jsx";
 import { LocationContext } from "../context/LocationContext";
+import { useBooked } from "../context/BookedContext";
 import {
   LuCalendarSearch,
   LuCalendar,
@@ -15,19 +16,61 @@ import {
   LuMapPinOff,
   LuMapPinCheckInside,
   LuArrowUpRight,
+  LuCalendarClock,
+  LuCalendarCheck,
 } from "react-icons/lu";
+import { CheckCircle2 } from "lucide-react";
 const Main = () => {
   const navigate = useNavigate();
-  const { theme } = useAppContext();
+  const { theme, user } = useAppContext();
   const { userAddress } = useContext(LocationContext);
   const [category, setCategory] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [visible, setVisible] = useState(false);
-  // const [categoryVisible, setCategoryVisible] = useState(false);
+  const { userBookDetails } = useBooked();
 
   const handleCategoryChange = (value) => {
     setCategory(value);
   };
+  //----------------------------------------------------
+  // const clickedBookDetails = userBookDetails.find(
+  //   (booking) => booking._id === clickedBookingId
+  // );
+
+  const statuses = [
+    {
+      name: "pending",
+      icon: LuCalendarClock,
+      color: "text-yellow-500",
+      bgColor: "bg-yellow-100",
+      borderColor: "border-yellow-500",
+    },
+    {
+      name: "confirmed",
+      icon: LuCalendarCheck,
+      color: "text-green-500",
+      bgColor: "bg-green-100",
+      borderColor: "border-green-500",
+    },
+    {
+      name: "in-progress",
+      icon: CheckCircle2,
+      color: "text-blue-500",
+      bgColor: "bg-blue-100",
+      borderColor: "border-blue-500",
+    },
+  ];
+
+  const firstBooking = userBookDetails[0];
+  const currentIndex = firstBooking
+    ? statuses.findIndex(
+        (s) => s.name.toLowerCase() === firstBooking.status.toLowerCase()
+      )
+    : 0;
+
+  //----------------------------------------------------
+  // console.log("main.jsx -------->", userBookDetails[0]);
+  //----------------------------------------------------
   return (
     <div
       className={`flex-1 w-full border-[1.6px]  ${
@@ -197,7 +240,7 @@ const Main = () => {
           </div>
         </div>
         {/* --------------------------MAP area -------------------------- */}
-        <div className="map-div w-[64%] h-[calc(100vh-7rem)] z-10 bg-white p-2 rounded-lg relative">
+        <div className="map-div w-[65%] h-[calc(100vh-7rem)] z-10 bg-white p-2 rounded-lg relative">
           <div className="w-full rounded-xl overflow-hidden relative ">
             <Maps />
 
@@ -215,32 +258,131 @@ const Main = () => {
                 </p>
               </div>
             </div>
-            {/* bookings------ */}
-            <div className="absolute bottom-3 left-3 bg-white text-gray-800 font-inter  opacity-80 hover:opacity-100 shadow-xl rounded-lg px-4 w-[56%] py-2">
-              <div className=" flex items-center justify-between px-3">
-                <p className="text-[18px] font-[400] tracking-tight ">
-                  Current Bookings
-                </p>
-                <LuCalendar className="text-3xl text-primary " />
-              </div>
-              <hr className="text-gray-300 border-b-[.8px] my-3" />
+            {/* --------------------------------bookings------------------ */}
+            <div className="absolute bottom-3 left-3 bg-white text-gray-800 font-inter  opacity-80 hover:opacity-100 shadow-xl rounded-lg px-4 w-[60%] py-2">
+              {userBookDetails.length > 0 ? (
+                <div className="">
+                  <p className="flex items-center gap-2 text-[15px] font-[400] tracking-tight select-text text-gray-600">
+                    <LuCalendarCheck className="text-xl text-primary" /> ID:{" "}
+                    {userBookDetails[0]._id}{" "}
+                  </p>
+                  {/* TIMELINE */}
+                  <div className="relative mt-5">
+                    <div className="flex items-center justify-between">
+                      {statuses.map((step, index) => {
+                        const Icon = step.icon;
+                        const isActive = index <= currentIndex;
+                        const isCurrentStep = index === currentIndex;
 
-              <div className="flex flex-col px-6 items-center gap-2">
-                <LuCalendarSearch className="text-2xl text-primary " />
-                <p className="text-[16px] font-[400] tracking-wide">
-                  No Bookings Found
-                </p>
-                <p className=" capitalize text-[14px] font-light text-gray-600 text-center leading-5 tracking-tight">
-                  Your calender is lookig empty. <br /> ready to fill it with
-                  amazing experiences.
-                </p>
-                <div className="w-fit bg-primary px-2 py-2 rounded-full shadow-md flex items-center gap-2 cursor-pointer hover:scale-105 transition-all duration-200 hover:bg-blue-700 mt-2">
-                  <LuCircleFadingPlus className="text-[18px] text-white" />
-                  <button className="tracking-tight text-[15px] text-white font-medium">
-                    Book Now
-                  </button>
+                        return (
+                          <div
+                            key={step.name}
+                            className="flex flex-col items-center relative z-10 font-inter capitalize"
+                          >
+                            <div
+                              className={`
+                  w-10 h-10 rounded-full flex items-center justify-center
+                  border-2 transition-all duration-300
+                  ${isActive ? step.borderColor : "border-gray-400"}
+                  ${isActive ? step.bgColor : "bg-gray-100"}
+                  ${isCurrentStep ? "scale-110" : ""}
+                `}
+                            >
+                              <Icon
+                                className={`w-5 h-5 ${
+                                  isActive ? step.color : "text-gray-400"
+                                }`}
+                              />
+                            </div>
+                            <p
+                              className={`text-xs mt-2 font-medium ${
+                                isActive ? "text-gray-900" : "text-gray-400"
+                              }`}
+                            >
+                              {step.name}
+                            </p>
+                          </div>
+                        );
+                      })}
+
+                      <div className="absolute top-5 left-0 right-0 h-0.5 z-0">
+                        <div className="absolute w-full h-full bg-gray-200"></div>
+                        <div
+                          className="absolute h-full transition-all duration-300 bg-gradient-to-r from-yellow-500 via-green-500 to-blue-500"
+                          style={{
+                            width:
+                              currentIndex === 0
+                                ? "0%"
+                                : currentIndex === 1
+                                ? "50%"
+                                : "100%",
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* ----------------- */}
+                  <div className="my-2 font-inter px-2">
+                    <p className="text-[15px] font-[400] tracking-tight capitalize">
+                      hey {user?.name}, your current booking is{" "}
+                      <span className="font-medium text-primary uppercase">
+                        {userBookDetails[0].status}
+                      </span>
+                    </p>
+                  </div>
+                  <p className=" capitalize text-center text-[14px] font-light font-inter">
+                    manage all your bookings
+                  </p>
+
+                  {/* --------------- */}
+                  <div className="flex items-center justify-center mt-2">
+                    <div
+                      className={`group relative cursor-pointer w-32 border bg-white rounded-full overflow-hidden text-black font-semibold hover:shadow-lg transition-shadow duration-300`}
+                      onClick={() => navigate("/bookings")}
+                    >
+                      <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-2 py-1">
+                        Bookings
+                      </span>
+                      <div className="flex gap-2 text-white z-10 items-center absolute top-0 h-full w-full justify-center translate-x-12 opacity-0 group-hover:-translate-x-1 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                        <span>Lets Go!</span>
+                        <LuCalendar className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                      </div>
+                      <div
+                        className={`absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg  scale-[1] dark:group-hover:bg-primary group-hover:bg-primary group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0 bg-primary`}
+                      ></div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="container">
+                  <div className=" flex items-center justify-between px-3">
+                    <p className="text-[18px] font-[400] tracking-tight ">
+                      Current Bookings
+                    </p>
+                    <LuCalendar className="text-3xl text-primary " />
+                  </div>
+                  <hr className="text-gray-300 border-b-[.8px] my-3" />
+                  <div className="flex flex-col px-6 items-center gap-2">
+                    <LuCalendarSearch className="text-2xl text-primary " />
+                    <p className="text-[16px] font-[400] tracking-wide">
+                      No Bookings Found
+                    </p>
+                    <p className=" capitalize text-[14px] font-light text-gray-600 text-center leading-5 tracking-tight">
+                      Your calender is lookig empty. <br /> ready to fill it
+                      with amazing experiences.
+                    </p>
+                    <div className="w-fit bg-primary px-2 py-2 rounded-full shadow-md flex items-center gap-2 cursor-pointer hover:scale-105 transition-all duration-200 hover:bg-blue-700 mt-2">
+                      <LuCircleFadingPlus className="text-[18px] text-white" />
+                      <button
+                        onClick={() => navigate("/bookings")}
+                        className="tracking-tight text-[15px] text-white font-medium"
+                      >
+                        Book Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* chatbot------------ */}

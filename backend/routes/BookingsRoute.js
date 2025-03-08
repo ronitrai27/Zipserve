@@ -6,6 +6,7 @@ const {
   getFilteredBookings,
   getUserBookingHistory,
   cancelBooking,
+  getAllBookings,
 } = require("../controllers/BookingController.js");
 
 const router = express.Router();
@@ -16,4 +17,5 @@ router.get("/book/:bookingId", getBookingById);
 router.get("/filter/:userId", getFilteredBookings);
 router.get("/history/:userId", getUserBookingHistory);
 router.put("/cancel/:bookingId", cancelBooking);
+router.get("/all/:workerId", getAllBookings);
 module.exports = router;

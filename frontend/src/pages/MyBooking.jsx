@@ -72,8 +72,7 @@ const NewMyBooking = () => {
     setSubservices,
   } = useBooking();
 
-  const { workersLocations, userLocation, userAddress } =
-    useContext(LocationContext);
+  const { userLocation, userAddress } = useContext(LocationContext);
   //----------------------------------------------------------
   // ------------------DEFAULT EVERYTHING ON PAGE LOAD
   //----------------------------------------------------------
@@ -228,7 +227,8 @@ const NewMyBooking = () => {
     "DEC",
   ];
   const [workerSlot, setWorkerSlot] = useState([]); // Stores all available slots
-  const [slotIndex, setSlotIndex] = useState(0); // Tracks selected day index
+  const [slotIndex, setSlotIndex] = useState(0); // stores index of DATE (0 to 6)
+  const [allBookedSlots, setAllBookedSlots] = useState([]); // stores selected booked details
   const toggleDrawer = () => {
     if (!selectedDayDate.day || !selectedDayDate.date) {
       toast.info("Please select a valid day and date");
@@ -332,9 +332,85 @@ const NewMyBooking = () => {
 
     return () => clearInterval(interval);
   }, []);
-  //--------------------------------------------------------
+  //------------------------------------------------------------------
+  //---------------------------FILTERING BOOKINGS----
+  //------------------------------------------------------------------
+
+  const fetchBookings = async () => {
+    if (!workerInfo?._id) return;
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/bookings/all/${workerInfo._id}`
+      );
+      const allBookings = response.data;
+      console.log("RESPONSE FROM BACKEND--->", allBookings);
+
+      //  Filter bookings (Only Pending, Confirmed, In-Progress)
+      const filteredBookings = allBookings.filter((booking) =>
+        ["pending", "confirmed", "in-progress"].includes(booking.status)
+      );
+
+      setAllBookedSlots(filteredBookings);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+    }
+  };
+
+  // Function to Get Available Slots (Auto-Filters Booked Ones)----------
+  // const getAllAvailableSlots = () => {
+  //   if (!workerSlot[slotIndex]) return [];
+
+  //   return workerSlot[slotIndex].filter((slot) => {
+  //     return !allBookedSlots.some((booking) => {
+  //       const isSameDate =
+  //         booking.date.date === new Date(slot.datetime).getDate() &&
+  //         booking.date.month.toUpperCase() ===
+  //           monthsOfYear[new Date(slot.datetime).getMonth()].toUpperCase() &&
+  //         booking.date.year === new Date(slot.datetime).getFullYear();
+
+  //       const isSameTime =
+  //         typeof booking.time === "string" &&
+  //         typeof slot.time === "string" &&
+  //         booking.time.trim().toLowerCase() === slot.time.trim().toLowerCase();
+
+  //       return isSameDate && isSameTime;
+  //       s;
+  //     });
+  //   });
+  // };
+  const getAllAvailableSlots = () => {
+    if (!workerSlot[slotIndex]) return [];
+
+    return workerSlot[slotIndex].filter((slot) => {
+      return !allBookedSlots.some((booking) => {
+        const bookedDateTime = new Date(
+          `${booking.date.year}-${booking.date.month}-${booking.date.date} ${booking.time}`
+        );
+        const slotDateTime = new Date(slot.datetime);
+
+        // Check if slot is exactly at the booked time OR within 2 hours after it
+        const isSameOrWithin2Hours =
+          slotDateTime >= bookedDateTime &&
+          slotDateTime <=
+            new Date(bookedDateTime.getTime() + 2 * 60 * 60 * 1000);
+
+        return isSameOrWithin2Hours;
+      });
+    });
+  };
+
+  useEffect(() => {
+    fetchBookings(); // Fetch initially
+
+    const interval = setInterval(() => {
+      fetchBookings();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [workerInfo?._id]);
+  //------------------------------------------------------------------------------
   //------------------------Filtering all data from service id
-  //--------------------------------------------------------
+  //------------------------------------------------------------------------------
 
   const selectedServiceDetails = subservices.filter((service) =>
     selectedServices.includes(service._id)
@@ -369,9 +445,9 @@ const NewMyBooking = () => {
   // console.log("TOTALPRICE---->", totalPrice);
   // console.log(selectedDayDate);
   // console.log("selected services---->", selectedServices);
-  // console.log("check-->", slotIndex);
+  // console.log("SLOT INDEX-->", slotIndex);
   // console.log("check-->", slotTime);
-  // console.log("worker-------->", workerSlot);
+  // console.log("worker Available SLOTS-------->", workerSlot);
   // console.log("USER Locations->", userLocation);
   // console.log("Locations->", userAddress);
   // console.log("WORKERS Locations->", workersLocations);
@@ -383,6 +459,8 @@ const NewMyBooking = () => {
   // console.log("Worker Location---------->", workerInfo?.location?.coordinates);
   // console.log("WORKER LAT-------->", workerInfo?.location?.coordinates[1]);
   // console.log("WORKER LON-------->", workerInfo?.location?.coordinates[0]);
+  // console.log("BOOKED SLOTS MYBOOKING:", allBookedSlots);
+  // console.log("Available Slots After Filtering:", getAllAvailableSlots());
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -398,6 +476,7 @@ const NewMyBooking = () => {
               ref={parentContainerRef}
               className="px-8 py-4 flex flex-col gap-5 h-[90vh] overflow-y-auto scroll-smooth w-[55rem] overflow-x-hidden  min-h-0"
             >
+              {/* -------WORKER TOP----------- */}
               <div className="worker-top flex flex-row gap-8">
                 <img
                   src={workerInfo.profileImage}
@@ -676,6 +755,7 @@ const NewMyBooking = () => {
               </div>
 
               <div className="w-full mb-5 flex justify-center">
+                {/* day */}
                 <div className="flex items-center gap-4 flex-nowrap  ">
                   {workerSlot.length &&
                     workerSlot.map((item, index) => (
@@ -710,9 +790,10 @@ const NewMyBooking = () => {
                 </div>
               </div>
               {/* time */}
+              {/* workerSlot[slotIndex].map((item, index) => */}
               <div className="flex items-center gap-3 w-full overflow-x-scroll flex-shrink-0 mb-6 h-16 px-2">
                 {workerSlot.length &&
-                  workerSlot[slotIndex].map((item, index) => (
+                  getAllAvailableSlots().map((item, index) => (
                     <p
                       onClick={() => setSlotTime(item.time)}
                       className={`text-sm font-medium flex-shrink-0 px-5 py-2 rounded-full cursor-pointer hover:scale-105 hover:shadow-lg transition-all duration-300 flex items-center gap-1 ${

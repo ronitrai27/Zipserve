@@ -2,6 +2,7 @@ const Booking = require("../models/BookingModel.js");
 const sendEmail = require("../utils/emailService.js");
 const User = require("../models/UserModel");
 const Worker = require("../models/workerModel");
+const mongoose = require("mongoose");
 //--------------------------------------------------------------
 //------------------------CREATE BOOKING
 //--------------------------------------------------------------
@@ -44,47 +45,41 @@ const createBooking = async (req, res) => {
     // Save to database
     await newBooking.save();
     // Fetch user details
-    const user = await User.findById(userId).select("email name");
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
+    //   const user = await User.findById(userId).select("email name");
+    //   if (!user) {
+    //     return res.status(404).json({ message: "User not found." });
+    //   }
 
-    // Fetch worker details
-    const worker = await Worker.findById(workerId).select("name");
-    if (!worker) {
-      return res.status(404).json({ message: "Worker not found." });
-    }
+    //   // Fetch worker details
+    //   const worker = await Worker.findById(workerId).select("name");
+    //   if (!worker) {
+    //     return res.status(404).json({ message: "Worker not found." });
+    //   }
 
-    // Construct email message
-    const subject = "Booking Confirmation - Your Request is Pending";
-    const message = `
-     Dear ${user.name},
+    //   // Construct email message
+    //   const subject = "Booking Confirmation - Your Request is Pending";
+    //   const message = `
+    //    Dear ${user.name},
 
-     Your booking request has been received and is currently pending approval.
+    //    Your booking request has been received and is currently pending approval.
 
-     📌 Booking Details:
-     - Worker: ${worker.name}
-     - Date: ${date}
-     - Time: ${time}
-     - Services: ${subservices.join(", ")}
-     - Total Price: ₹${totalPrice}
-     - Payment Method: ${paymentMethod}
+    //    📌 Booking Details:
+    //    - Worker: ${worker.name}
+    //    - Date: ${date}
+    //    - Time: ${time}
+    //    - Services: ${subservices.join(", ")}
+    //    - Total Price: ₹${totalPrice}
+    //    - Payment Method: ${paymentMethod}
 
-     You will receive a confirmation once the worker accepts your booking.
+    //    You will receive a confirmation once the worker accepts your booking.
 
-     Thank you for choosing our service!
-     
-     Regards,
-     [Your Service Name]
-   `;
+    //    Thank you for choosing our service!
 
-    // Send email
-    // await sendEmail(user.email, subject, message);
-    sendEmail(user.email, subject, message);
-    // // Fetch the latest booking for this user
-    // const latestBooking = await Booking.findOne({ userId })
-    //   .sort({ createdAt: -1 }) // Sort by latest booking
-    //   .select("_id"); // Only fetch the booking ID
+    //    Regards,
+    //    [Your Service Name]
+    //  `;
+
+    // sendEmail(user.email, subject, message);
 
     res.status(201).json({
       message: "Booking Request Initiated",
@@ -96,9 +91,9 @@ const createBooking = async (req, res) => {
   }
 };
 
-//--------------------------------------------------------------
-//------------------------GET USER BOOKINGS by pending , confirmed , in-progress
-//--------------------------------------------------------------
+// //--------------------------------------------------------------
+// //------------------------GET USER BOOKINGS by pending , confirmed , in-progress
+// //--------------------------------------------------------------
 const getUserBookings = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -144,10 +139,9 @@ const getUserBookings = async (req, res) => {
   }
 };
 
-//--------------------------------------------------------------
-//------------------------BOOKINGS BY ID
-//--------------------------------------------------------------
-const mongoose = require("mongoose");
+// //--------------------------------------------------------------
+// //------------------------BOOKINGS BY ID
+// //--------------------------------------------------------------
 
 const getBookingById = async (req, res) => {
   try {
@@ -157,10 +151,15 @@ const getBookingById = async (req, res) => {
       return res.status(400).json({ message: "Invalid Booking ID format." });
     }
 
-    const booking = await Booking.findById(bookingId);
+    const booking = await Booking.findOne({
+      _id: bookingId,
+      status: { $in: ["pending", "confirmed", "in-Progress"] },
+    });
 
     if (!booking) {
-      return res.status(404).json({ message: "Booking not found." });
+      return res
+        .status(404)
+        .json({ message: "Booking not found or not eligible." });
     }
 
     res.status(200).json(booking);
@@ -169,6 +168,7 @@ const getBookingById = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 //-------------------------------------------------------------
 //----------------------------FILTER BOOKINGS
 //-------------------------------------------------------------
@@ -264,6 +264,27 @@ const cancelBooking = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+//-------------------------------------------------------------
+//-----------------ALL -BOOKINGS
+//------------------------------------------------------------
+const getAllBookings = async (req, res) => {
+  try {
+    const { workerId } = req.params; // Get workerId from URL params
+
+    if (!workerId) {
+      return res.status(400).json({ message: "Worker ID is required" });
+    }
+
+    const bookings = await Booking.find({ workerId }) // Fetch bookings for the worker
+      .sort({ "date.year": 1, "date.month": 1, "date.date": 1, time: 1 }); // Sort by date & time
+
+    res.status(200).json(bookings);
+  } catch (error) {
+    console.error("Error fetching worker's bookings:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 //--------------------------------------------------------------
 //------------------------EXPORTS
 //--------------------------------------------------------------
@@ -274,4 +295,5 @@ module.exports = {
   getFilteredBookings,
   getUserBookingHistory,
   cancelBooking,
+  getAllBookings,
 };

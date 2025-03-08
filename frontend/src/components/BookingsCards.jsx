@@ -11,10 +11,21 @@ import {
   LuUserRound,
   LuCalendarX2,
 } from "react-icons/lu";
+import { BiGhost } from "react-icons/bi";
 const UserBookings = () => {
   const navigate = useNavigate();
-  const { userBookDetails, fetchUserBookings } = useBooked(); //contains all bookings of user
-  const [bookWorkers, setBookWorkers] = useState([]); //details of workers who are selected
+  const {
+    userBookDetails,
+    fetchUserBookings,
+    handleFilters,
+    selectedStatus,
+    fetchBookingById,
+    // clickedBookDetails,
+    // setClickedBookDetails,
+    clickedBookingId,
+    setClickedBookingId,
+  } = useBooked(); //contains all bookings of user
+  const [bookWorkers, setBookWorkers] = useState([]); //details of workers who are selected(name , id , profileImage ...)
   const { user, workers: contextWorkers } = useAppContext(); // all workers from context
   //-------------------------------------------------------------
   //----------------------FILTERING WORKERS ID FROM CONTEXT
@@ -40,28 +51,37 @@ const UserBookings = () => {
 
       // Refetch bookings after canceling
       fetchUserBookings();
+      if (selectedStatus) {
+        handleFilters(selectedStatus);
+      }
     } catch (error) {
       console.error("Error cancelling booking:", error);
       toast.error("Failed to cancel booking.");
     }
   };
-
   //----------------------------------------------------------------
   //-------------------------DEBUGGING LOGS-
   //----------------------------------------------------------------
   // console.log("bookWorkers from BookingCards.jsx", bookWorkers); // all workers details filtered with id
-  console.log("userBookDetails from BookingCards.jsx", userBookDetails); // all bookings of user
+  // console.log("userBookDetails from BookingCards.jsx", userBookDetails); // all bookings of user
+  // console.log("clickedBookDetails from BookingCards.jsx", clickedBookDetails); // clicked booking details
   return (
     <div className="min-w-[22rem] max-w-[26rem] flex flex-col  justify-center px-1 gap-3 mx-auto">
       {userBookDetails.length === 0 ? (
-        <p>No active bookings found.</p>
+        <div className="text-center flex flex-col items-center gap-2 font-inter mt-5">
+          <BiGhost className="text-6xl text-gray-300" />
+          <p className=" capitalize tracking-wide text-[18px] font-medium">
+            No Active Booking found
+          </p>
+        </div>
       ) : (
         userBookDetails.map((booking) => {
-          const worker = bookWorkers.find((w) => w._id === booking.workerId); // Match worker
+          const worker = bookWorkers.find((w) => w._id === booking.workerId);
 
           return (
             <div
               key={booking._id}
+              onClick={() => setClickedBookingId(booking._id)}
               className="bg-white border-[.5px] border-primary/50 px-2 py-2 rounded-md hover:shadow-md cursor-pointer scale-95 hover:scale-100 transition-all duration-300 font-inter"
             >
               <div className="flex items-center justify-between mb-2">
@@ -121,22 +141,11 @@ const UserBookings = () => {
                     Booking :
                   </strong>{" "}
                   {booking.date.date}, {booking.date.month} {booking.date.year}
-                  <span className="font-light tracking-tighter text-[14px]">
+                  {/* <span className="font-light tracking-tighter text-[14px]">
                     {booking.time}
-                  </span>
+                  </span> */}
                 </p>
 
-                {/* <div className="flex items-center gap-5 px-2">
-                  <p className="text-[15px] font-light shrink-0">
-                    Selected services:
-                  </p>
-                  <div className="overflow-x-auto whitespace-nowrap">
-                    <p className="text-primary text-[14px] font-light">
-                      {" "}
-                      {booking.subservices.map((s) => s.name).join(", ")}
-                    </p>
-                  </div>
-                </div> */}
                 <div className="flex items-center justify-between px-2 mt-3">
                   <p className="text-[15px] font-light">
                     Total Price: ₹{booking.totalPrice}
@@ -155,7 +164,7 @@ const UserBookings = () => {
                 <div className="flex items-center justify-center ">
                   <div
                     className="group relative cursor-pointer w-28 border bg-white rounded-full overflow-hidden text-gray-800 text-[15px] font-medium hover:shadow-lg transition-shadow duration-300"
-                    onClick={() => navigate("")}
+                    onClick={() => navigate("/booking/" + worker._id)}
                   >
                     <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-2 py-1">
                       profile

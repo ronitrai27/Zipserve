@@ -88,7 +88,8 @@ function Maps() {
 
   // console.log("worker location from mylocation->", workersLocations); // debugging log ----
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ",
+    googleMapsApiKey: "",
+    // AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ
   });
 
   useEffect(() => {

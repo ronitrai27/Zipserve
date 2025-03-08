@@ -46,12 +46,12 @@ const WorkerDashboard = ({ workerId }) => {
     }
   };
 
-  if (loading)
-    return <div className="text-center mt-10">Loading bookings...</div>;
+  // if (loading)
+  //   return <div className="text-center mt-10">Loading bookings...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Worker Dashboard</h1>
+    <div className="max-w-3xl mx-auto p-6 bg-white">
+      <h1 className="text-2xl font-bold mb-4 text-red-500">Worker Dashboard</h1>
       {bookings.length === 0 ? (
         <p>No pending bookings.</p>
       ) : (
