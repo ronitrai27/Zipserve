@@ -25,6 +25,6 @@ routes.post(
 routes.get("/workers/:workerId/reviews", getWorkerReviews);
 
 // Add a review for a specific worker-------------------------------
-routes.post("/workers/:workerId/reviews", addWorkerReview);
+routes.post("/workers/:workerId/users/:userId/reviews", addWorkerReview);
 
 module.exports = routes;

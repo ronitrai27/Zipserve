@@ -6,13 +6,6 @@ require("./models/db"); // Ensure DB connection
 
 const app = express();
 
-// app.use(
-//   cors({
-//     origin: "http://localhost:3000", // Allow frontend origin
-//     credentials: true,
-//   })
-// );
-
 const allowedOrigins = ["http://localhost:3000", "http://localhost:3010"];
 
 app.use(
@@ -24,7 +17,7 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, // Allow cookies if needed
+    credentials: true,
   })
 );
 

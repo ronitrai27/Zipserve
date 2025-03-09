@@ -343,7 +343,7 @@ const NewMyBooking = () => {
         `http://localhost:8080/api/bookings/all/${workerInfo._id}`
       );
       const allBookings = response.data;
-      console.log("RESPONSE FROM BACKEND--->", allBookings);
+      // console.log("RESPONSE FROM BACKEND--->", allBookings);
 
       //  Filter bookings (Only Pending, Confirmed, In-Progress)
       const filteredBookings = allBookings.filter((booking) =>
@@ -356,28 +356,6 @@ const NewMyBooking = () => {
     }
   };
 
-  // Function to Get Available Slots (Auto-Filters Booked Ones)----------
-  // const getAllAvailableSlots = () => {
-  //   if (!workerSlot[slotIndex]) return [];
-
-  //   return workerSlot[slotIndex].filter((slot) => {
-  //     return !allBookedSlots.some((booking) => {
-  //       const isSameDate =
-  //         booking.date.date === new Date(slot.datetime).getDate() &&
-  //         booking.date.month.toUpperCase() ===
-  //           monthsOfYear[new Date(slot.datetime).getMonth()].toUpperCase() &&
-  //         booking.date.year === new Date(slot.datetime).getFullYear();
-
-  //       const isSameTime =
-  //         typeof booking.time === "string" &&
-  //         typeof slot.time === "string" &&
-  //         booking.time.trim().toLowerCase() === slot.time.trim().toLowerCase();
-
-  //       return isSameDate && isSameTime;
-  //       s;
-  //     });
-  //   });
-  // };
   const getAllAvailableSlots = () => {
     if (!workerSlot[slotIndex]) return [];
 

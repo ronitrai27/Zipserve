@@ -8,6 +8,10 @@ import Rating from "@mui/material/Rating";
 import MinimumDistanceSlider from "../components/Slider.jsx";
 import { useLocationContext } from "../context/LocationContext";
 import { useAppContext } from "../context/AppContext";
+import { LuZap } from "react-icons/lu";
+import { FiPhoneCall } from "react-icons/fi";
+import axios from "axios";
+import { toast } from "react-toastify";
 const Workers = () => {
   const [workers, setWorkers] = useState([]);
   const [totalWorkersCount, setTotalWorkersCount] = useState(0);
@@ -36,7 +40,6 @@ const Workers = () => {
   const handleFilter = () => {
     setFilter(!filter);
   };
-
   const fetchWorkers = async (page = 1) => {
     try {
       if (!userLocation) {
@@ -68,7 +71,7 @@ const Workers = () => {
       }
       const data = await response.json();
 
-      console.log("Frontend Received Data:", data); //--------- Debugging
+      // console.log("Frontend Received Data:", data); //--------- Debugging
 
       setWorkers(data.workers);
       setTotalWorkersCount(data.totalWorkers);
@@ -90,13 +93,13 @@ const Workers = () => {
   const handleEnlargeClick = (workerId) => {
     setEnlargedWorker(enlargedWorker === workerId ? null : workerId);
   };
-
   // Filter workers based on search term
   const filteredWorkers = workers.filter(
     (worker) =>
       worker.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       worker.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  //---------------------------------------------------
 
   const handleCategoryClick = (selectedCategory) => {
     if (category === selectedCategory) {
@@ -105,7 +108,57 @@ const Workers = () => {
       navigate(`/workers/${selectedCategory}`);
     }
   };
+  //---------------------------------------------------------------------
+  //-----------------------INSTANT BOOKING
+  //---------------------------------------------------------------------
 
+  const handleInstantBooking = () => {
+    if (!category) {
+      toast.warning("Please select a category first!");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const userLocation = [
+          position.coords.longitude,
+          position.coords.latitude,
+        ];
+
+        try {
+          const response = await axios.post(
+            "http://localhost:8080/api/bookings/instant",
+            {
+              userId: user._id,
+              category,
+              userLocation,
+            }
+          );
+
+          // console.log("✅ Booking Response:", response.data);
+          toast.success("Instant booking successful!");
+          // Redirect after 2 seconds
+          setTimeout(() => {
+            navigate("/bookings");
+          }, 2000);
+        } catch (error) {
+          console.error("❌ Booking Error:", error.response?.data || error);
+          toast.error(error.response?.data?.message || "Booking failed!");
+        }
+      },
+      (error) => {
+        console.error("❌ Location Error:", error);
+        toast.warning(
+          "Failed to get location. Please enable location services."
+        );
+      }
+    );
+  };
+  //-------------------------------------------------------------------
+  //--------------------------DEBUGGING LOGS
+  //-------------------------------------------------------------------
+  console.log("category--->", category);
+  //-------------------
   return (
     <div className="flex-1 border-[1px] bg-stone-50 h-[90vh] rounded-t-xl pt-4 pb-2 overflow-hidden">
       <div className="parent-container relative flex flex-row justify-between gap-6 w-[95%] mx-auto">
@@ -210,7 +263,7 @@ const Workers = () => {
               </span>
             </p>
           )}
-
+          {/* search bae , filter and instant booking */}
           <div className="flex items-center gap-5 mb-2">
             <div className="flex items-center bg-gray-200 w-full rounded-full px-6 gap-2 hover:bg-gray-100 transition-all">
               <assets.IoIosSearch className="text-[20px] cursor-pointer hover:scale-110 transition-all" />
@@ -361,6 +414,22 @@ const Workers = () => {
                 </div>
               </div>
             </div>
+            {/* INSTANT BOOKING */}
+            <div className="flex items-center justify-center font-inter ">
+              <div
+                className="group relative cursor-pointer w-40 border bg-white rounded-full overflow-hidden text-black font-[400] hover:shadow-lg transition-shadow duration-300 capitalize text-[15px] "
+                onClick={handleInstantBooking}
+              >
+                <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-2 py-2">
+                  Instant Book
+                </span>
+                <div className="flex gap-2 text-white z-10 items-center absolute top-0 h-full w-full justify-center translate-x-12 opacity-0 group-hover:-translate-x-1 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                  <span>{category ? category : "Lets Go"}</span>
+                  <LuZap className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                </div>
+                <div className="absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg bg-[#3b75ef] scale-[1] dark:group-hover:bg-[#3b75ef] group-hover:bg-[#3b75ef] group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0"></div>
+              </div>
+            </div>
           </div>
           {/* ------------------------All the filters ----------------- */}
           <div className="w-full h-[35px]  rounded-xl mt-1 mb-1">
@@ -436,7 +505,7 @@ const Workers = () => {
               exit={{ opacity: 0, x: currentPage > 1 ? -50 : 50, scale: 1.1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <div className="flex flex-col gap-3 font-inter  bg-white rounded-2xl px-6 py-1">
+              <div className="flex flex-col gap-3 font-inter  bg-white rounded-2xl px-6 ">
                 {totalWorkersCount !== undefined &&
                 filteredWorkersCount !== undefined ? (
                   <p className="text-gray-500 font-extralight text-sm tracking-tighter font-outfit">
@@ -543,14 +612,15 @@ const Workers = () => {
                         </div>
                       </div>
                       {enlargedWorker === worker._id && (
-                        <div className="bg-inherit px-20 pt-2 flex items-center justify-between border-t border-gray-200">
+                        <div className="bg-inherit px-20 pt-1 flex items-center justify-between border-t border-gray-200">
                           <div className="flex items-center gap-4">
                             <button className="flex items-center gap-1 font-medium text-[15px] text-primary hover:scale-105 transition-all duration-200 px-2 py-1.5 ">
                               <assets.BsChatDots className="text-lg" />
                               Chat
                             </button>
 
-                            <p className="text-sm font-medium text-gray-700">
+                            <p className="text-[14px] font-[400] text-gray-800 flex items-center gap-2 font-inter">
+                              <FiPhoneCall className="text-primary text-lg" />{" "}
                               {worker.phone}
                             </p>
                           </div>

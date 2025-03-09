@@ -267,6 +267,7 @@ const cancelBooking = async (req, res) => {
 //-------------------------------------------------------------
 //-----------------ALL -BOOKINGS
 //------------------------------------------------------------
+
 const getAllBookings = async (req, res) => {
   try {
     const { workerId } = req.params; // Get workerId from URL params
@@ -284,6 +285,178 @@ const getAllBookings = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+//--------------------------------------------------------------
+//-----------------------------INSTANT BOOKING
+//--------------------------------------------------------------
+const generateTimeSlots = (startTime, endTime) => {
+  const slots = [];
+  let current = new Date(startTime);
+
+  while (current <= endTime) {
+    const formattedTime = current.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false, // Use 24-hour format
+    });
+    slots.push(formattedTime);
+    current.setMinutes(current.getMinutes() + 15); // Increment by 15 minutes
+  }
+
+  return slots;
+};
+const monthsOfYear = [
+  "JAN",
+  "FEB",
+  "MAR",
+  "APR",
+  "MAY",
+  "JUN",
+  "JUL",
+  "AUG",
+  "SEP",
+  "OCT",
+  "NOV",
+  "DEC",
+];
+
+const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+//--------------------------
+const instantBooking = async (req, res) => {
+  try {
+    const { userId, category, userLocation } = req.body;
+
+    if (!userId || !category || !userLocation) {
+      return res
+        .status(400)
+        .json({ message: "User ID, category, and location are required" });
+    }
+
+    console.log("🚀 Instant Booking Request Received!");
+    // console.log("User ID:", userId);
+    // console.log("Category:", category);
+    // console.log("User Location:", userLocation);
+
+    // Convert distance to radians (5km / 6378.1km Earth's radius)
+    const maxDistanceInRadians = 5 / 6378.1;
+
+    // ----------------FETCHING WORKERS WITHIN 5KM---------------------------
+    const locationFilter = {
+      location: {
+        $geoWithin: {
+          $centerSphere: [userLocation, maxDistanceInRadians],
+        },
+      },
+    };
+
+    console.log("🔍 Searching for workers with filter:", locationFilter);
+
+    const workers = await Worker.find({
+      category,
+      ...locationFilter,
+    });
+
+    console.log(
+      "🛠 Found Workers:",
+      workers.map((w) => w._id)
+    );
+
+    if (workers.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No workers available in your area." });
+    }
+
+    // ----------------CHECKING WORKER AVAILABILITY---------------------------
+    const currentTime = new Date();
+    const nextTwoHours = new Date(currentTime.getTime() + 2 * 60 * 60 * 1000);
+
+    let selectedWorker = null;
+    let availableTime = null; // Declare availableTime outside
+
+    for (const worker of workers) {
+      console.log(`Checking worker ${worker._id} for availability...`);
+
+      // Fetch all bookings of this worker
+      const workerBookings = await Booking.find({
+        workerId: worker._id,
+        "date.date": currentTime.getDate(),
+        "date.month": monthsOfYear[currentTime.getMonth()],
+        "date.year": currentTime.getFullYear(),
+      });
+
+      console.log(
+        `📅 Worker ${worker._id} has ${workerBookings.length} bookings today.`
+      );
+
+      // Extract all booked times for this worker
+      const bookedTimes = workerBookings.map((b) => b.time);
+
+      // ✅ Generate possible time slots in the next 2 hours
+      const possibleTimes = generateTimeSlots(currentTime, nextTwoHours);
+
+      // ✅ Find the first available time slot
+      availableTime = possibleTimes.find((time) => !bookedTimes.includes(time));
+
+      if (availableTime) {
+        selectedWorker = worker;
+        console.log(`✅ Worker ${worker._id} is available at ${availableTime}`);
+        break; // Stop searching if a free worker is found
+      }
+    }
+
+    // Check if no worker was available before booking
+    if (!selectedWorker || !availableTime) {
+      return res
+        .status(404)
+        .json({ message: "No workers available at this time." });
+    }
+
+    // Now, the booking logic will work correctly
+    const newBooking = new Booking({
+      userId,
+      workerId: selectedWorker._id,
+      subservices: [{ name: "Instant Booking" }],
+      totalPrice: 0,
+      date: {
+        day: daysOfWeek[currentTime.getDay()],
+        date: currentTime.getDate(),
+        month: monthsOfYear[currentTime.getMonth()],
+        year: currentTime.getFullYear(),
+      },
+      time: availableTime, // ✅ Now this won't be undefined
+      paymentMethod: "cash",
+      status: "pending",
+    });
+
+    await newBooking.save();
+    res.status(201).json({
+      message: "Booking created successfully.",
+      booking: newBooking,
+    });
+  } catch (error) {
+    console.error("❌ Error in instant booking:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+//------------------------------------------------------------
+//-----------------------------TESTING WORKER BY ID
+//-----------------------------------------------------------
+const getWorkerById = async (req, res) => {
+  try {
+    const { workerId } = req.params;
+    const worker = await Worker.findById(workerId); // Fetch worker from DB
+
+    if (!worker) {
+      return res.status(404).json({ message: "Worker not found" });
+    }
+
+    res.status(200).json(worker);
+  } catch (error) {
+    console.error("Error fetching worker:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 //--------------------------------------------------------------
 //------------------------EXPORTS
@@ -296,4 +469,6 @@ module.exports = {
   getUserBookingHistory,
   cancelBooking,
   getAllBookings,
+  instantBooking,
+  getWorkerById,
 };

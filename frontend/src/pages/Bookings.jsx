@@ -41,7 +41,7 @@ const Bookings = () => {
   const [showStatus, setShowStatus] = useState(false);
 
   //----------------------------------------------------------------------
-  const clickedBookDetails = userBookDetails.find(
+  const clickedBookDetails = userBookDetails?.find(
     (booking) => booking._id === clickedBookingId
   );
 

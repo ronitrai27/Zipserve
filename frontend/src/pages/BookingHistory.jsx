@@ -2,12 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBooked } from "../context/BookedContext";
 import { useAppContext } from "../context/AppContext";
+import { motion } from "framer-motion";
+import axios from "axios";
+import { toast } from "react-toastify";
 import { BiGhost } from "react-icons/bi";
 import {
   LuCalendarMinus,
   LuCalendarClock,
   LuUserRound,
   LuCalendarX2,
+  LuX,
+  LuSquarePen,
 } from "react-icons/lu";
 import Rating from "@mui/material/Rating";
 import { IoInformation } from "react-icons/io5";
@@ -16,6 +21,10 @@ const BookingHistory = () => {
   const { bookingHist, loading } = useBooked();
   const { user, workers: contextWorkers } = useAppContext();
   const [bookedWorkers, setBookedWorkers] = useState([]); // store booked workers details (id , name , image...)
+  const [selectedWorkerId, setSelectedWorkerId] = useState(null); // store id to add reviews
+  const [isOpen, setIsOpen] = useState(false); // review modal
+  const [comment, setComment] = useState("");
+  const [stars, setStars] = useState(5);
   //-------------------------------------------------------------
   //----------------------FILTERING WORKERS ID FROM CONTEXT
   //-------------------------------------------------------------
@@ -37,10 +46,39 @@ const BookingHistory = () => {
         <p className="w-5 h-5 bg-primary rounded-full animate-bounce transition-all duration-1000"></p>
       </div>
     );
+
+  //------------------------------------------------------------
+  const handleSubmit = async () => {
+    if (!comment || stars < 1 || stars > 5) {
+      toast.warning("Please provide all fileds correctly");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/workers/${selectedWorkerId}/users/${user._id}/reviews`,
+        {
+          comment,
+          stars,
+          customerName: user.name,
+        }
+      );
+
+      toast.success("Review Added Successfully");
+      setIsOpen(false); // Close modal
+      setComment(""); // Clear input field
+      setStars(5); // Reset stars
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      toast.error(error.response?.data?.message || "Failed to submit review");
+    }
+  };
   //-------------------------------------------------------
   //----------------------DEBUGGING LOGS
   //-------------------------------------------------------
   // console.log("Booking History: ", bookingHist);
+  console.log("selected worker id:", selectedWorkerId);
+  //-------------------------------------------------------------------------
   return (
     <div className="flex-1 border-[1px] bg-stone-100 h-[90vh] rounded-t-xl py-4 px-2">
       <div className="container px-8 flex justify-between h-full">
@@ -144,7 +182,13 @@ const BookingHistory = () => {
                     </div>
                   </div>
                   {/* providing review------------------ */}
-                  <div className="mt-3 flex items-center gap-2 px-2">
+                  <div
+                    onClick={() => {
+                      setSelectedWorkerId(worker._id);
+                      setIsOpen(true);
+                    }}
+                    className="mt-3 flex items-center gap-2 px-2 hover:scale-105 transition-all duration-300 w-fit cursor-pointer"
+                  >
                     <div className="w-5 h-5 rounded-full flex items-center justify-center bg-primary">
                       <IoInformation className="text-white text-xl" />
                     </div>
@@ -163,6 +207,68 @@ const BookingHistory = () => {
           <h1>RATE US</h1>
         </div> */}
       </div>
+      {/* Modal (shown when isOpen is true) */}
+      {isOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white p-6 rounded-lg shadow-lg w-96"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-xl font-semibold  capitalize font-inter text-gray-800 flex items-center gap-2">
+                <LuSquarePen className="text-primary text-xl" /> Add a Review
+              </h2>
+              {/* button */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className=" text-gray-800 hover:text-primary"
+              >
+                <LuX className="text-2xl" />
+              </button>
+            </div>
+
+            {/* Display Customer Name */}
+            <p className="mb-3 font-medium capitalize font-inter">
+              Reviewing as:{" "}
+              <span className="text-primary uppercase">{user.name}</span>
+            </p>
+
+            {/* Comment Input */}
+            <textarea
+              placeholder="Write your review..."
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="w-full p-2 mb-3 border rounded"
+            ></textarea>
+
+            {/* Stars Selection */}
+            <div className="flex gap-2 mb-4">
+              {[1, 2, 3, 4, 5].map((num) => (
+                <button
+                  key={num}
+                  onClick={() => setStars(num)}
+                  className={`p-1 text-2xl ${
+                    stars >= num ? "text-yellow-500" : "text-gray-400"
+                  }`}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+
+            {/* Submit Button */}
+            <button
+              onClick={handleSubmit}
+              className="bg-primary text-white px-4 py-2 w-full rounded-lg hover:bg-blue-700"
+            >
+              Submit Review
+            </button>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
