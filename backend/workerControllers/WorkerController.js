@@ -1,24 +1,5 @@
 const Booking = require("../models/BookingModel");
-//------------------------------------------------------
-// Long polling for workers to check pending bookings
-//------------------------------------------------------
-// const getPendingBookingsForWorker = async (req, res) => {
-//   try {
-//     const { workerId } = req.params;
-//     if (!workerId) {
-//       return res.status(400).json({ message: "Worker ID is required." });
-//     }
 
-//     const pendingBookings = await Booking.find({
-//       workerId,
-//       status: "pending",
-//     }).sort({ createdAt: -1 });
-//     return res.status(200).json(pendingBookings);
-//   } catch (error) {
-//     console.error("Error fetching pending bookings:", error);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
 const getPendingBookingsForWorker = async (req, res) => {
   try {
     const { workerId } = req.params;

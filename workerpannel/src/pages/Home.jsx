@@ -16,7 +16,12 @@ import {
 import { BiMessageSquareDetail } from "react-icons/bi";
 import WorkerDashboard from "../components/WorkerDashboard";
 function Home() {
-  const { loggedWorker, setLoggedWorker } = useAppContext();
+  const {
+    loggedWorker,
+    setLoggedWorker,
+    inProgressBookings,
+    confirmedBookings,
+  } = useAppContext();
   const [stats, setStats] = useState({
     totalEarnings: 0,
     totalPendingBookings: 0,
@@ -71,30 +76,64 @@ function Home() {
   //-------------------------------------------
   // console.log("logged in worker detail:", loggedWorker);
   // console.log("workerid from HOME------->", workerId);
-  console.log("total earnings:", stats.totalEarnings);
-  console.log("total pending:", stats.totalPendingBookings);
-  console.log("total CONFIRMED:", stats.totalConfirmedBookings);
+  // console.log("total earnings:", stats.totalEarnings);
+  // console.log("total pending:", stats.totalPendingBookings);
+  // console.log("total CONFIRMED:", stats.totalConfirmedBookings);
+  // console.log("CONFIRMED BOOKING:-------->", confirmedBookings);
+  // console.log("IN-PROGRESS BOOKING:-------->", inProgressBookings);
 
   return (
     <div className="font-outfit ">
       {/* navbar */}
       <Navbar />
       {/* men-bar */}
-      <div className="menu bg-primary/30 flex items-center justify-end px-5 py-2 gap-6">
-        <div className="text-white bg-green-500 px-2 py-1 rounded-full shrink-0 flex items-center gap-2">
-          <LuUserRoundCheck className="text-lg" />
-          <p className=" ">Available</p>
+      <div className="menu bg-gradient-to-r from-blue-50 to-primary/10 backdrop-blur-sm shadow-sm flex items-center justify-between px-6 py-3">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              <img
+                src={
+                  loggedWorker?.profileImage ||
+                  "https://ui-avatars.com/api/?name=Worker&background=0D8ABC&color=fff"
+                }
+                alt="Profile"
+                className="w-9 h-9 rounded-full border-2 border-white shadow-md"
+              />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-800">
+                {loggedWorker?.name || "Worker"}
+              </p>
+              <div className="flex items-center gap-1">
+                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                <p className="text-xs text-green-600 font-medium">Available</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <p className="capitalize text-[16px] tracking-tight text-gray-600 flex items-center gap-2">
-          <BiMessageSquareDetail className="text-xl text-primary" /> Messages
-        </p>
+        <div className="flex items-center gap-5">
+          <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/80 transition-all duration-300 text-gray-700 hover:text-primary">
+            <BiMessageSquareDetail className="text-xl text-primary" />
+            <span className="text-sm font-medium">Messages</span>
+            <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              3
+            </span>
+          </button>
 
-        <p
-          onClick={logoutWorker}
-          className=" capitalize text-[16px] tracking-tight text-gray-600 flex items-center gap-2 hover:scale-105 transition-all duration-300 hover:text-black cursor-pointer"
-        >
-          <LuLogOut className="text-primary text-xl" /> Logout
-        </p>
+          <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/80 transition-all duration-300 text-gray-700 hover:text-primary">
+            <LuUserRoundCheck className="text-xl text-primary" />
+            <span className="text-sm font-medium">Status</span>
+          </button>
+
+          <button
+            onClick={logoutWorker}
+            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-gray-700 hover:text-red-500 border border-gray-100"
+          >
+            <LuLogOut className="text-lg" />
+            <span className="text-sm font-medium">Logout</span>
+          </button>
+        </div>
       </div>
       {/* BOXES----------- */}
       <div className="px-6 py-2">

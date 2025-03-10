@@ -53,7 +53,7 @@ const WorkerDashboard = ({ workerId }) => {
   // if (loading)
   //   return <div className="text-center mt-10">Loading bookings...</div>;
   // console.log("worker id------->", workerId);
-  console.log("users----------->", users);
+  // console.log("users----------->", users);
 
   return (
     <div className="max-w-[45%] px-3 py-2 bg-white font-inter rounded-xl min-h-[26rem] overflow-y-auto">
