@@ -8,6 +8,10 @@ export default {
         inter: "Inter, serif",
         rubik: "Rubik, serif",
       },
+      colors: {
+        primary: "#3b75ef",
+        primaryLight: "#7ba6f8",
+      },
     },
   },
   plugins: [],

@@ -2,9 +2,28 @@ const Booking = require("../models/BookingModel");
 //------------------------------------------------------
 // Long polling for workers to check pending bookings
 //------------------------------------------------------
+// const getPendingBookingsForWorker = async (req, res) => {
+//   try {
+//     const { workerId } = req.params;
+//     if (!workerId) {
+//       return res.status(400).json({ message: "Worker ID is required." });
+//     }
+
+//     const pendingBookings = await Booking.find({
+//       workerId,
+//       status: "pending",
+//     }).sort({ createdAt: -1 });
+//     return res.status(200).json(pendingBookings);
+//   } catch (error) {
+//     console.error("Error fetching pending bookings:", error);
+//     res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
 const getPendingBookingsForWorker = async (req, res) => {
   try {
     const { workerId } = req.params;
+    // console.log("Received workerId:", workerId); // ✅ Debugging Log
+
     if (!workerId) {
       return res.status(400).json({ message: "Worker ID is required." });
     }
@@ -13,12 +32,14 @@ const getPendingBookingsForWorker = async (req, res) => {
       workerId,
       status: "pending",
     }).sort({ createdAt: -1 });
+
     return res.status(200).json(pendingBookings);
   } catch (error) {
     console.error("Error fetching pending bookings:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 //------------------------------------------------------
 // Worker updates booking status (Accept/Reject)
 //------------------------------------------------------
@@ -48,5 +69,70 @@ const updateBookingStatus = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+//------------------------------------------------------------------
+//------------------------------------------------------------------
+const getWorkerStats = async (req, res) => {
+  try {
+    const { workerId } = req.params;
+    if (!workerId) {
+      return res.status(400).json({ message: "Worker ID is required." });
+    }
 
-module.exports = { getPendingBookingsForWorker, updateBookingStatus };
+    // Fetch bookings with earnings (Confirmed, In-Progress, Completed)
+    const earningBookings = await Booking.find({
+      workerId,
+      status: { $in: ["confirmed", "in-Progress", "completed"] },
+    });
+
+    // Calculate total earnings
+    const totalEarnings = earningBookings.reduce(
+      (sum, booking) => sum + (booking.totalPrice || 0),
+      0
+    );
+
+    // Count pending bookings
+    const totalPendingBookings = await Booking.countDocuments({
+      workerId,
+      status: "pending",
+    });
+
+    // Count confirmed bookings
+    const totalConfirmedBookings = await Booking.countDocuments({
+      workerId,
+      status: "confirmed",
+    });
+
+    res.status(200).json({
+      totalEarnings,
+      totalPendingBookings,
+      totalConfirmedBookings,
+    });
+  } catch (error) {
+    console.error("Error fetching worker stats:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+//--------------------------------------------------------------------
+//----------------------------GET ALL USERS
+//-------------------------------------------------------------------
+const User = require("../models/UserModel"); // Import User model
+
+// Controller to fetch all users
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, "-password"); // Exclude passwords from the response
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports = { getAllUsers };
+
+module.exports = {
+  getPendingBookingsForWorker,
+  updateBookingStatus,
+  getWorkerStats,
+  getAllUsers,
+};

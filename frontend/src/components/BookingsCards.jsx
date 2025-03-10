@@ -110,7 +110,7 @@ const UserBookings = () => {
                   <img
                     src={worker.profileImage}
                     alt={worker.name}
-                    className="w-14 h-14 rounded-full object-cover border-[1px] border-primary"
+                    className="w-14 h-14 rounded-full border-[1px] border-primary object-cover shrink-0"
                   />
                   <div className="flex  justify-between w-full">
                     <div className="flex flex-col ">
