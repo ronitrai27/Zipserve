@@ -100,7 +100,7 @@ const Workers = () => {
       worker.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
   //---------------------------------------------------
-
+  //------------------------CATEGORY CLICK=-------------------
   const handleCategoryClick = (selectedCategory) => {
     if (category === selectedCategory) {
       navigate("/workers");

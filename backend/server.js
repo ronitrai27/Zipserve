@@ -37,6 +37,7 @@ const bookingRoutes = require("./routes/BookingsRoute");
 const workerPannelRoutes = require("./workerRoutes/WorkerRoute.js");
 const workerLoginRoutes = require("./workerRoutes/LoginRoutes.js");
 const workerProfileRoutes = require("./workerRoutes/ProfileRoutes");
+const messagesRoutes = require("./routes/MessageRoutes");
 //  Use Routes
 app.use("/api", workerRoutes);
 app.use("/api", serviceRoutes);
@@ -49,6 +50,7 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/workers", workerPannelRoutes);
 app.use("/api", workerLoginRoutes);
 app.use("/api", workerProfileRoutes);
+app.use("/api/messages", messagesRoutes);
 // Global Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

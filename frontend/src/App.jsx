@@ -102,6 +102,14 @@ const App = () => {
               }
             />
             <Route
+              path="/messages/:id"
+              element={
+                <ProtectedRoute>
+                  <Chats />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/my-profile"
               element={
                 <ProtectedRoute>
