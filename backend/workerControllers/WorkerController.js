@@ -113,6 +113,38 @@ const getWorkerStats = async (req, res) => {
   }
 };
 //--------------------------------------------------------------------
+//-------------------------GET CONFIRMED , IN-PROGRESS BOOKINGS
+//--------------------------------------------------------------------
+const getWorkerConfirmedAndInProgressBookings = async (req, res) => {
+  try {
+    const { workerId } = req.params;
+    if (!workerId) {
+      return res.status(400).json({ message: "Worker ID is required." });
+    }
+
+    // Fetch confirmed bookings
+    const confirmedBookings = await Booking.find({
+      workerId,
+      status: "confirmed",
+    }).sort({ createdAt: -1 });
+
+    // Fetch in-progress bookings
+    const inProgressBookings = await Booking.find({
+      workerId,
+      status: "in-progress",
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      confirmedBookings,
+      inProgressBookings,
+    });
+  } catch (error) {
+    console.error("Error fetching worker bookings:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+//--------------------------------------------------------------------
 //----------------------------GET ALL USERS
 //-------------------------------------------------------------------
 const User = require("../models/UserModel"); // Import User model
@@ -135,4 +167,5 @@ module.exports = {
   updateBookingStatus,
   getWorkerStats,
   getAllUsers,
+  getWorkerConfirmedAndInProgressBookings,
 };
