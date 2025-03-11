@@ -86,8 +86,6 @@ function Home() {
 
   return (
     <div className="font-outfit ">
-      {/* navbar */}
-      {/* <Navbar /> */}
       {/* men-bar */}
       <div className="menu bg-gradient-to-r from-blue-50 to-primary/10 backdrop-blur-sm shadow-sm flex items-center justify-between px-6 py-3">
         <div className="flex items-center gap-4">
@@ -141,14 +139,14 @@ function Home() {
         </div>
       </div>
       {/* BOXES----------- */}
-      <div className="px-6 py-2">
+      <div className="px-6 pt-2">
         <div className="flex items-center gap-10 mt-4">
-          <div className="relative px-5 py-3 w-[16rem] bg-gradient-to-tl from-purple-400 via-primary/70 to-blue-300 rounded-md">
+          <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-purple-400 via-primary/70 to-blue-300 rounded-md">
             <LuAward className="text-3xl text-white -ml-3 mb-5" />
-            <h3 className="text-[20px] font-medium font-inter tracking-tight text-white">
+            <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
               Total Earnings :
             </h3>
-            <p className="text-[28px] font-[600] text-white tracking-wide">
+            <p className="text-[24px] font-[600] text-white tracking-wide">
               ₹{stats.totalEarnings}
             </p>
             <div className="absolute -top-2 -right-3  bg-primary px-3 py-1 rounded-full">
@@ -158,12 +156,12 @@ function Home() {
             </div>
           </div>
           {/* -- */}
-          <div className="relative px-5 py-3 w-[15rem] bg-gradient-to-tl from-yellow-300 via-orange-400/80 to-orange-300 rounded-md">
+          <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-yellow-300 via-orange-400/80 to-orange-300 rounded-md">
             <LuCalendarClock className="text-3xl text-white -ml-2 mb-5" />
-            <h3 className="text-[20px] font-medium font-inter tracking-tight text-white">
+            <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
               Pending Bookings :
             </h3>
-            <p className="text-[28px] font-[600] text-white tracking-wide">
+            <p className="text-[24px] font-[600] text-white tracking-wide">
               {stats.totalPendingBookings}
             </p>
             <div className="absolute -top-2 -right-3  bg-yellow-500 px-3 py-1 rounded-full shadow-lg">
@@ -173,12 +171,12 @@ function Home() {
             </div>
           </div>
           {/* -- */}
-          <div className="relative px-5 py-3 w-[15rem] bg-gradient-to-tl from-blue-400 via-green-500 to-green-300 rounded-md">
+          <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-blue-400 via-green-500 to-green-300 rounded-md">
             <LuCalendarClock className="text-3xl text-white -ml-2 mb-5" />
-            <h3 className="text-[20px] font-medium font-inter tracking-tight text-white">
+            <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
               Confirmed Bookings :
             </h3>
-            <p className="text-[28px] font-[600] text-white tracking-wide">
+            <p className="text-[24px] font-[600] text-white tracking-wide">
               {stats.totalConfirmedBookings}
             </p>
             <div className="absolute -top-2 -right-3  bg-green-500 px-3 py-1 rounded-full shadow-lg">
