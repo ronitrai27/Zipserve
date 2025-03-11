@@ -139,13 +139,13 @@ const Chats = () => {
             <div className="flex-1 overflow-y-auto space-y-2">
               <div className="bg-primary pl-5 py-2 rounded-md flex items-center gap-3">
                 <img
-                  src={selectedWorker.profileImage}
+                  src={selectedWorker?.profileImage}
                   alt=""
                   className="w-12 h-12 rounded-full object-cover"
                 />
-                <div className="flex flex-col text-white tracking-tight font-[16px] font-inter font-medium">
-                  <p className=" capitalize">{selectedWorker.name}</p>
-                  <p className="">{selectedWorker.email}</p>
+                <div className="flex flex-col text-white tracking-tight text-[16px] font-inter font-medium">
+                  <p className=" capitalize">{selectedWorker?.name}</p>
+                  <p className="">{selectedWorker?.email}</p>
                 </div>
               </div>
               {messages.length > 0 ? (
@@ -154,8 +154,8 @@ const Chats = () => {
                     key={msg._id}
                     className={`px-2 py-2 rounded-lg max-w-[60%] text-[15px] font-outfit tracking-tight ${
                       msg.senderType === "user"
-                        ? "bg-blue-400 text-white self-end w-fit"
-                        : "bg-gray-200 text-gray-800 self-start"
+                        ? "bg-blue-400 text-white self-start w-fit"
+                        : "bg-gray-200 text-gray-800 self-end w-fit ml-auto"
                     }`}
                   >
                     {msg.message}

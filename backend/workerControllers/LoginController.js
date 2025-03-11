@@ -1,40 +1,15 @@
-// const Worker = require("../models/workerModel");
-
-// const loginWorker = async (req, res) => {
-//   const { workerId, password } = req.body;
-
-//   try {
-//     if (!workerId || !password) {
-//       return res.status(400).json({ error: "Please provide all fields" });
-//     }
-//     console.log("Request body:", req.body);
-
-//     const worker = await Worker.findById(workerId);
-//     if (!worker) {
-//       return res.status(404).json({ error: "Worker not found" });
-//     }
-
-//     if (password !== "worker123") {
-//       return res.status(401).json({ error: "Invalid credentials" });
-//     }
-
-//     res.json({
-//       message: "Login successful",
-//       worker, // Sending the entire worker object
-//     });
-//   } catch (error) {
-//     console.error("Login error:", error); // Log the exact error
-//     res.status(500).json({ error: "Server error" });
-//   }
-// };
-
-// module.exports = { loginWorker };
 const Worker = require("../models/workerModel");
+const mongoose = require("mongoose");
 
 const loginWorker = async (req, res) => {
   const { workerId, password } = req.body;
 
   try {
+    // Check if workerId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(workerId)) {
+      return res.status(400).json({ error: "Invalid worker ID" });
+    }
+
     // Check if worker ID exists
     const worker = await Worker.findById(workerId);
     if (!worker) {
@@ -60,6 +35,9 @@ const loginWorker = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+module.exports = { loginWorker };
+
 //-------------------------------------------------------------------
 // Fetch logged-in worker details from the cookie
 const getWorkerDetails = (req, res) => {

@@ -3,7 +3,7 @@ import axios from "axios";
 import { LuCalendarPlus } from "react-icons/lu";
 import { useAppContext } from "../context/AppContext";
 import boy from "../assets/boy.png";
-import { LuCheck } from "react-icons/lu";
+import { LuCheck, LuCalendarSearch } from "react-icons/lu";
 import { MdClose } from "react-icons/md";
 const WorkerDashboard = ({ workerId }) => {
   const [bookings, setBookings] = useState([]);
@@ -56,14 +56,16 @@ const WorkerDashboard = ({ workerId }) => {
   // console.log("users----------->", users);
 
   return (
-    <div className="max-w-[45%] px-3 py-2 bg-white font-inter rounded-xl min-h-[26rem] overflow-y-auto">
+    <div className="max-w-[45%] min-w-[30%] px-3 py-2 bg-white font-inter rounded-xl min-h-[26rem] overflow-y-auto">
       <h1 className="text-[22px] font-medium mb-4 text-primary tracking-tight flex items-center gap-2 justify-center font-inter">
         <LuCalendarPlus className="text-primary text-2xl" /> Active Request
       </h1>
       {bookings.length === 0 ? (
-        <p className="text-center text-gray-500 font-medium">
-          No pending bookings.
-        </p>
+        <div className="">
+          <p className="text-gray-500 font-medium font-inter tracking-tight text-[18px] flex items-center gap-2 justify-center capitalize h-full mt-6">
+            <LuCalendarSearch className="text-2xl" /> No pending bookings.
+          </p>
+        </div>
       ) : (
         bookings.map((booking) => {
           // Find the user details using booking.userId

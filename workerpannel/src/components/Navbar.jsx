@@ -4,9 +4,11 @@ import { useAppContext } from "../context/AppContext";
 import { LuChevronLast } from "react-icons/lu";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 function Navbar() {
   const { loggedWorker, setLoggedWorker } = useAppContext();
   const [isUploading, setIsUploading] = useState(false);
+  const navigate = useNavigate();
   //----------------------------------------------------
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
@@ -22,8 +24,8 @@ function Navbar() {
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      console.log("✅ Server Response:", response.data);
-      // Update profile image in AppContext
+      // console.log("✅ Server Response:", response.data);
+
       setLoggedWorker((prev) => ({
         ...prev,
         profileImage: response.data.worker.profileImage,

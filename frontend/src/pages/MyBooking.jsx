@@ -560,7 +560,12 @@ const NewMyBooking = () => {
                           <span className="font-medium">Email:</span>{" "}
                           {workerInfo.email}
                         </p>
-                        <p className="text-[18px] font-medium bg-white text-primary px-2 py-1 rounded-full w-fit flex items-center gap-2 cursor-pointer">
+                        <p
+                          onClick={() =>
+                            navigate(`/messages/${workerInfo._id}`)
+                          }
+                          className="text-[16px] font-medium bg-white text-primary px-2 py-1 rounded-full w-fit flex items-center gap-2 cursor-pointer font-inter capitalize"
+                        >
                           <assets.BsChatDots className="text-[20px]" /> chat
                         </p>
                       </div>

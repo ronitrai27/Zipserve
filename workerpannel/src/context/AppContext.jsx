@@ -41,21 +41,8 @@ export const AppProvider = ({ children }) => {
     };
 
     fetchUsers();
-  }, []); // Runs only once when the component mounts
-  //--------------------------------------------------
-  // const fetchBookings = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `http://localhost:8080/api/workers/worker-confirm-progress/${loggedWorker?._id}`
-  //     );
-  //     const { confirmed, inProgress } = response.data;
-
-  //     setConfirmedBookings(confirmed);
-  //     setInProgressBookings(inProgress);
-  //   } catch (error) {
-  //     console.error("Error fetching worker bookings:", error);
-  //   }
-  // };
+  }, []);
+  //-----------------------------------------------------
   const fetchBookings = async () => {
     if (!loggedWorker?._id) {
       console.warn("Worker ID is missing, skipping fetch");
@@ -67,9 +54,8 @@ export const AppProvider = ({ children }) => {
         `http://localhost:8080/api/workers/worker-confirm-progress/${loggedWorker._id}`
       );
 
-      console.log("API RESPONSE:", response.data); // Debugging
+      // console.log("API RESPONSE:", response.data); // Debugging
 
-      // Ensure the response contains the expected keys
       if (
         !response.data.confirmedBookings ||
         !response.data.inProgressBookings
@@ -78,7 +64,6 @@ export const AppProvider = ({ children }) => {
         return;
       }
 
-      // Set state properly
       setConfirmedBookings([...response.data.confirmedBookings]);
       setInProgressBookings([...response.data.inProgressBookings]);
 

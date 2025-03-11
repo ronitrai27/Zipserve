@@ -33,7 +33,7 @@ const getMessages = async (req, res) => {
     }
 
     const messages = await Message.find({ userId, workerId })
-      .sort({ timestamp: -1 })
+      .sort({ timestamp: 1 })
       .limit(50);
 
     return res.status(200).json({ success: true, messages });

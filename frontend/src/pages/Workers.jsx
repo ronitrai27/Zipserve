@@ -111,13 +111,14 @@ const Workers = () => {
   //---------------------------------------------------------------------
   //-----------------------INSTANT BOOKING
   //---------------------------------------------------------------------
-
+  const [loading, setLoading] = useState(false);
   const handleInstantBooking = () => {
     if (!category) {
       toast.warning("Please select a category first!");
       return;
     }
 
+    setLoading(true);
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const userLocation = [
@@ -144,6 +145,8 @@ const Workers = () => {
         } catch (error) {
           console.error("❌ Booking Error:", error.response?.data || error);
           toast.error(error.response?.data?.message || "Booking failed!");
+        } finally {
+          setLoading(false); // Hide loading indicator
         }
       },
       (error) => {
@@ -151,6 +154,7 @@ const Workers = () => {
         toast.warning(
           "Failed to get location. Please enable location services."
         );
+        setLoading(false);
       }
     );
   };
@@ -160,7 +164,7 @@ const Workers = () => {
   console.log("category--->", category);
   //-------------------
   return (
-    <div className="flex-1 border-[1px] bg-stone-50 h-[90vh] rounded-t-xl pt-4 pb-2 overflow-hidden">
+    <div className="relative flex-1 border-[1px] bg-stone-50 h-[90vh] rounded-t-xl pt-4 pb-2 overflow-hidden">
       <div className="parent-container relative flex flex-row justify-between gap-6 w-[95%] mx-auto">
         {/* LEFT SIDE -> CATEGORIES AND AD */}
         <div className="left-side max-w-[24%] min-w-[24%] font-inter flex flex-col">
@@ -614,7 +618,12 @@ const Workers = () => {
                       {enlargedWorker === worker._id && (
                         <div className="bg-inherit px-20 pt-1 flex items-center justify-between border-t border-gray-200">
                           <div className="flex items-center gap-4">
-                            <button className="flex items-center gap-1 font-medium text-[15px] text-primary hover:scale-105 transition-all duration-200 px-2 py-1.5 ">
+                            <button
+                              onClick={() =>
+                                navigate(`/messages/${worker._id}`)
+                              }
+                              className="flex items-center gap-1 font-medium text-[15px] text-primary hover:scale-105 transition-all duration-200 px-2 py-1.5 "
+                            >
                               <assets.BsChatDots className="text-lg" />
                               Chat
                             </button>
@@ -668,6 +677,18 @@ const Workers = () => {
             </button>
           </div>
         </div>
+
+        {/* LOADING.... */}
+        {loading && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 ">
+            <div className="bg-white p-4 rounded-lg shadow-lg flex items-center gap-2 font-inter">
+              <p className="text-lg font-medium text-primary">
+                Processing Booking...
+              </p>
+              <div className="mt-2 w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
