@@ -170,8 +170,8 @@ function Home() {
         <div className="flex flex-col ">
           {/* BOXES----------- */}
           <div className=" pt-2">
-            <div className="flex items-center gap-10 mt-4">
-              <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-purple-400 via-primary/70 to-blue-300 rounded-md">
+            <div className="flex items-center gap-10 mt-4 ">
+              <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-purple-400 via-primary/70 to-blue-300 rounded-md hover:scale-105 transition-all duration-200 cursor-pointer">
                 <LuAward className="text-3xl text-white -ml-3 mb-5" />
                 <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
                   Total Earnings :
@@ -186,7 +186,7 @@ function Home() {
                 </div>
               </div>
               {/* -- */}
-              <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-yellow-300 via-orange-400/80 to-orange-300 rounded-md">
+              <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-yellow-300 via-orange-400/80 to-orange-300 rounded-md hover:scale-105 transition-all duration-200 cursor-pointer">
                 <LuCalendarClock className="text-3xl text-white -ml-2 mb-5" />
                 <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
                   Pending Bookings :
@@ -201,7 +201,7 @@ function Home() {
                 </div>
               </div>
               {/* -- */}
-              <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-blue-400 via-green-500 to-green-300 rounded-md">
+              <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-blue-400 via-green-500 to-green-300 rounded-md hover:scale-105 transition-all duration-200 cursor-pointer">
                 <LuCalendarClock className="text-3xl text-white -ml-2 mb-5" />
                 <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
                   Confirmed Bookings :
