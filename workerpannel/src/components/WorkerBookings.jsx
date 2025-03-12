@@ -210,6 +210,11 @@ function WorkerBookings({ workerId }) {
                     className="bg-gray-50 px-4 py-3 mb-2 rounded-md shadow-sm flex flex-col border-b-[.8px] border-primary/40"
                   >
                     <div className="flex items-center justify-between">
+                      <img
+                        src={user?.userImage}
+                        alt=""
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
                       <div className="flex flex-col">
                         <p className="flex items-center gap-2 text-primary text-[14px] tracking-tight ">
                           <LuCalendarCheck className="text-md text-primary" />{" "}
@@ -219,7 +224,7 @@ function WorkerBookings({ workerId }) {
                           {user ? user.name : "Unknown"}
                         </p>
                       </div>
-
+                      {/* START BUYTTON */}
                       <div className="flex items-center justify-center ">
                         <div
                           className="group relative cursor-pointer w-28 border bg-white rounded-full overflow-hidden text-gray-800 text-[15px] font-medium hover:shadow-lg transition-shadow duration-300"
