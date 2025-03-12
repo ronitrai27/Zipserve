@@ -12,43 +12,43 @@ const WorkerDashboard = ({ workerId }) => {
   //----------------------------------------------------------
   //  ----------------------- Displays pending bookings.
   //----------------------------------------------------------
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/api/workers/pending/${workerId}`
-        );
-        setBookings(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchBookings = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `http://localhost:8080/api/workers/pending/${workerId}`
+  //       );
+  //       setBookings(response.data);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error("Error fetching bookings:", error);
+  //     }
+  //   };
 
-    // Fetch bookings initially
-    fetchBookings();
+  //   // Fetch bookings initially
+  //   fetchBookings();
 
-    // Set an interval to fetch bookings every 3 seconds
-    const intervalId = setInterval(fetchBookings, 3000);
+  //   // Set an interval to fetch bookings every 3 seconds
+  //   const intervalId = setInterval(fetchBookings, 3000);
 
-    // Cleanup interval when the component is unmounted or workerId changes
-    return () => clearInterval(intervalId);
-  }, [workerId]);
+  //   // Cleanup interval when the component is unmounted or workerId changes
+  //   return () => clearInterval(intervalId);
+  // }, [workerId]);
 
-  //--------------------------------------------------------------
-  //  ----------------------- Updates booking status in the database.
-  //--------------------------------------------------------------
-  const handleAction = async (bookingId, status) => {
-    try {
-      await axios.put(
-        `http://localhost:8080/api/workers/update-status/${bookingId}`,
-        { status }
-      );
-      setBookings(bookings.filter((b) => b._id !== bookingId));
-    } catch (error) {
-      console.error("Error updating booking status:", error);
-    }
-  };
+  // //--------------------------------------------------------------
+  // //  ----------------------- Updates booking status in the database.
+  // //--------------------------------------------------------------
+  // const handleAction = async (bookingId, status) => {
+  //   try {
+  //     await axios.put(
+  //       `http://localhost:8080/api/workers/update-status/${bookingId}`,
+  //       { status }
+  //     );
+  //     setBookings(bookings.filter((b) => b._id !== bookingId));
+  //   } catch (error) {
+  //     console.error("Error updating booking status:", error);
+  //   }
+  // };
 
   // if (loading)
   //   return <div className="text-center mt-10">Loading bookings...</div>;

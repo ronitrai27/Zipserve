@@ -40,7 +40,7 @@ function Navbar() {
     }
   };
   //---------------------------------------------------
-  console.log("logged worker------->", loggedWorker);
+  // console.log("logged worker------->", loggedWorker);
   return (
     <div>
       <div className="navbar flex items-center justify-between px-12 py-2 font-inter bg-white">

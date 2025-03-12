@@ -124,6 +124,58 @@ const getWorkerConfirmedAndInProgressBookings = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+//---------------------------------------------------------------
+//-------------------------IN-PROGRESS
+//---------------------------------------------------------------
+
+const setBookingInProgress = async (req, res) => {
+  try {
+    const { bookingId, workerId } = req.body;
+
+    // 🔴 Check if both fields are present
+    if (!bookingId || !workerId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing bookingId or workerId" });
+    }
+
+    // 🔍 Step 1: Check if the worker already has an "in-progress" booking
+    const existingInProgressBooking = await Booking.findOne({
+      workerId,
+      status: "in-progress",
+    });
+
+    if (existingInProgressBooking) {
+      return res.status(400).json({
+        success: false,
+        message: "You already have an active booking.",
+      });
+    }
+
+    // 🔄 Step 2: Update the booking status to "in-progress"
+    const updatedBooking = await Booking.findOneAndUpdate(
+      { _id: bookingId, status: "confirmed" }, // Update only if it's "confirmed"
+      { status: "in-progress" },
+      { new: true }
+    );
+
+    if (!updatedBooking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found or already updated.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Booking status updated to In-Progress.",
+      booking: updatedBooking,
+    });
+  } catch (error) {
+    console.error("Error updating booking status:", error);
+    return res.status(500).json({ success: false, message: "Server error." });
+  }
+};
 
 //--------------------------------------------------------------------
 //----------------------------GET ALL USERS
@@ -149,4 +201,5 @@ module.exports = {
   getWorkerStats,
   getAllUsers,
   getWorkerConfirmedAndInProgressBookings,
+  setBookingInProgress,
 };

@@ -13,9 +13,12 @@ import {
   LuCalendarClock,
   LuCalendarCheck2,
   LuCalendarCheck,
+  LuCalendarRange,
 } from "react-icons/lu";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import WorkerDashboard from "../components/WorkerDashboard";
+import WorkerBookings from "../components/WorkerBookings";
+import GoogleMapComponent from "../components/GoogleRouting";
 function Home() {
   const {
     loggedWorker,
@@ -73,6 +76,28 @@ function Home() {
     // Cleanup interval when component unmounts
     return () => clearInterval(intervalId);
   }, [loggedWorker]);
+  //--------------------------------------------------------------
+  //----------------------------------GEO-LOCATION
+  //--------------------------------------------------------------
+  const [userLocation, setUserLocation] = useState(null);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation not supported");
+    }
+  }, []);
   //----------------------------------------
   //-----------DEBUGGING LOGS
   //-------------------------------------------
@@ -83,9 +108,9 @@ function Home() {
   // console.log("total CONFIRMED:", stats.totalConfirmedBookings);
   // console.log("CONFIRMED BOOKING:-------->", confirmedBookings);
   // console.log("IN-PROGRESS BOOKING:-------->", inProgressBookings);
-
+  //--------------------------------------------------------------------------------------
   return (
-    <div className="font-outfit ">
+    <div className="font-outfit  ">
       {/* men-bar */}
       <div className="menu bg-gradient-to-r from-blue-50 to-primary/10 backdrop-blur-sm shadow-sm flex items-center justify-between px-6 py-3">
         <div className="flex items-center gap-4">
@@ -138,135 +163,135 @@ function Home() {
           </button>
         </div>
       </div>
-      {/* BOXES----------- */}
-      <div className="px-6 pt-2">
-        <div className="flex items-center gap-10 mt-4">
-          <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-purple-400 via-primary/70 to-blue-300 rounded-md">
-            <LuAward className="text-3xl text-white -ml-3 mb-5" />
-            <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
-              Total Earnings :
-            </h3>
-            <p className="text-[24px] font-[600] text-white tracking-wide">
-              ₹{stats.totalEarnings}
-            </p>
-            <div className="absolute -top-2 -right-3  bg-primary px-3 py-1 rounded-full">
-              <p className="flex items-center gap-2 text-white ">
-                <LuArrowUpRight className="text-white text-lg" /> +13.5%
-              </p>
+      {/* MAIN-------------> */}
+      <div className="flex justify-between gap-20 mx-10 ">
+        {/* LEFT SIDE --------------> */}
+        <div className="flex flex-col ">
+          {/* BOXES----------- */}
+          <div className=" pt-2">
+            <div className="flex items-center gap-10 mt-4">
+              <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-purple-400 via-primary/70 to-blue-300 rounded-md">
+                <LuAward className="text-3xl text-white -ml-3 mb-5" />
+                <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
+                  Total Earnings :
+                </h3>
+                <p className="text-[24px] font-[600] text-white tracking-wide">
+                  ₹{stats.totalEarnings}
+                </p>
+                <div className="absolute -top-2 -right-3  bg-primary px-3 py-1 rounded-full">
+                  <p className="flex items-center gap-2 text-white ">
+                    <LuArrowUpRight className="text-white text-lg" /> +13.5%
+                  </p>
+                </div>
+              </div>
+              {/* -- */}
+              <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-yellow-300 via-orange-400/80 to-orange-300 rounded-md">
+                <LuCalendarClock className="text-3xl text-white -ml-2 mb-5" />
+                <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
+                  Pending Bookings :
+                </h3>
+                <p className="text-[24px] font-[600] text-white tracking-wide">
+                  {stats.totalPendingBookings}
+                </p>
+                <div className="absolute -top-2 -right-3  bg-yellow-500 px-3 py-1 rounded-full shadow-lg">
+                  <p className="flex items-center gap-2 text-white ">
+                    <LuCalendarClock className="text-white text-lg" /> Pending
+                  </p>
+                </div>
+              </div>
+              {/* -- */}
+              <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-blue-400 via-green-500 to-green-300 rounded-md">
+                <LuCalendarClock className="text-3xl text-white -ml-2 mb-5" />
+                <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
+                  Confirmed Bookings :
+                </h3>
+                <p className="text-[24px] font-[600] text-white tracking-wide">
+                  {stats.totalConfirmedBookings}
+                </p>
+                <div className="absolute -top-2 -right-3  bg-green-500 px-3 py-1 rounded-full shadow-lg">
+                  <p className="flex items-center gap-2 text-white ">
+                    <LuCalendarCheck2 className="text-white text-lg" />{" "}
+                    Confirmed
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          {/* -- */}
-          <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-yellow-300 via-orange-400/80 to-orange-300 rounded-md">
-            <LuCalendarClock className="text-3xl text-white -ml-2 mb-5" />
-            <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
-              Pending Bookings :
-            </h3>
-            <p className="text-[24px] font-[600] text-white tracking-wide">
-              {stats.totalPendingBookings}
-            </p>
-            <div className="absolute -top-2 -right-3  bg-yellow-500 px-3 py-1 rounded-full shadow-lg">
-              <p className="flex items-center gap-2 text-white ">
-                <LuCalendarClock className="text-white text-lg" /> Pending
-              </p>
-            </div>
-          </div>
-          {/* -- */}
-          <div className="relative px-5 py-2 w-[14rem] bg-gradient-to-tl from-blue-400 via-green-500 to-green-300 rounded-md">
-            <LuCalendarClock className="text-3xl text-white -ml-2 mb-5" />
-            <h3 className="text-[18px] font-medium font-inter tracking-tight text-white">
-              Confirmed Bookings :
-            </h3>
-            <p className="text-[24px] font-[600] text-white tracking-wide">
-              {stats.totalConfirmedBookings}
-            </p>
-            <div className="absolute -top-2 -right-3  bg-green-500 px-3 py-1 rounded-full shadow-lg">
-              <p className="flex items-center gap-2 text-white ">
-                <LuCalendarCheck2 className="text-white text-lg" /> Confirmed
-              </p>
-            </div>
+          {/* ------------------ */}
+          <div className="container">
+            <WorkerBookings workerId={loggedWorker?._id} />
           </div>
         </div>
-      </div>
-      {/* ------------------ */}
-      <div className="container px-8 py-5 flex gap-10">
-        {/* accept/reject */}
-        <WorkerDashboard workerId={loggedWorker?._id} />
-        {/* all confirmed bookings */}
-        <div className="Confirmed-booking h-[400px] overflow-y-auto bg-white p-4 rounded-lg shadow-md w-[26rem]">
-          <p className="text-[22px] font-medium mb-2 flex items-center gap-2 justify-center text-primary">
-            <LuCalendarCheck className="text-2xl" /> Confirmed Bookings
+        {/* RIGHT SIDE-------------> */}
+        <div className="w-full min-h-[15rem] bg-white mt-6 rounded-lg shadow-md">
+          <p className="flex items-center justify-center gap-2 text-[16px] font-inter font-medium text-gray-800 py-3">
+            <LuCalendarRange className="text-xl text-primary" /> Active Booking
           </p>
-          {confirmedBookings.length > 0 ? (
-            confirmedBookings.map((booking) => {
-              const user = users.find((u) => u._id === booking.userId);
-
-              return (
-                <div
-                  key={booking._id}
-                  className="bg-gray-100 px-4 py-3 mb-4 rounded-lg shadow-md flex flex-col"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <p className="flex items-center gap-2 text-primary text-[15px] tracking-tight ">
-                        <LuCalendarCheck className="text-lg text-primary" />{" "}
-                        {booking._id}
-                      </p>
-                      <p className="text-[16px] font-medium tracking-tight font-inter capitalize">
-                        {user ? user.name : "Unknown"}
-                      </p>
-                    </div>
-                    {/* START BUTTON FOR IN-PROGRESS */}
-                    <div className="flex items-center justify-center ">
-                      <div
-                        className="group relative cursor-pointer w-28 border bg-white rounded-full overflow-hidden text-gray-800 text-[15px] font-medium hover:shadow-lg transition-shadow duration-300"
-                        // onClick={() => navigate("/booking/" + worker._id)}
-                      >
-                        <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-2 py-1">
-                          Start
-                        </span>
-                        <div className="flex gap-2 text-white z-10 items-center absolute top-0 h-full w-full justify-center translate-x-12 opacity-0 group-hover:-translate-x-1 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-                          <span>Ready ?</span>
-                          <LuCalendarCheck2 className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                        </div>
-                        <div className="absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg bg-[#3b75ef] scale-[1] dark:group-hover:bg-[#3b75ef] group-hover:bg-[#3b75ef] group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0"></div>
-                      </div>
-                    </div>
+          {inProgressBookings.length > 0 ? (
+            inProgressBookings.map((booking) => (
+              <div key={booking._id} className="font-inter text-gray-800 px-4">
+                <h2 className="text-[14px] text-gray-500 font-[400] flex items-center gap-2 mb-2">
+                  <LuCalendarCheck className="text-lg" /> ID: {booking._id}
+                </h2>
+                {/* Google Map Component */}
+                {userLocation?.latitude &&
+                userLocation?.longitude &&
+                loggedWorker?.location?.coordinates?.[0] !== undefined &&
+                loggedWorker?.location?.coordinates?.[1] !== undefined ? (
+                  <GoogleMapComponent
+                    userLocation={{
+                      lat: Number(userLocation.latitude),
+                      lng: Number(userLocation.longitude),
+                    }}
+                    workerLocation={{
+                      lat: Number(loggedWorker.location.coordinates[1]),
+                      lng: Number(loggedWorker.location.coordinates[0]),
+                    }}
+                  />
+                ) : (
+                  <div className="bg-gray-100 py-6 px-3 rounded-md ">
+                    <p className="text-black text-[18px] font-outfit font-medium tracking-tighter">
+                      Loading map...
+                    </p>
                   </div>
-
-                  {/* <p className="text-sm text-gray-700">
-                    Total Price: <strong>${booking.totalPrice}</strong>
+                )}
+                {/* <p>
+                  <strong>Date:</strong>{" "}
+                  {`${booking.date.date} ${booking.date.month}, ${booking.date.year} (${booking.date.day})`}
+                </p> */}
+                <div className="flex items-center gap-2 pl-4 mt-3">
+                  <LuCalendarClock className="text-primary text-lg" />
+                  <p className="text-[16px] tracking-tight ">
+                    {booking.date.date}, {booking.date.month},
+                    {booking.date.year}
                   </p>
-                  <p className="text-sm text-gray-700">
-                    Payment Mode:{" "}
-                    <strong>{booking.paymentMode || "N/A"}</strong>
-                  </p>
-                  <p className="text-sm text-gray-700">
-                    Date:{" "}
-                    <strong>
-                      {booking.date ? booking.date.fullDate : "N/A"}
-                    </strong>
-                  </p>
-                  <p className="text-sm text-gray-700">
-                    Time Slot:{" "}
-                    <strong>
-                      {booking.date ? booking.date.timeSlot : "N/A"}
-                    </strong>
-                  </p> */}
-
-                  {/* Displaying subservices */}
-                  {/* <div className="mt-2">
-                    <p className="text-sm font-semibold">Services:</p>
-                    <ul className="list-disc list-inside text-sm text-gray-700">
-                      {booking.subservices.map((service) => (
-                        <li key={service._id}>{service.name}</li>
-                      ))}
-                    </ul>
-                  </div> */}
                 </div>
-              );
-            })
+                <p>
+                  <strong>Time:</strong> {booking.time}
+                </p>
+                <p>
+                  <strong>Status:</strong>{" "}
+                  <span className="text-blue-500">{booking.status}</span>
+                </p>
+                <p>
+                  <strong>Payment Method:</strong> {booking.paymentMethod}
+                </p>
+                <p>
+                  <strong>Total Price:</strong> ₹{booking.totalPrice}
+                </p>
+                <p>
+                  <strong>Surge Charge:</strong> ₹{booking.surgeCharge}
+                </p>
+                <p>
+                  <strong>User ID:</strong> {booking.userId}
+                </p>
+                <p>
+                  <strong>Worker ID:</strong> {booking.workerId}
+                </p>
+              </div>
+            ))
           ) : (
-            <p className="text-gray-600">No confirmed bookings available.</p>
+            <p className="text-gray-500">No in-progress bookings available.</p>
           )}
         </div>
       </div>
@@ -275,3 +300,20 @@ function Home() {
 }
 
 export default Home;
+// {userLocation?.latitude &&
+//   userLocation?.longitude &&
+//   workerInfo?.location?.coordinates?.[0] !== undefined &&
+//   workerInfo?.location?.coordinates?.[1] !== undefined ? (
+//     <GoogleMapComponent
+//       userLocation={{
+//         lat: Number(userLocation.latitude),
+//         lng: Number(userLocation.longitude),
+//       }}
+//       workerLocation={{
+//         lat: Number(workerInfo.location.coordinates[1]),
+//         lng: Number(workerInfo.location.coordinates[0]),
+//       }}
+//     />
+//   ) : (
+//     <p>Loading map...</p>
+//   )}
