@@ -9,6 +9,7 @@ import {
   LuCalendarClock,
   LuCalendarCheck,
   LuCalendarCheck2,
+  LuCalendarMinus2,
 } from "react-icons/lu";
 import { MdClose } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -241,7 +242,11 @@ function WorkerBookings({ workerId }) {
                 );
               })
             ) : (
-              <p className="text-gray-600">No confirmed bookings available.</p>
+              <div className="flex items-center justify-center w-full h-full">
+                <p className="text-gray-600 flex items-center gap-2">
+                  <LuCalendarMinus2 /> No confirmed bookings available.
+                </p>
+              </div>
             )}
           </div>
         )}
