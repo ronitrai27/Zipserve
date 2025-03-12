@@ -176,8 +176,10 @@ const WorkerCards = ({ category, sortOption }) => {
               <hr className="w-full my-1 border-gray-300 border-[.6px]" />
               <div className="worker-bottom px-6 ">
                 <div className="flex items-center justify-between">
-                  <p className="flex items-center gap-1 text-[14px]">
-                    {" "}
+                  <p
+                    onClick={() => navigate(`/messages/${worker._id}`)}
+                    className="flex items-center gap-1 text-[14px] cursor-pointer hover:text-primary transition-colors duration-200"
+                  >
                     <LuMessageCircleMore className="text-[18px]" /> Chat
                   </p>
                   <p

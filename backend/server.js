@@ -38,6 +38,8 @@ const userRoutes = require("./routes/UserRoutes");
 const subServiceRoutes = require("./routes/SubServiceRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const bookingRoutes = require("./routes/BookingsRoute");
+const profileUserRoutes = require("./routes/ProfileRoutes");
+//------workers
 const workerPannelRoutes = require("./workerRoutes/WorkerRoute.js");
 const workerLoginRoutes = require("./workerRoutes/LoginRoutes.js");
 const workerProfileRoutes = require("./workerRoutes/ProfileRoutes");
@@ -50,6 +52,7 @@ app.use("/api/users", userRoutes);
 app.use("/api", subServiceRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api", profileUserRoutes);
 //worker Routes--------------
 app.use("/api/workers", workerPannelRoutes);
 app.use("/api", workerLoginRoutes);

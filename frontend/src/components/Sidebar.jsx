@@ -35,11 +35,15 @@ const Sidebar = () => {
         {/* ------------------Top-------------------- */}
         <div className="flex items-center justify-between  mt-2 font-outfit">
           <div
-            className={`w-9 h-9 lg:w-11 lg:h-11  border flex items-center justify-center rounded-full ${
-              theme ? "bg-gray-200" : "bg-gray-200"
-            }`}
+          // className={`w-9 h-9 lg:w-11 lg:h-11  border flex items-center justify-center rounded-full ${
+          //   theme ? "bg-gray-200" : "bg-gray-200"
+          // }`}
           >
-            <img src={assets.sideUserLogo} alt="" className="w-6 lg:w-8" />
+            <img
+              src={user?.userImage}
+              alt=""
+              className="w-8 lg:w-11 h-8 lg:h-11 object-cover rounded-full"
+            />
           </div>
           <div className={`flex flex-col items-center`}>
             <p

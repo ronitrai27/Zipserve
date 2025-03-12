@@ -145,14 +145,14 @@ function WorkerBookings({ workerId }) {
                 return (
                   <div
                     key={booking._id}
-                    className="bg-gray-50 shadow-sm border-b-[.8px] border-primary/20  py-2 px-6 mx-5 rounded-md"
+                    className="bg-gray-50 shadow-sm border-b-[.8px] border-primary/20  py-2 px-6 mx-5 rounded-md mb-3"
                   >
                     {/* User Details */}
 
                     <div className="flex items-center justify-between  font-inter ">
                       <div className="flex items-center gap-4 ">
                         <img
-                          src={boy}
+                          src={user?.userImage}
                           alt="User"
                           className="w-10 h-10 rounded-full border border-gray-300 object-cover"
                         />
@@ -160,6 +160,7 @@ function WorkerBookings({ workerId }) {
                         <p className="font-medium text-gray-800 text-[16px] tracking-tight capitalize">
                           {user ? user.name : "Unknown User"}
                         </p>
+
                         <p className="text-gray-800 tracking-tight text-[16px] font-medium">
                           <span className="">Price: </span>
                           {booking.totalPrice}
@@ -185,16 +186,6 @@ function WorkerBookings({ workerId }) {
                         </button>
                       </div>
                     </div>
-
-                    {/* Booking Details */}
-                    {/* <p className="text-gray-700">
-                            <span className="font-semibold">Service:</span>{" "}
-                            {booking.subservices.map((s) => s.name).join(", ")}
-                          </p> */}
-                    {/* <p className="text-gray-700">
-                            <span className="font-semibold">Total Price:</span> $
-                            {booking.totalPrice}
-                          </p> */}
                   </div>
                 );
               })

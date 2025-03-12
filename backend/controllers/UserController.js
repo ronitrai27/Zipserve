@@ -36,7 +36,7 @@ const toggleFavoriteWorker = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
+//---------------------------------------------------------------
 // Get user's favorite workers
 const getFavoriteWorkers = async (req, res) => {
   try {

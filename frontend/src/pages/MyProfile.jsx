@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { LuArrowUpRight } from "react-icons/lu";
 import { MdOutlineDiscount } from "react-icons/md";
-// import { useSearch } from "../context/SearchContext";
-
+import { useAppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 const MyProfile = () => {
-  // const { recentSearch } = useSearch(); // Access recent searches
-  // console.log("Recent Searches:", recentSearch);
+  const { user, setUser } = useAppContext();
+  const [isUploading, setIsUploading] = useState(false);
   const [userData, setUserData] = useState({
     name: "John Parker",
     image: assets.sideUserLogo,
@@ -17,16 +18,74 @@ const MyProfile = () => {
     dob: "2004-10-10",
   });
   const [isEdit, setIsEdit] = useState(false);
+  //-----------------------------------------
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    console.log("📤 Selected file:", file);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      setIsUploading(true);
+      const response = await axios.put(
+        `http://localhost:8080/api/update-user-image/${user?._id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      // console.log("✅ Server Response:", response.data);
+
+      setUser((prev) => ({
+        ...prev,
+        userImage: response.data.user.userImage,
+      }));
+
+      toast.success("Profile image updated successfully!");
+    } catch (error) {
+      console.error("Error updating profile image:", error);
+      toast.error("Failed to update profile image.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
   return (
     <div className="bg-gray-50 w-full h-[calc(100vh-4.6rem)] rounded-tr-xl py-6 px-10 border-[1px] border-gray-200">
       <div className="Parent  font-inter grid grid-cols-[1fr_3fr_1fr]  h-full">
         {/* -----------------------------About----- ---------------*/}
         <div className="child-1 flex flex-col items-center justify-center gap-2 ">
-          <img
-            src={userData.image}
+          {/* <img
+            src={user?.userImage}
             alt=""
             className="w-32 rounded-full bg-primaryLight"
+          /> */}
+          <div className="">
+            <div className="profile flex items-center gap-3">
+              {/* Clickable Profile Image */}
+              <label htmlFor="imageUpload" className="cursor-pointer relative">
+                <img
+                  src={user?.userImage}
+                  alt="Profile"
+                  className="w-14 h-14 rounded-full border-[1px] border-primary object-cover"
+                />
+                {isUploading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs">
+                    Uploading...
+                  </div>
+                )}
+              </label>
+            </div>
+          </div>
+
+          {/* Hidden File Input */}
+          <input
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageChange}
           />
+
+          {/* ------- */}
           <h1 className="text-[18px]  font-[400]">{userData.name}</h1>
           <p className="text-[14px]  font-[400] text-gray-500">
             {userData.email}

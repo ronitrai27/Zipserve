@@ -185,8 +185,12 @@ const Navbar = () => {
 
         {/* ------------------------------PROFILE ICON-------------------------------- */}
         <div className="flex items-center gap-2 cursor-pointer group relative">
-          <div className="w-11 h-11 bg-gray-200 flex items-center justify-center rounded-full ml-3 ">
-            <img src={assets.sideUserLogo} alt="" className="w-9" />
+          <div className="ml-3">
+            <img
+              src={user?.userImage}
+              alt=""
+              className="w-12 h-12 rounded-full object-cover"
+            />
           </div>
           <button>
             <assets.LuChevronDown

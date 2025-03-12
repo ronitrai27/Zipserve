@@ -33,6 +33,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "", // Default empty address
     },
+    userImage: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/duvfwyqnd/image/upload/v1741749005/lnesarudy02wqtzhhlcz.png",
+    },
+
     age: {
       type: Number,
       default: 18, // Default age (change if needed)
