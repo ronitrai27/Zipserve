@@ -14,6 +14,7 @@ import {
   LuTrendingUp,
   LuCalendarClock,
   LuCalendarCheck,
+  LuChevronDown,
 } from "react-icons/lu";
 import PieActiveArc from "../components/PieChart";
 const HomeNew = () => {
@@ -110,43 +111,83 @@ const HomeNew = () => {
           </div>
           <LuAxis3D className="absolute top-0 right-0 text-2xl text-primary" />
         </div>
-        <div className="box-2 relative flex flex-col bg-white border-[.8px] border-primary rounded-md shadow-md min-w-[220px] pl-4 py-3 hover:shadow-lg hover:border-[1px] hover:scale-105 transition-all duration-500">
-          <p className="text-[16px] font-medium text-gray-800 tracking-tight flex items-center gap-2 capitalize mb-2">
-            <LuCalendarClock className="text-2xl text-primary" /> pending tasks
-            :
-          </p>
+        <div className="box-2 relative flex flex-col bg-white border-l-4 border-primary rounded-md shadow-md min-w-[220px] pl-4 py-3 hover:shadow-lg hover:border-[1px] hover:scale-105 transition-all duration-500">
+          <div className=" flex items-center gap-2 mb-2">
+            <div className="bg-gray-100 w-10 h-10 rounded-lg flex items-center justify-center">
+              <LuCalendarClock className="text-primary text-2xl" />
+            </div>
+            <p className="text-[16px] font-medium text-gray-800 tracking-tight capitalize">
+              Pending tasks :
+            </p>
+          </div>
           <p className="text-[26px] text-gray-500 font-medium self-end mr-20">
             {stats.totalPendingBookings}
           </p>
-          <div className="bg-primary text-white flex items-center gap-2 px-2 py-1 rounded-full w-fit justify-center">
+          <div className="bg-primary text-white flex items-center gap-2 px-2 py-1 rounded-lg w-fit justify-center">
             <div className="w-2 h-2 rounded-full bg-yellow-50 animate-pulse transition-all duration-1000"></div>
             <p className="text-[12px] tracking-tight">Pending</p>
           </div>
         </div>
-        <div className="box-3 relative flex flex-col bg-white border-[.8px] border-primary rounded-md shadow-md min-w-[220px] pl-4 py-3 hover:shadow-lg hover:border-[1px] hover:scale-105 transition-all duration-500">
-          <p className="text-[16px] font-medium text-gray-800 tracking-tight flex items-center gap-2 capitalize mb-2">
-            <LuCalendarCheck className="text-2xl text-primary" /> confirmed
-            tasks :
-          </p>
-          <p className="text-[26px] text-gray-500 font-medium self-end mr-20">
+        <div className="box-3 relative flex flex-col bg-white border-l-4 border-primary rounded-md shadow-md min-w-[220px] pl-4 py-3 hover:shadow-lg hover:border-[1px] hover:scale-105 transition-all duration-500">
+          <div className=" flex items-center gap-2 mb-2">
+            <div className="bg-gray-100 w-10 h-10 rounded-lg flex items-center justify-center">
+              <LuCalendarCheck className="text-primary text-2xl" />
+            </div>
+            <p className="text-[16px] font-medium text-gray-800 tracking-tight capitalize">
+              confirmed tasks :
+            </p>
+          </div>
+          <p className="text-[26px] text-gray-500 font-extrabold self-end mr-20">
             {stats.totalConfirmedBookings}
           </p>
-          <div className="bg-primary text-white flex items-center gap-2 px-2 py-1 rounded-full w-fit justify-center">
+          <div className="bg-primary text-white flex items-center gap-2 px-2 py-1 rounded-lg w-fit justify-center">
             <div className="w-2 h-2 rounded-full bg-yellow-50 animate-pulse transition-all duration-1000"></div>
             <p className="text-[12px] tracking-tight">confirmed</p>
           </div>
         </div>
-        <div className="box-4 relative flex flex-col bg-white border-[.8px] border-primary rounded-md shadow-md min-w-[220px] pl-4 py-3 hover:shadow-lg hover:border-[1px] hover:scale-105 transition-all duration-500">
-          <p className="text-[16px] font-medium text-gray-800 tracking-tight flex items-center gap-2 capitalize mb-2">
-            <LuSwatchBook className="text-2xl text-primary" /> available leaves
-            :
-          </p>
-          <p className="text-[26px] text-gray-500 font-medium self-end mr-20">
+        <div className="box-4 relative flex flex-col bg-white border-l-4 border-primary rounded-md shadow-md min-w-[220px] pl-4 py-3 hover:shadow-lg hover:border-[1px] hover:scale-105 transition-all duration-500">
+          <div className=" flex items-center gap-2 mb-2">
+            <div className="bg-gray-100 w-10 h-10 rounded-lg flex items-center justify-center">
+              <LuSwatchBook className="text-primary text-2xl" />
+            </div>
+            <p className="text-[16px] font-medium text-gray-800 tracking-tight capitalize">
+              available leaves
+            </p>
+          </div>
+          <p className="text-[26px] text-gray-500 font-extrabold self-end mr-20">
             2
           </p>
-          <div className="bg-primary text-white flex items-center gap-2 px-2 py-1 rounded-full w-fit justify-center">
+          <div className="bg-primary text-white flex items-center gap-2 px-2 py-1 rounded-lg w-fit justify-center">
             <div className="w-2 h-2 rounded-full bg-yellow-50 animate-pulse transition-all duration-1000"></div>
             <p className="text-[12px] tracking-tight">available</p>
+          </div>
+        </div>
+      </div>
+      {/* AREA TO SHOW MAP+IN-PROGRESS ,  REVIEWS,PENDING,CONFIRMED*/}
+      <div className="PARENT px-6 mt-5 text-gray-800">
+        {/* LEFT SIDE */}
+        <div className="left-side font-inter w-1/2 bg-white rounded-md min-h-[28rem]">
+          <div className="flex items-center gap-2 ml-10 pt-3">
+            <p className=" capitalize text-[16px] font-medium tracking-tight">
+              my tasks
+            </p>
+            <div className="bg-gray-100 w-9 h-9 rounded-lg flex items-center justify-center">
+              <LuChevronDown className="text-2xl text-primary" />
+            </div>
+          </div>
+          <div className="flex items-center gap-5">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-primary animate-pulse transition-all duration-700"></div>
+              <p className=" capitalize text-[14px] font-medium">reviews</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse transition-all duration-700"></div>
+              <p className=" capitalize text-[14px] font-medium">pending</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse transition-all duration-700"></div>
+              <p className=" capitalize text-[14px] font-medium">confirmed</p>
+            </div>
           </div>
         </div>
       </div>
