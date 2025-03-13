@@ -34,11 +34,7 @@ const Sidebar = () => {
       >
         {/* ------------------Top-------------------- */}
         <div className="flex items-center justify-between  mt-2 font-outfit">
-          <div
-          // className={`w-9 h-9 lg:w-11 lg:h-11  border flex items-center justify-center rounded-full ${
-          //   theme ? "bg-gray-200" : "bg-gray-200"
-          // }`}
-          >
+          <div>
             <img
               src={user?.userImage}
               alt=""

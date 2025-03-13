@@ -5,6 +5,7 @@ import { LuChevronLast } from "react-icons/lu";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { LuMail, LuUserCog } from "react-icons/lu";
 function Navbar() {
   const { loggedWorker, setLoggedWorker } = useAppContext();
   const [isUploading, setIsUploading] = useState(false);
@@ -43,35 +44,41 @@ function Navbar() {
   // console.log("logged worker------->", loggedWorker);
   return (
     <div>
-      <div className="navbar flex items-center justify-between px-12 py-2 font-inter bg-white">
-        <img src={logo} alt="Logo" className="w-44" />
+      <div className="navbar flex items-center justify-between px-6 py-[10px] font-inter bg-white border-b-[1px] border-gray-300 text-gray-800">
+        <img src={logo} alt="Logo" className="w-40" />
 
-        <div className="profile flex items-center gap-3">
-          {/* Clickable Profile Image */}
-          <label htmlFor="imageUpload" className="cursor-pointer relative">
-            <img
-              src={loggedWorker?.profileImage}
-              alt="Profile"
-              className="w-14 h-14 rounded-full border-[1px] border-primary object-cover"
-            />
-            {isUploading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs">
-                Uploading...
-              </div>
-            )}
-          </label>
+        <div className=" flex items-center gap-10">
+          <LuUserCog className="text-2xl text-gray-800" />
+          <div className="relative">
+            <LuMail className="text-2xl text-gray-800" />
+            <div className="w-3 h-3 rounded-full bg-primary absolute -top-1 -right-1"></div>
+          </div>
 
-          <div className="flex flex-col">
-            <p className="capitalize tracking-tight text-[15px] font-medium">
-              {loggedWorker?.name}
-            </p>
-            <p className="font-light text-[13px] tracking-tighter">
-              {loggedWorker?.email}
-            </p>
+          <div className="profile flex items-center gap-3">
+            <label htmlFor="imageUpload" className="cursor-pointer relative">
+              <img
+                src={loggedWorker?.profileImage}
+                alt="Profile"
+                className="w-12 h-12 rounded-full border-[1px] border-primary object-cover"
+              />
+              {isUploading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs">
+                  Uploading...
+                </div>
+              )}
+            </label>
+
+            <div className="flex flex-col">
+              <p className="capitalize tracking-tight text-[15px] font-medium">
+                {loggedWorker?.name}
+              </p>
+              <p className="font-light text-[12px] tracking-tighter">
+                {loggedWorker?.email}
+              </p>
+            </div>
           </div>
         </div>
       </div>
-      <hr />
 
       {/* Hidden File Input */}
       <input

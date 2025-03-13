@@ -69,7 +69,7 @@ const Navbar = () => {
           className={`cursor-pointer text-[1.5rem] ${
             theme
               ? "text-gray-600 hover:text-black"
-              : "text-gray-200    hover:text-white"
+              : "text-gray-400    hover:text-white"
           } transition-all group relative`}
         >
           <assets.FaFire />
@@ -165,9 +165,13 @@ const Navbar = () => {
         </div>
 
         {/* coins--- */}
-        <div className="flex items-center gap-2 py-1 px-5 border-[1px] rounded-full border-primary">
-          <PiCoinsLight className="text-xl text-primary" />
-          <p className="text-primary font-medium">{user?.coins ?? 0.0}</p>
+        <div
+          className={`flex items-center gap-2 py-1 px-5 border-[1px] rounded-full ${
+            theme ? "border-primary text-primary" : "border-white text-white"
+          } `}
+        >
+          <PiCoinsLight className="text-xl " />
+          <p className=" font-medium">{user?.coins ?? 0.0}</p>
         </div>
 
         <button

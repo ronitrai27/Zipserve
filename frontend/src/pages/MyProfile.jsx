@@ -1,23 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import { LuArrowUpRight } from "react-icons/lu";
 import { MdOutlineDiscount } from "react-icons/md";
 import { useAppContext } from "../context/AppContext";
+import { LocationContext } from "../context/LocationContext";
+import Rating from "@mui/material/Rating";
 import axios from "axios";
 import { toast } from "react-toastify";
 const MyProfile = () => {
   const { user, setUser } = useAppContext();
   const [isUploading, setIsUploading] = useState(false);
-  const [userData, setUserData] = useState({
-    name: "John Parker",
-    image: assets.sideUserLogo,
-    email: "richardjames@gmail.com",
-    phone: "+91 123 456 890",
-    address: "57 cloth, richmond, circle sexy, london",
-    gender: "Male",
-    dob: "2004-10-10",
-  });
-  const [isEdit, setIsEdit] = useState(false);
+  const { userAddress } = useContext(LocationContext);
   //-----------------------------------------
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
@@ -53,11 +46,6 @@ const MyProfile = () => {
       <div className="Parent  font-inter grid grid-cols-[1fr_3fr_1fr]  h-full">
         {/* -----------------------------About----- ---------------*/}
         <div className="child-1 flex flex-col items-center justify-center gap-2 ">
-          {/* <img
-            src={user?.userImage}
-            alt=""
-            className="w-32 rounded-full bg-primaryLight"
-          /> */}
           <div className="">
             <div className="profile flex items-center gap-3">
               {/* Clickable Profile Image */}
@@ -65,7 +53,7 @@ const MyProfile = () => {
                 <img
                   src={user?.userImage}
                   alt="Profile"
-                  className="w-14 h-14 rounded-full border-[1px] border-primary object-cover"
+                  className="w-20 h-20 rounded-full border-[1px] border-primary object-cover"
                 />
                 {isUploading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs">
@@ -86,10 +74,8 @@ const MyProfile = () => {
           />
 
           {/* ------- */}
-          <h1 className="text-[18px]  font-[400]">{userData.name}</h1>
-          <p className="text-[14px]  font-[400] text-gray-500">
-            {userData.email}
-          </p>
+          <h1 className="text-[18px]  font-[400]">{user?.name}</h1>
+          <p className="text-[14px]  font-[400] text-gray-500">{user?.email}</p>
           <div className="">
             <button className="bg-primaryLight text-white px-4 py-2 rounded-full mt-3">
               Edit Profile
@@ -99,19 +85,23 @@ const MyProfile = () => {
           <div className="flex flex-col gap-2 mt-12">
             <p className="text-[14px] font-[400] flex items-center gap-2">
               <span className="font-medium text-[16px]">Phone:</span>
-              {userData.phone}
+              {user?.phone}
             </p>
             <p className="text-[14px] font-[400] flex  gap-2 flex-nowrap">
               <span className="font-medium text-[16px]  ">Address:</span>
-              {userData.address}
+              {userAddress}
             </p>
             <p className="text-[14px] font-[400] flex items-center gap-2">
               <span className="font-medium text-[16px]">Gender:</span>
-              {userData.gender}
+              MALE
             </p>
             <p className="text-[14px] font-[400] flex items-center gap-2">
               <span className="font-medium text-[16px]">DOB:</span>
-              {userData.dob}
+              28 JULY 2004
+            </p>
+            <p className="text-[14px] font-[400] flex items-center gap-2">
+              <span className="font-medium text-[16px]">AGE:</span>
+              {user?.age}
             </p>
 
             <div className="flex flex-col gap-2 self-center items-center mt-32">
@@ -182,18 +172,52 @@ const MyProfile = () => {
           </div>
         </div>
         {/* -----------------------------Recent Searches------ ---------------*/}
-        <div className="child-3 ">
-          <div className="flex flex-col items-center justify-center">
-            <p className="text-[18px] font-medium capitalize underline underline-offset-8 decoration-primaryLight">
-              Recent Searches
-            </p>
+        <div className="child-3">
+          <p className="text-[18px] font-medium underline underline-offset-8 decoration-primaryLight capitalize mb-5 text-center">
+            Bookmarked workers
+          </p>
+          {user?.favouriteWorkers?.length > 0 ? (
+            <div className="flex flex-col w-full px-2">
+              {user.favouriteWorkers.map((worker) => (
+                <div
+                  key={worker._id}
+                  className="bg-gray-100 mb-3 rounded-md border-b-[.6px] border-primary py-2"
+                >
+                  <div className="flex items-center justify-between px-4">
+                    <img
+                      src={worker.profileImage}
+                      alt={worker.name}
+                      className="w-14 h-14 rounded-full object-cover"
+                    />
+                    <div className="flex flex-col">
+                      <h2 className="text-[16px] font-[400] text-center capitalize">
+                        {worker.name}
+                      </h2>
+                      <p className="text-gray-600 text-center font-light capitalize">
+                        {worker.category}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-center text-yellow-500">
+                    <Rating
+                      name="half-rating-read"
+                      size="small"
+                      defaultValue={worker.stars}
+                      precision={0.1}
+                      readOnly
+                    />
+                  </p>
 
-            <ul className="mt-4 px-2 text-[20px] font-[400] text-gray-800 font-inter flex flex-col gap-5 items-center justify-center">
-              {/* {recentSearch.map((search, index) => (
-                <li key={index}>{search}</li>
-              ))} */}
-            </ul>
-          </div>
+                  <p className="text-center text-gray-800">{worker.phone}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center">
+              No favorite workers added yet.
+            </p>
+          )}
+          {/* </div> */}
         </div>
       </div>
     </div>

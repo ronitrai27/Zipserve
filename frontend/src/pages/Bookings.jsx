@@ -302,7 +302,7 @@ const Bookings = () => {
         </div>
         {/*-----------------SELECTED-BOOKING-INFO----------------------- */}
         <div className=" absolute pointer-events-none inset-0 left-5 bottom-2 flex justify-start items-end">
-          <div className="h-[17rem] max-w-[46%] w-[35%] bg-gray-50  rounded-xl  shadow-lg hover:shadow-xl opacity-80 hover:opacity-100 transition-all duration-300 px-1 py-2 pointer-events-auto">
+          <div className="h-[17rem] max-w-[46%] w-[35%] bg-gray-50  rounded-xl  shadow-lg hover:shadow-xl  transition-all duration-300 px-1 py-2 pointer-events-auto">
             {clickedBookDetails && userBookDetails.length > 0 ? (
               <div className="px-3 py-2 h-full">
                 <p className="flex items-center gap-2 text-[15px] font-[400] tracking-tight select-text text-gray-600 mb-5">

@@ -17,7 +17,6 @@ import {
   LuCircleFadingPlus,
 } from "react-icons/lu";
 import { BiMessageSquareDetail } from "react-icons/bi";
-import WorkerDashboard from "../components/WorkerDashboard";
 import WorkerBookings from "../components/WorkerBookings";
 import GoogleMapComponent from "../components/GoogleRouting";
 function Home() {

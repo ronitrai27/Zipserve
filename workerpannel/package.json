@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/x-charts": "^7.27.1",
     "@react-google-maps/api": "^2.20.6",
     "axios": "^1.8.2",
     "lucide-react": "^0.479.0",

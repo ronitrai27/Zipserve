@@ -6,15 +6,15 @@ import Home from "./pages/Home";
 import Messages from "./pages/Messages";
 import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
+import HomeNew from "./pages/HomeNew";
+import Sidebar from "./components/Sidebar";
 
 const App = () => {
   const location = useLocation();
-
-  // Show Navbar only on /home and /messages
-  const showNavbar = location.pathname !== "/login";
+  const isAuthPage = location.pathname === "/login";
 
   return (
-    <div className="bg-gray-200 w-full h-screen">
+    <div className="bg-gray-200 w-full h-screen flex flex-col">
       <ToastContainer
         position="top-right"
         autoClose={2000}
@@ -23,13 +23,21 @@ const App = () => {
         pauseOnHover
         draggable
       />
-      {showNavbar && <Navbar />} {/* Conditionally render Navbar */}
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/messages" element={<Messages />} />
-      </Routes>
+      {!isAuthPage && <Navbar />}
+
+      <div className={`flex flex-1 `}>
+        {!isAuthPage && <Sidebar />}
+
+        {/* Main content area */}
+        <div className="flex-1 w-full">
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/home" element={<HomeNew />} />
+            <Route path="/messages" element={<Messages />} />
+          </Routes>
+        </div>
+      </div>
     </div>
   );
 };
