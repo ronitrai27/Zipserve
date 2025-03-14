@@ -21,8 +21,10 @@ import {
   LuCalendarRange,
   LuBadgeAlert,
   LuCalendarMinus2,
+  LuCalendarSearch,
 } from "react-icons/lu";
 import { MdClose } from "react-icons/md";
+import { SlGhost } from "react-icons/sl";
 import PieActiveArc from "../components/PieChart";
 import GoogleMapComponent from "../components/GoogleRouting";
 const HomeNew = () => {
@@ -427,7 +429,10 @@ const HomeNew = () => {
             {typeOfTask === "reviews" ? (
               <div className="REVIEWS">
                 {reviews.length === 0 ? (
-                  <p>No reviews available</p>
+                  <div className="flex flex-col items-center gap-2 text-[18px] text-gray-400 justify-center mt-5">
+                    <SlGhost className="text-[3rem]" />
+                    <p>No reviews available</p>
+                  </div>
                 ) : (
                   reviews.map((review) => {
                     const userDetails =

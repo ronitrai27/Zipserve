@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Home from "./pages/Home";
 import Messages from "./pages/Messages";
 import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
