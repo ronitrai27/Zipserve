@@ -30,7 +30,7 @@ const getAllWorkers = async (req, res) => {
     const skip = (pageNumber - 1) * limitNumber;
 
     // Convert distance to radians (5km / 6378.1km Earth's radius)
-    const maxDistanceInRadians = 5 / 6378.1;
+    const maxDistanceInRadians = 100 / 6378.1;
 
     // ----------------FETCHING ALL WORKERS WITHINN 5KM---------------------------
     const locationFilter = {
@@ -110,7 +110,7 @@ const getAllWorkersNoPage = async (req, res) => {
             type: "Point",
             coordinates: userLocation,
           },
-          $maxDistance: 5000, //5km----------------
+          $maxDistance: 100000, //5km----------------
         },
       },
     });

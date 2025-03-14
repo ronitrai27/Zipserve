@@ -1,5 +1,5 @@
 const Booking = require("../models/BookingModel");
-
+const Review = require("../models/reviewModel");
 const getPendingBookingsForWorker = async (req, res) => {
   try {
     const { workerId } = req.params;
@@ -193,7 +193,31 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers };
+// module.exports = { getAllUsers };
+
+//-------------------------------------------------------------
+//-----------------------------REVIEWS
+//--------------------------------------------------------------
+const getWorkerReviews = async (req, res) => {
+  try {
+    const { workerId } = req.params;
+
+    // Find all reviews where workerId matches
+    const reviews = await Review.find({ workerId });
+
+    res.status(200).json({
+      success: true,
+      count: reviews.length,
+      reviews,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching reviews",
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   getPendingBookingsForWorker,
@@ -202,4 +226,5 @@ module.exports = {
   getAllUsers,
   getWorkerConfirmedAndInProgressBookings,
   setBookingInProgress,
+  getWorkerReviews,
 };

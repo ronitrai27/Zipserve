@@ -4,6 +4,7 @@ const User = require("../models/UserModel.js");
 const {
   toggleFavoriteWorker,
   getFavoriteWorkers,
+  getAllUsers,
 } = require("../controllers/UserController.js");
 
 // Toggle favorite worker (Add/Remove)
@@ -31,5 +32,7 @@ router.get("/is-favorite/:userId/:workerId", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+router.get("/all", getAllUsers);
 
 module.exports = router;

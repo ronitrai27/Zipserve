@@ -7,6 +7,7 @@ const {
   getAllUsers,
   getWorkerConfirmedAndInProgressBookings,
   setBookingInProgress,
+  getWorkerReviews,
 } = require("../workerControllers/WorkerController.js");
 
 // Long polling: Get pending bookings for a worker
@@ -21,5 +22,7 @@ router.get(
   getWorkerConfirmedAndInProgressBookings
 );
 router.post("/set-in-progress", setBookingInProgress);
+
+router.get("/worker-reviews/:workerId", getWorkerReviews);
 
 module.exports = router;

@@ -414,6 +414,25 @@ const NewMyBooking = () => {
   useEffect(() => {
     setTotalPrice(workerInfo?.price + servicePrice + 10 + commission);
   }, [workerInfo, servicePrice, commission]);
+
+  //-------------------------------------------------------------
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    // Fetch all users
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/users/all");
+        if (response.data.success) {
+          setAllUsers(response.data.users);
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
   // DEBUGGING LOGS ------------------------------->
 
   // console.log("details of services from Bookings ->", selectedServiceDetails);
@@ -616,31 +635,61 @@ const NewMyBooking = () => {
                   {reviews && reviews.length > 0 ? (
                     reviews
                       ?.sort((a, b) => {
-                        if (sortOrder === "newest") {
-                          return new Date(b.createdAt) - new Date(a.createdAt);
-                        } else {
-                          return new Date(a.createdAt) - new Date(b.createdAt);
-                        }
+                        return sortOrder === "newest"
+                          ? new Date(b.createdAt) - new Date(a.createdAt)
+                          : new Date(a.createdAt) - new Date(b.createdAt);
                       })
                       .slice(0, visibleReviews)
-                      .map((review, index) => (
-                        <div
-                          key={review._id || index}
-                          className="border-b-[1px] rounded-md px-4 py-2 w-[90%] mx-auto bg-gray-50/40"
-                        >
-                          <div className="flex justify-between items-center mb-1">
-                            <h3 className="font-medium text-[16px] text-gray-800 font-inter capitalize">
-                              {review.customerName}
-                            </h3>
-                            <span className="text-sm text-gray-500">
-                              {new Date(review.createdAt).toLocaleDateString()}
-                            </span>
+                      .map((review, index) => {
+                        // Find user details for this review's userId
+                        const user = allUsers.find(
+                          (u) => u._id === review.userId
+                        );
+
+                        return (
+                          <div
+                            key={review._id || index}
+                            className="border-b-[1px] rounded-md px-4 py-2 w-[90%] mx-auto bg-gray-50/40"
+                          >
+                            <div className="flex justify-between items-center mb-1">
+                              {/* User Image and Name */}
+                              <div className="flex items-center gap-2">
+                                <img
+                                  src={user?.userImage}
+                                  alt={user?.name}
+                                  className="w-10 h-10 rounded-full object-cover"
+                                />
+                                <h3 className="font-medium text-[16px] text-gray-800 font-inter capitalize">
+                                  {review.customerName}
+                                </h3>
+                              </div>
+
+                              {/* Review Date */}
+                              <span className="text-sm text-gray-500">
+                                {new Date(
+                                  review.createdAt
+                                ).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-end px-5 gap-2">
+                              <p className=" text-gray-500 text-[12px] font-light">
+                                {review.stars}
+                              </p>
+                              <Rating
+                                name="half-rating-read"
+                                size="small"
+                                defaultValue={review.stars || 0}
+                                precision={0.5}
+                                readOnly
+                              />
+                            </div>
+                            {/* Review Comment */}
+                            <p className="text-[15px] text-gray-600 font-light break-words max-w-full overflow-hidden">
+                              {review.comment}
+                            </p>
                           </div>
-                          <p className="text-[15px] text-gray-600 font-light break-words max-w-full overflow-hidden">
-                            {review.comment}
-                          </p>
-                        </div>
-                      ))
+                        );
+                      })
                   ) : (
                     // Show message when there are no reviews
                     <div className="flex justify-center items-center h-full">
@@ -1052,7 +1101,7 @@ const NewMyBooking = () => {
                     <p className=" capitalize text-[22px] tracking-tighter text-gray-800 font-medium mb-3">
                       Congratulations ! {user?.name}
                     </p>
-                    <div className="flex items-center w-fit bg-yellow-200 px-4 rounded-full py-2 ">
+                    <div className="flex items-center w-fit bg-yellow-500 px-4 rounded-full py-2 ">
                       <div className="flex flex-col items-center gap-1 ">
                         <p className="text-black ">Rewards</p>
                         <p className="text-black tracking-tighter text-sm">

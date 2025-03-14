@@ -52,4 +52,15 @@ const getFavoriteWorkers = async (req, res) => {
   }
 };
 
-module.exports = { toggleFavoriteWorker, getFavoriteWorkers };
+// Get all users
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, "_id name userImage"); // Fetch required fields only
+    res.status(200).json({ success: true, users });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+module.exports = { toggleFavoriteWorker, getFavoriteWorkers, getAllUsers };
