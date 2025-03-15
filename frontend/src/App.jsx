@@ -21,7 +21,7 @@ import MyBooking from "./pages/MyBooking.jsx";
 import Workers from "./pages/Workers.jsx";
 import NotFound from "./pages/NotFound";
 import Register from "./pages/Register.jsx";
-
+import Password from "./pages/Password.jsx";
 const App = () => {
   const location = useLocation();
   const { theme } = useAppContext();
@@ -34,9 +34,10 @@ const App = () => {
     "/about",
     "/404",
     "/register",
+    "/reset-cridentials",
   ];
-  const noLeftBarRoutes = ["/login", "/404", "/register"];
-  const noNavbarRoutes = ["/login", "/register", "/404"];
+  const noLeftBarRoutes = ["/login", "/404", "/register", "/reset-cridentials"];
+  const noNavbarRoutes = ["/login", "/register", "/404", "/reset-cridentials"];
   const isBookingRoute = location.pathname.startsWith("/booking/");
 
   // Logic to determine which components to show
@@ -82,6 +83,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/404" element={<NotFound />} />
+            <Route path="/reset-cridentials" element={<Password />} />
 
             {/* Protected Routes - Only accessible if logged in */}
 

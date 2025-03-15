@@ -79,26 +79,27 @@ const Register = () => {
   //----------------------------------------------------
   const handleGoogleLogin = async (credentialResponse) => {
     try {
-      // const decoded = jwtDecode(googleToken.credential);
-      // console.log("Google User Info:", decoded);
       const res = await axios.post(
         "http://localhost:8080/api/auth/google-login",
         { token: credentialResponse.credential },
         { withCredentials: true }
       );
 
-      // ✅ Fetch updated user data after Google login
       const userResponse = await axios.get(
         "http://localhost:8080/api/auth/me",
         {
           withCredentials: true,
         }
       );
+
       setUser(userResponse.data.user);
-      toast.success("Login Successful");
-      navigate("/home");
+
+      setTimeout(() => {
+        navigate("/home");
+      }, 1000); // Small delay to allow state update
     } catch (error) {
       console.error("Google Login Error:", error);
+      toast.error("Google Login Failed!");
     }
   };
 

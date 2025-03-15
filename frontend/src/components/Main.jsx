@@ -262,7 +262,7 @@ const Main = () => {
             </div>
             {/* --------------------------------bookings------------------ */}
             <div className="absolute bottom-3 left-3 bg-white text-gray-800 font-inter  opacity-80 hover:opacity-100 shadow-xl rounded-lg px-4 w-auto py-2">
-              {userBookDetails.length > 0 ? (
+              {userBookDetails && userBookDetails.length > 0 ? (
                 <div className="">
                   <p className="flex items-center gap-2 text-[15px] font-[400] tracking-tight select-text text-gray-600">
                     <LuCalendarCheck className="text-xl text-primary" /> ID:{" "}

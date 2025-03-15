@@ -14,14 +14,14 @@ exports.googleLogin = async (req, res) => {
       return res.status(400).json({ message: "Token required" });
     }
 
-    console.log("Verifying Google token...");
+    // console.log("Verifying Google token...");
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
-    console.log("Google token verified successfully", payload);
+    // console.log("Google token verified successfully", payload);
 
     const { email, name, picture, sub } = payload;
     if (!email) {
@@ -31,11 +31,11 @@ exports.googleLogin = async (req, res) => {
         .json({ message: "Google account must have an email" });
     }
 
-    console.log("Checking if user exists in database...");
+    // console.log("Checking if user exists in database...");
     let user = await User.findOne({ email });
 
     if (user) {
-      console.log("User found in database", user);
+      //   console.log("User found in database", user);
       if (!user.googleId) {
         user.googleId = sub;
         await user.save();
@@ -58,7 +58,7 @@ exports.googleLogin = async (req, res) => {
         favouriteWorkers: [],
       });
       await user.save();
-      console.log("New user created successfully");
+      //   console.log("New user created successfully");
     }
 
     console.log("Generating JWT token...");
@@ -69,7 +69,7 @@ exports.googleLogin = async (req, res) => {
     );
     console.log("JWT token generated");
 
-    console.log("Setting auth token in HTTP-only cookie...");
+    // console.log("Setting auth token in HTTP-only cookie...");
     res.cookie("authToken", authToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

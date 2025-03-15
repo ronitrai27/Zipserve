@@ -60,7 +60,9 @@ app.use("/api", workerLoginRoutes);
 app.use("/api", workerProfileRoutes);
 app.use("/api/messages", messagesRoutes);
 app.use("/api/complete", completeRoute);
+//----------------OTHERS
 app.use("/api/auth", require("./routes/GoogleRoutes")); // google login
+app.use("/api/pass", require("./routes/PasswordRoutes"));
 // Global Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

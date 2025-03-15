@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import img from "../assets/homeImg1-removebg-preview.png";
 import { LuBadgeCheck } from "react-icons/lu";
 import styled from "styled-components";
@@ -16,34 +16,36 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const navigate = useNavigate();
-  const { setUser } = useAppContext();
-  //----------------------------
+  const { setUser, user } = useAppContext();
+  //------------------------------------------------------------GOOGLE
   const handleGoogleLogin = async (credentialResponse) => {
     try {
-      // const decoded = jwtDecode(googleToken.credential);
-      // console.log("Google User Info:", decoded);
       const res = await axios.post(
         "http://localhost:8080/api/auth/google-login",
         { token: credentialResponse.credential },
         { withCredentials: true }
       );
 
-      // ✅ Fetch updated user data after Google login
       const userResponse = await axios.get(
         "http://localhost:8080/api/auth/me",
         {
           withCredentials: true,
         }
       );
+
       setUser(userResponse.data.user);
-      toast.success("Login Successful");
-      navigate("/home");
+
+      setTimeout(() => {
+        navigate("/home");
+      }, 1000); // Small delay to allow state update
     } catch (error) {
       console.error("Google Login Error:", error);
+      toast.error("Google Login Failed!");
     }
   };
 
-  //--------------------------------
+  //----------------------------------------------------
+  //------------------------------------------
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -72,6 +74,9 @@ const Register = () => {
       toast.error(errorMessage);
     }
   };
+  //----------------------------------------------------
+  //-------------------DEBUGGING---------------------
+  console.log("USER DETAILS FROM LOGIN ---------------------------->", user);
   return (
     <div className="flex  font-inter p-1">
       {/* leftside */}
@@ -129,8 +134,8 @@ const Register = () => {
                 />
                 <span className="input-border" />
               </div>
-              <p className="text-[14px] text-primary flex w-full justify-end my-1 capitalize cursor-pointer">
-                forget password?
+              <p className="text-[14px] text-primary flex w-full justify-end my-1 capitalize cursor-pointer hover:text-blue-700">
+                <Link to="/reset-cridentials">Forgot password?</Link>
               </p>
             </StyledWrapper>
             {/* terms and condition */}
