@@ -61,7 +61,9 @@ const Main = () => {
     },
   ];
 
-  const firstBooking = userBookDetails[0];
+  // const firstBooking = userBookDetails[0];
+  const firstBooking = userBookDetails?.[0] || null;
+
   const currentIndex = firstBooking
     ? statuses.findIndex(
         (s) => s.name.toLowerCase() === firstBooking.status.toLowerCase()

@@ -17,7 +17,33 @@ const Register = () => {
   const [pass, setPass] = useState("");
   const navigate = useNavigate();
   const { setUser } = useAppContext();
-  //---------------
+  //----------------------------
+  const handleGoogleLogin = async (credentialResponse) => {
+    try {
+      // const decoded = jwtDecode(googleToken.credential);
+      // console.log("Google User Info:", decoded);
+      const res = await axios.post(
+        "http://localhost:8080/api/auth/google-login",
+        { token: credentialResponse.credential },
+        { withCredentials: true }
+      );
+
+      // ✅ Fetch updated user data after Google login
+      const userResponse = await axios.get(
+        "http://localhost:8080/api/auth/me",
+        {
+          withCredentials: true,
+        }
+      );
+      setUser(userResponse.data.user);
+      toast.success("Login Successful");
+      navigate("/home");
+    } catch (error) {
+      console.error("Google Login Error:", error);
+    }
+  };
+
+  //--------------------------------
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -66,8 +92,9 @@ const Register = () => {
             onSubmit={handleLogin}
           >
             <div className="mb-4 flex items-center justify-between gap-3">
+              {/* GOOGLE------> */}
               <GoogleLogin
-                // onSuccess={handleGoogleLogin}
+                onSuccess={handleGoogleLogin}
                 onError={() => toast.error("Google Login Failed")}
               />
 

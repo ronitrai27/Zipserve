@@ -62,7 +62,7 @@ const GoogleMapComponent = ({ userLocation, workerLocation }) => {
 
   // Use the useLoadScript hook to load the Google Maps API
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "",
+    googleMapsApiKey: "AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ",
     // AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ
   });
 

@@ -106,7 +106,7 @@ const TooltipButton = ({ Icon, tooltip, onClick }) => {
 
 // Tooltip Component (Reusable)
 const Tooltip = ({ tooltip }) => (
-  <span className="absolute left-[calc(100%+26px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-primary text-white px-3 py-1.5 rounded-md text-xs whitespace-nowrap">
+  <span className="absolute left-[calc(100%+26px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-primary text-white px-3 py-1.5 rounded-md text-xs whitespace-nowrap z-50">
     {tooltip}
   </span>
 );

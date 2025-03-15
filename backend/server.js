@@ -3,7 +3,6 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 require("./models/db");
-
 const app = express();
 
 const allowedOrigins = [
@@ -39,6 +38,7 @@ const subServiceRoutes = require("./routes/SubServiceRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const bookingRoutes = require("./routes/BookingsRoute");
 const profileUserRoutes = require("./routes/ProfileRoutes");
+
 //------workers
 const workerPannelRoutes = require("./workerRoutes/WorkerRoute.js");
 const workerLoginRoutes = require("./workerRoutes/LoginRoutes.js");
@@ -60,6 +60,7 @@ app.use("/api", workerLoginRoutes);
 app.use("/api", workerProfileRoutes);
 app.use("/api/messages", messagesRoutes);
 app.use("/api/complete", completeRoute);
+app.use("/api/auth", require("./routes/GoogleRoutes")); // google login
 // Global Error Handling Middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

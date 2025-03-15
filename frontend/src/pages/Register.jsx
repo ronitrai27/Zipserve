@@ -74,6 +74,33 @@ const Register = () => {
       toast.error(error.response?.data?.message || "Registration failed!");
     }
   };
+  //-----------------------------------------------------
+  //---------------------GOOGLE LOGIN
+  //----------------------------------------------------
+  const handleGoogleLogin = async (credentialResponse) => {
+    try {
+      // const decoded = jwtDecode(googleToken.credential);
+      // console.log("Google User Info:", decoded);
+      const res = await axios.post(
+        "http://localhost:8080/api/auth/google-login",
+        { token: credentialResponse.credential },
+        { withCredentials: true }
+      );
+
+      // ✅ Fetch updated user data after Google login
+      const userResponse = await axios.get(
+        "http://localhost:8080/api/auth/me",
+        {
+          withCredentials: true,
+        }
+      );
+      setUser(userResponse.data.user);
+      toast.success("Login Successful");
+      navigate("/home");
+    } catch (error) {
+      console.error("Google Login Error:", error);
+    }
+  };
 
   return (
     <div className="flex  font-inter p-1">
@@ -97,7 +124,7 @@ const Register = () => {
           >
             <div className="mb-3 flex items-center justify-between gap-3">
               <GoogleLogin
-                // onSuccess={handleGoogleLogin}
+                onSuccess={handleGoogleLogin}
                 onError={() => toast.error("Google Login Failed")}
               />
 
