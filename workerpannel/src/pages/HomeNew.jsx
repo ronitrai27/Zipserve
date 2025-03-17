@@ -40,6 +40,8 @@ const HomeNew = () => {
   const [typeOfTask, setTypeOfTask] = useState("reviews");
   const [reviews, setReviews] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [surgeCharge, setSurgeCharge] = useState("");
+  const [showModal, setShowModal] = useState(false);
   //---------------------------------------------------------
   //--------------EARNING , BOOKINGS
   //---------------------------------------------------------
@@ -68,13 +70,13 @@ const HomeNew = () => {
     const updateDate = () => {
       const now = new Date();
       const formattedDate = now
-        .toLocaleDateString("en-GB") // "DD/MM/YYYY" format
-        .replace(/\//g, " / "); // Add spaces around "/"
+        .toLocaleDateString("en-GB")
+        .replace(/\//g, " / ");
       setCurrentDate(formattedDate);
     };
 
     updateDate();
-    const interval = setInterval(updateDate, 60000); // Update every minute
+    const interval = setInterval(updateDate, 60000);
 
     return () => clearInterval(interval);
   }, []);
@@ -113,13 +115,10 @@ const HomeNew = () => {
       }
     };
 
-    // Fetch bookings initially
     fetchBookings();
 
-    // Set an interval to fetch bookings every 3 seconds
     const intervalId = setInterval(fetchBookings, 3000);
 
-    // Cleanup interval when the component is unmounted or workerId changes
     return () => clearInterval(intervalId);
   }, [loggedWorker?._id]);
   //---------------------------------------------------------------
@@ -195,7 +194,7 @@ const HomeNew = () => {
   const [otp, setOtp] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedBookingId, setSelectedBookingId] = useState(null); // Store bookingId
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
   const handleCompleteBooking = async (bookingId, workerId) => {
     setIsLoading(true);
     setSelectedBookingId(bookingId);
@@ -223,7 +222,7 @@ const HomeNew = () => {
   //---------------------------------------------------------------
   const handleVerifyOTP = async () => {
     if (!otp) {
-      toast.warn("Please enter the OTP! ⚠️");
+      toast.warn("Please enter the OTP! ");
       return;
     }
 
@@ -248,11 +247,37 @@ const HomeNew = () => {
       toast.error("Error verifying OTP");
     }
   };
+  //-----------------------------------------------
+  //--------------------SURGE CHARGE
+  //-------------------------------------------------
+  const bookingId =
+    inProgressBookings.length > 0 ? inProgressBookings[0]._id : null;
+  const handleUpdateSurge = async () => {
+    try {
+      if (!bookingId) {
+        toast.warn("Booking ID is missing");
+        return;
+      }
+
+      const response = await axios.put(
+        `http://localhost:8080/api/complete/update-surge/${bookingId}`,
+        { surgeCharge: Number(surgeCharge) }
+      );
+
+      toast.success("Surge Charge Added ✅");
+      setSurgeCharge("");
+      // onUpdate(response.data.booking);
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error updating surge charge", error);
+    }
+  };
 
   //---------------------------------------
   //---------------DEBUGGING LOGS
   //----------------------------------------
   // console.log("REVIEWS ----->", reviews);
+  console.log("IN-PROGRESS ID", inProgressBookings);
   //------------------------------------------
   return (
     <div className=" w-full h-full relative">
@@ -287,8 +312,8 @@ const HomeNew = () => {
               <LuChartColumnBig className="text-2xl text-primary" /> my revenue
               :
             </p>
-            <p className="text-[26px] font-medium text-gray-500 mb-2">
-              ₹{stats.totalEarnings.toFixed(2)}
+            <p className="text-[24px] font-medium text-gray-500 mb-2 tracking-tight">
+              ₹{stats.totalEarnings.toFixed(1)}
             </p>
             <div className="bg-primary text-white flex items-center gap-2 px-1 py-1 rounded-full w-fit ml-auto">
               <LuCircleFadingPlus className="text-lg" />
@@ -711,8 +736,12 @@ const HomeNew = () => {
                 </div>
                 {/* BUTTONS--------------> */}
                 <div className="flex items-center justify-between mt-5 px-10 mb-5">
+                  {/* SURGE CHARGE */}
                   <div className="flex items-center justify-center ">
-                    <div className="group relative cursor-pointer w-36 border bg-white rounded-full overflow-hidden text-gray-800 text-[14px] font-[300] hover:shadow-lg transition-shadow duration-300">
+                    <div
+                      onClick={() => setShowModal(true)}
+                      className="group relative cursor-pointer w-36 border bg-white rounded-full overflow-hidden text-gray-800 text-[14px] font-[300] hover:shadow-lg transition-shadow duration-300"
+                    >
                       <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-2 py-2">
                         Surge charge
                       </span>
@@ -754,7 +783,7 @@ const HomeNew = () => {
       </div>
       {/*----------------------------- OTP Popup------------------------ */}
       {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-65 font-inter">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 font-inter">
           <div className="bg-white px-4 py-3 rounded-lg shadow-lg">
             <h2 className="text-[16px] font-medium mb-3 tracking-tight capitalize flex items-center gap-2">
               <LuBadgeAlert className="text-primary text-lg" />
@@ -780,6 +809,41 @@ const HomeNew = () => {
               Cancel
             </button>
             {/* {message && <p className="mt-2 text-sm text-gray-700">{message}</p>} */}
+          </div>
+        </div>
+      )}
+      {/* -------------------------------SURGE------------------------- */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80 relative font-inter">
+            <h2 className="text-lg font-semibold text-center mb-3">
+              Enter Surge Charge
+            </h2>
+
+            {/* Input Field */}
+            <input
+              type="number"
+              value={surgeCharge}
+              onChange={(e) => setSurgeCharge(e.target.value)}
+              className="w-full p-2 border rounded mt-2"
+              placeholder="Enter amount"
+            />
+
+            {/* Action Buttons */}
+            <div className="flex justify-between mt-4">
+              <button
+                className="px-4 py-2 bg-gray-300 rounded"
+                onClick={() => setShowModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-primary text-white rounded hover:bg-blue-700"
+                onClick={handleUpdateSurge}
+              >
+                Update
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -1,7 +1,8 @@
 const User = require("../models/UserModel");
 const { OAuth2Client } = require("google-auth-library");
 const jwt = require("jsonwebtoken");
-
+const validator = require("validator");
+const sendEmail = require("../utils/emailService.js");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 exports.googleLogin = async (req, res) => {
@@ -61,6 +62,17 @@ exports.googleLogin = async (req, res) => {
       //   console.log("New user created successfully");
     }
 
+    //email--
+    const loginTime = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
+
+    sendEmail(
+      email,
+      "New Login Alert 🛡️",
+      `Hello ${user.name},\n\nYou just logged in to your account at: ${loginTime}.\n\nIf this wasn't you, please reset your password immediately.\n\nBest Regards,\nZipserve Team`
+    ).catch((error) => console.error("Email sending failed:", error));
+
     console.log("Generating JWT token...");
     const authToken = jwt.sign(
       { id: user._id, email: user.email },
@@ -76,7 +88,7 @@ exports.googleLogin = async (req, res) => {
       sameSite: "strict",
     });
 
-    console.log("Sending response with user details");
+    // console.log("Sending response with user details");
     res.status(200).json({
       message: "Login successful",
       token: authToken,

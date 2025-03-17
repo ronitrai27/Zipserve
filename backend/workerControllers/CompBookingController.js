@@ -61,12 +61,10 @@ const verifyCompletionOTP = async (req, res) => {
       status: "in-progress",
     });
     if (!booking) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Invalid booking or not in-progress",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid booking or not in-progress",
+      });
     }
 
     // Check OTP
@@ -85,14 +83,37 @@ const verifyCompletionOTP = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Booking marked as completed" });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Error verifying OTP",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Error verifying OTP",
+      error: error.message,
+    });
   }
 };
+//---------------------------------------------------------------
+updateSurgeCharge = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const { surgeCharge } = req.body;
 
-module.exports = { sendCompletionOTP, verifyCompletionOTP };
+    if (!surgeCharge || surgeCharge < 0) {
+      return res.status(400).json({ message: "Invalid surge charge amount" });
+    }
+
+    const booking = await Booking.findByIdAndUpdate(
+      bookingId,
+      { surgeCharge },
+      { new: true }
+    );
+
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json({ message: "Surge charge updated", booking });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+//---------------------------------------------------------------
+module.exports = { sendCompletionOTP, verifyCompletionOTP, updateSurgeCharge };
