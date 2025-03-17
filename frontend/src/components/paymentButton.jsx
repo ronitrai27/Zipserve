@@ -22,7 +22,7 @@ const PaymentButton = ({ userId, workerId }) => {
   const { user } = useAppContext();
 
   const [showMore, setShowMore] = useState(false);
-
+  // const [loading, setLoading] = useState(false);
   const {
     setCurrentBookingId,
     currentBookingId,
@@ -56,6 +56,8 @@ const PaymentButton = ({ userId, workerId }) => {
     setSelectedDayDate,
     subservices,
     earnedCoins,
+    storedCoins,
+    setStoredCoins,
   } = useBooking();
 
   //----------------------------------------------------------------
@@ -194,6 +196,7 @@ const PaymentButton = ({ userId, workerId }) => {
       try {
         await sendBookingDetails(); // Sending data
         toast.success("Booking Request Initiated");
+        setStoredCoins(earnedCoins);
         setSlotTime("");
         setSelectedServices([]);
         setTotalPrice(0);

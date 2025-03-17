@@ -70,7 +70,8 @@ const NewMyBooking = () => {
     setIsDrawerOpen,
     subservices,
     setSubservices,
-    earnedCoins,
+    // earnedCoins,
+    storedCoins,
   } = useBooking();
 
   const { userLocation, userAddress } = useContext(LocationContext);
@@ -1115,7 +1116,8 @@ const NewMyBooking = () => {
                       <div className="flex items-center gap-3">
                         <img src={coins} alt="" className="w-10" />
                         <p className="text-4xl font-medium text-white">
-                          3.5 <span className="text-lg text-black">coins</span>
+                          {storedCoins}{" "}
+                          <span className="text-lg text-black">coins</span>
                         </p>
                       </div>
                     </div>

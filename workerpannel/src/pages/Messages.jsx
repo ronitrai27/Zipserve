@@ -10,7 +10,7 @@ function Messages() {
   const { loggedWorker, users } = useAppContext();
   const [messagedUserIds, setMessagedUserIds] = useState([]); // Stores user IDs who messaged the worker
   const [messages, setMessages] = useState([]); // Chat history
-
+  const [newMessage, setNewMessage] = useState("");
   //-----------------------------------------------
   //---------------GETTING USERS WHO MESSAGED THE WORKER
   //-----------------------------------------------
@@ -50,6 +50,23 @@ function Messages() {
 
     fetchMessages();
   }, [id, loggedWorker?._id]);
+  //------------------------------------------------------------
+  const sendMessage = async () => {
+    if (!newMessage.trim()) return;
+
+    try {
+      await axios.post("http://localhost:8080/api/mess/send", {
+        workerId: loggedWorker?._id,
+        userId: id,
+        message: newMessage,
+      });
+
+      setMessages([...messages, { senderType: "worker", message: newMessage }]); // Add to UI instantly
+      setNewMessage(""); // Clear input
+    } catch (error) {
+      toast.error("Failed to send message");
+    }
+  };
   //-----------------------------------------------------
   // console.log("ID PARAM --->", id);
   // console.log("ALL USER MESSAGED ID---->", messagedUserIds);
@@ -81,7 +98,7 @@ function Messages() {
                     />
                     <div className="flex flex-col  ">
                       <p className="font-semibold capitalize">{user.name}</p>
-                      <p className="text-sm text-gray-600">{user.email}</p>
+                      <p className="text-sm">{user.email}</p>
                     </div>
                   </li>
                 )
@@ -91,19 +108,35 @@ function Messages() {
         )}
       </div>
 
-      {/* RIGHT SIDE - Placeholder */}
-      {/* <div className="w-2/3 flex items-center justify-center font-inter">
-        <p className="text-gray-500 text-[26px] capitalize flex items-center gap-3">
-          <LuScanFace className="text-2xl" /> Select a user to view messages
-        </p>
-      </div> */}
       {/* Right Side - Chat Box */}
       <div className="w-full h-full flex flex-col">
-        <div className=" bg-gray-200 border-b text-lg font-semibold">
-          {/* {id
-            ? `Chat with ${users.find((u) => u._id === id)?.name}`
-            : "Select a user"} */}
-        </div>
+        {/* User Details at the Top */}
+        {id && (
+          <div className="w-full h-14 bg-primary text-white flex items-center px-4 gap-3">
+            {/** Find the user from the users list **/}
+            {users.length > 0 && (
+              <>
+                {users
+                  .filter((user) => user._id === id)
+                  .map((user) => (
+                    <div key={user._id} className="flex items-center gap-3">
+                      <img
+                        src={user.userImage}
+                        alt={user.name}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                      <div>
+                        <p className="font-semibold text-lg capitalize">
+                          {user.name}
+                        </p>
+                        <p className="text-sm text-gray-200">{user.email}</p>
+                      </div>
+                    </div>
+                  ))}
+              </>
+            )}
+          </div>
+        )}
 
         {/* Chat Messages */}
         <div className="flex-1 p-4 overflow-y-auto space-y-4 font-inter">
@@ -117,7 +150,7 @@ function Messages() {
                   className={`p-3 rounded-md max-w-[70%] ${
                     msg.senderType === "user"
                       ? "bg-gray-300 text-black self-end ml-auto w-fit"
-                      : "bg-primary text-white self-start"
+                      : "bg-primary text-white self-start w-fit "
                   }`}
                 >
                   {msg.message}
@@ -125,24 +158,30 @@ function Messages() {
               ))
             )
           ) : (
-            <p className="text-gray-500 flex items-center justify-center h-full">
-              Select a user to view messages
+            <p className="text-gray-500 flex items-center justify-center h-full text-[22px] capitalize gap-3">
+              <LuScanFace className="text-3xl" /> Select a user to view messages
             </p>
           )}
         </div>
 
-        {/* {id && (
+        {/* Message Input */}
+        {id && (
           <div className="p-4 border-t flex">
             <input
               type="text"
-              className="flex-1 p-2 border rounded-md"
+              className="flex-1 p-2 border rounded-md focus:outline-none"
               placeholder="Type a message..."
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
             />
-            <button className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md">
+            <button
+              className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md"
+              onClick={sendMessage}
+            >
               Send
             </button>
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );

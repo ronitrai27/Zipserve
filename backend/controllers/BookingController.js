@@ -45,41 +45,41 @@ const createBooking = async (req, res) => {
     // Save to database
     await newBooking.save();
     // Fetch user details
-    //   const user = await User.findById(userId).select("email name");
-    //   if (!user) {
-    //     return res.status(404).json({ message: "User not found." });
-    //   }
+    const user = await User.findById(userId).select("email name");
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
 
-    //   // Fetch worker details
-    //   const worker = await Worker.findById(workerId).select("name");
-    //   if (!worker) {
-    //     return res.status(404).json({ message: "Worker not found." });
-    //   }
+    // Fetch worker details
+    const worker = await Worker.findById(workerId).select("name");
+    if (!worker) {
+      return res.status(404).json({ message: "Worker not found." });
+    }
 
-    //   // Construct email message
-    //   const subject = "Booking Confirmation - Your Request is Pending";
-    //   const message = `
-    //    Dear ${user.name},
+    // Construct email message
+    const subject = "Booking Confirmation - Your Request is Pending";
+    const message = `
+       Dear ${user.name},
 
-    //    Your booking request has been received and is currently pending approval.
+       Your booking request has been received and is currently pending approval.
 
-    //    📌 Booking Details:
-    //    - Worker: ${worker.name}
-    //    - Date: ${date}
-    //    - Time: ${time}
-    //    - Services: ${subservices.join(", ")}
-    //    - Total Price: ₹${totalPrice}
-    //    - Payment Method: ${paymentMethod}
+       📌 Booking Details:
+       - Worker: ${worker.name}
+       - Date: ${date}
+       - Time: ${time}
+       - Services: ${subservices.join(", ")}
+       - Total Price: ₹${totalPrice}
+       - Payment Method: ${paymentMethod}
 
-    //    You will receive a confirmation once the worker accepts your booking.
+       You will receive a confirmation once the worker accepts your booking.
 
-    //    Thank you for choosing our service!
+       Thank you for choosing our service!
 
-    //    Regards,
-    //    [Your Service Name]
-    //  `;
+       Regards,
+       [Your Service Name]
+     `;
 
-    // sendEmail(user.email, subject, message);
+    sendEmail(user.email, subject, message);
 
     res.status(201).json({
       message: "Booking Request Initiated",

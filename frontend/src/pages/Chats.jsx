@@ -32,12 +32,15 @@ const Chats = () => {
   };
   //-------------------------------------------------------
   useEffect(() => {
-    if (id) {
-      fetchMessages();
-    }
+    if (!id) return;
+
+    fetchMessages();
+    const interval = setInterval(fetchMessages, 3000);
+
+    return () => clearInterval(interval);
   }, [id]);
 
-  // 🔥 Function to fetch messages
+  // ---------------------- Function to fetch messages
   const fetchMessages = async () => {
     try {
       const res = await axios.get(
@@ -48,8 +51,9 @@ const Chats = () => {
       console.error("Error fetching messages:", error);
     }
   };
+
   //----------------------------------------------------------
-  // ✨ Function to send a message
+  //  Function to send a message
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
 

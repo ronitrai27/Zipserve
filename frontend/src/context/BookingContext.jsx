@@ -42,7 +42,7 @@ export const BookingProvider = ({ children }) => {
   const [subservices, setSubservices] = useState([]); //SHOW ALL SERVICES from Backend FOR CATEGORY
 
   const [earnedCoins, setEarnedCoins] = useState(0);
-
+  const [storedCoins, setStoredCoins] = useState(0);
   // const calculateCoins = (price) => {
   //   let wholePart = Math.floor(price); // Remove decimals
   //   let coins = Math.floor(wholePart / 100) + (wholePart % 100 >= 50 ? 0.5 : 0);
@@ -87,6 +87,8 @@ export const BookingProvider = ({ children }) => {
         subservices,
         setSubservices,
         earnedCoins,
+        storedCoins,
+        setStoredCoins,
       }}
     >
       {children}

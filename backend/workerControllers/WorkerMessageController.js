@@ -35,5 +35,33 @@ const getMessagesForUser = async (req, res) => {
     res.status(500).json({ error: "Error fetching messages" });
   }
 };
+//---------------------------------------------------------------------
+const sendMessage = async (req, res) => {
+  try {
+    const { workerId, userId, message } = req.body;
 
-module.exports = { getUsersForWorker, getMessagesForUser };
+    if (!workerId || !userId || !message) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    // Create a new message
+    const newMessage = new Message({
+      workerId,
+      userId,
+      message,
+      senderType: "worker", // Worker is sending the message
+      timestamp: new Date(),
+    });
+
+    await newMessage.save(); // Save to database
+
+    res
+      .status(201)
+      .json({ success: true, message: "Message sent successfully" });
+  } catch (error) {
+    console.error("Error sending message:", error);
+    res.status(500).json({ error: "Error sending message" });
+  }
+};
+
+module.exports = { getUsersForWorker, getMessagesForUser, sendMessage };

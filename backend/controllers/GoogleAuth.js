@@ -79,7 +79,7 @@ exports.googleLogin = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
-    console.log("JWT token generated");
+    // console.log("JWT token generated");
 
     // console.log("Setting auth token in HTTP-only cookie...");
     res.cookie("authToken", authToken, {
