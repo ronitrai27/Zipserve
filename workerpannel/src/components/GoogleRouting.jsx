@@ -19,8 +19,8 @@ const lightStyle = [
 const GoogleMapComponent = ({ userLocation, workerLocation }) => {
   // Load Google Maps API
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "",
-    // AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ,
+    googleMapsApiKey: "AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ",
+    // AIzaSyAKUcB9_htfm4sbJbuHcObjSOKXwhdEwfQ
   });
 
   // Memoize locations to prevent unnecessary re-renders

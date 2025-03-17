@@ -22,6 +22,7 @@ import {
   LuBadgeAlert,
   LuCalendarMinus2,
   LuCalendarSearch,
+  LuCalendar,
 } from "react-icons/lu";
 import { MdClose } from "react-icons/md";
 import { SlGhost } from "react-icons/sl";
@@ -58,7 +59,7 @@ const HomeNew = () => {
 
     fetchWorkerStats();
 
-    const intervalId = setInterval(fetchWorkerStats, 6000);
+    const intervalId = setInterval(fetchWorkerStats, 3000);
 
     return () => clearInterval(intervalId);
   }, [loggedWorker]);
@@ -744,7 +745,10 @@ const HomeNew = () => {
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No in-progress bookings available.</p>
+            <div className="flex items-center gap-3 text-gray-500 capitalize text-[18px] justify-center mt-5">
+              <LuCalendar className="text-2xl" />
+              <p className="">No in-progress bookings available.</p>
+            </div>
           )}
         </div>
       </div>
