@@ -41,6 +41,29 @@ export const BookingProvider = ({ children }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false); // drawer
   const [subservices, setSubservices] = useState([]); //SHOW ALL SERVICES from Backend FOR CATEGORY
 
+  const [earnedCoins, setEarnedCoins] = useState(0);
+
+  // const calculateCoins = (price) => {
+  //   let wholePart = Math.floor(price); // Remove decimals
+  //   let coins = Math.floor(wholePart / 100) + (wholePart % 100 >= 50 ? 0.5 : 0);
+  //   return Number(coins.toFixed(1)); // Ensures 1 decimal place
+  // };
+  const calculateCoins = (price) => {
+    let coins = price / 100;
+
+    // coins = Math.round(coins * 2) / 2;
+
+    return Number(coins.toFixed(1));
+  };
+
+  useEffect(() => {
+    if (totalPrice > 0) {
+      setEarnedCoins(calculateCoins(totalPrice));
+    } else {
+      setEarnedCoins(0);
+    }
+  }, [totalPrice]);
+
   return (
     <BookingContext.Provider
       value={{
@@ -63,6 +86,7 @@ export const BookingProvider = ({ children }) => {
         setIsDrawerOpen,
         subservices,
         setSubservices,
+        earnedCoins,
       }}
     >
       {children}

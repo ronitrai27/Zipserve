@@ -19,7 +19,7 @@ const Chats = () => {
   useEffect(() => {
     if (id && workers.length > 0) {
       const worker = workers.find((worker) => worker._id === id);
-      setSelectedWorker(worker || null); // Update state, if found
+      setSelectedWorker(worker || null);
     }
   }, [id, workers]);
   //-------------------------------------------------

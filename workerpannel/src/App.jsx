@@ -34,6 +34,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/home" element={<HomeNew />} />
             <Route path="/messages" element={<Messages />} />
+            <Route path="/messages/:id" element={<Messages />} />
           </Routes>
         </div>
       </div>

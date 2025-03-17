@@ -17,6 +17,7 @@ import { MdOutlinePayments } from "react-icons/md";
 import { LiaAddressCardSolid } from "react-icons/lia";
 import { RiSecurePaymentLine } from "react-icons/ri";
 import { PiContactlessPayment } from "react-icons/pi";
+import { PiCoinsLight } from "react-icons/pi";
 const PaymentButton = ({ userId, workerId }) => {
   const { user } = useAppContext();
 
@@ -35,11 +36,11 @@ const PaymentButton = ({ userId, workerId }) => {
     fetchUserBookings(); // Fetch bookings when component mounts
   }, []);
 
-  useEffect(() => {
-    if (userBookDetails) {
-      console.log("User's Booking Details:", userBookDetails);
-    }
-  }, [userBookDetails]);
+  // useEffect(() => {
+  //   if (userBookDetails) {
+  //     console.log("User's Booking Details:", userBookDetails);
+  //   }
+  // }, [userBookDetails]);
   //----
   const {
     paymentMethod,
@@ -54,6 +55,7 @@ const PaymentButton = ({ userId, workerId }) => {
     selectedDayDate,
     setSelectedDayDate,
     subservices,
+    earnedCoins,
   } = useBooking();
 
   //----------------------------------------------------------------
@@ -339,21 +341,28 @@ const PaymentButton = ({ userId, workerId }) => {
           )}
         </div>
       </div>
-
-      {/* BOOK-BUTTON */}
-      <div className="flex items-center justify-center mt-10">
-        <div
-          className="group relative cursor-pointer w-40 border bg-white rounded-full overflow-hidden text-primary font-semibold hover:shadow-lg transition-shadow duration-300"
-          onClick={handleBooking}
-        >
-          <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-3 py-2">
-            Book Now
-          </span>
-          <div className="flex gap-2 text-white z-10 items-center absolute top-0 h-full w-full justify-center translate-x-12 opacity-0 group-hover:-translate-x-1 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-            <span>Book Now</span>
-            <LuCalendarPlus className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+      <div className="flex items-center justify-center mt-10 gap-10">
+        <div className="flex items-center gap-2 text-gray-500 font-inter text-[14px] border-[1px] border-yellow-500 px-2 py-1 rounded-md">
+          <p className="">Reward :</p>
+          <p className="flex items-center gap-1">
+            <PiCoinsLight className="text-yellow-500" /> {earnedCoins}
+          </p>
+        </div>
+        {/* BOOK-BUTTON */}
+        <div className="flex items-center justify-center">
+          <div
+            className="group relative cursor-pointer w-40 border bg-white rounded-full overflow-hidden text-primary font-semibold hover:shadow-lg transition-shadow duration-300"
+            onClick={handleBooking}
+          >
+            <span className="translate-x-8 group-hover:translate-x-12 group-hover:opacity-0 transition-all duration-500 ease-in-out inline-block px-3 py-2">
+              Book Now
+            </span>
+            <div className="flex gap-2 text-white z-10 items-center absolute top-0 h-full w-full justify-center translate-x-12 opacity-0 group-hover:-translate-x-1 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+              <span>Book Now</span>
+              <LuCalendarPlus className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+            </div>
+            <div className="absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg bg-[#3b75ef] scale-[1] dark:group-hover:bg-[#3b75ef] group-hover:bg-[#3b75ef] group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0"></div>
           </div>
-          <div className="absolute top-[50%] left-[15%] -translate-y-1/2 h-2 w-2 group-hover:h-full group-hover:w-full rounded-lg bg-[#3b75ef] scale-[1] dark:group-hover:bg-[#3b75ef] group-hover:bg-[#3b75ef] group-hover:scale-[1.8] transition-all duration-500 ease-out group-hover:top-[0%] group-hover:left-[0%] group-hover:translate-y-0"></div>
         </div>
       </div>
     </div>

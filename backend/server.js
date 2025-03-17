@@ -45,6 +45,7 @@ const workerLoginRoutes = require("./workerRoutes/LoginRoutes.js");
 const workerProfileRoutes = require("./workerRoutes/ProfileRoutes");
 const messagesRoutes = require("./routes/MessageRoutes");
 const completeRoute = require("./workerRoutes/CompleteBookingRoute");
+const workerMessage = require("./workerRoutes/WorkerMessageRoutes");
 //  Use Routes
 app.use("/api", workerRoutes);
 app.use("/api", serviceRoutes);
@@ -60,6 +61,7 @@ app.use("/api", workerLoginRoutes);
 app.use("/api", workerProfileRoutes);
 app.use("/api/messages", messagesRoutes);
 app.use("/api/complete", completeRoute);
+app.use("/api/mess", workerMessage);
 //----------------OTHERS
 app.use("/api/auth", require("./routes/GoogleRoutes")); // google login
 app.use("/api/pass", require("./routes/PasswordRoutes"));

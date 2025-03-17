@@ -287,7 +287,7 @@ const HomeNew = () => {
               :
             </p>
             <p className="text-[26px] font-medium text-gray-500 mb-2">
-              ₹{stats.totalEarnings}
+              ₹{stats.totalEarnings.toFixed(2)}
             </p>
             <div className="bg-primary text-white flex items-center gap-2 px-1 py-1 rounded-full w-fit ml-auto">
               <LuCircleFadingPlus className="text-lg" />

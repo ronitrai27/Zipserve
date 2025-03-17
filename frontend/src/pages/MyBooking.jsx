@@ -70,9 +70,12 @@ const NewMyBooking = () => {
     setIsDrawerOpen,
     subservices,
     setSubservices,
+    earnedCoins,
   } = useBooking();
 
   const { userLocation, userAddress } = useContext(LocationContext);
+  // console.log("TOTAL PRICE INITIAL -------------->", totalPrice);
+  // console.log("EARNED COINS INITIAL ---------------->", earnedCoins);
   //----------------------------------------------------------
   // ------------------DEFAULT EVERYTHING ON PAGE LOAD
   //----------------------------------------------------------
@@ -1020,7 +1023,7 @@ const NewMyBooking = () => {
                     <p className="text-[15px] tracking-tight">
                       Comission & Tax:
                     </p>
-                    <p className="">₹{commission}</p>
+                    <p className="">₹{commission.toFixed(2)}</p>
                   </div>
                   <div className="flex items-center justify-between border-b-[1px] border-gray-100 text-gray-800 mb-2 font-inter">
                     <p className="text-[15px] tracking-tight">Platform Fee:</p>
@@ -1049,7 +1052,7 @@ const NewMyBooking = () => {
             )}
           </AnimatePresence>
 
-          {/* CONGRATS DIV */}
+          {/*--------------------------------- CONGRATS DIV */}
           <div
             className={` fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-500 ${
               showDiv ? "opacity-100 visible" : "opacity-0 invisible"
@@ -1101,7 +1104,7 @@ const NewMyBooking = () => {
                     <p className=" capitalize text-[22px] tracking-tighter text-gray-800 font-medium mb-3">
                       Congratulations ! {user?.name}
                     </p>
-                    <div className="flex items-center w-fit bg-yellow-500 px-4 rounded-full py-2 ">
+                    <div className="flex items-center w-fit bg-yellow-300 px-4 rounded-full py-2 ">
                       <div className="flex flex-col items-center gap-1 ">
                         <p className="text-black ">Rewards</p>
                         <p className="text-black tracking-tighter text-sm">

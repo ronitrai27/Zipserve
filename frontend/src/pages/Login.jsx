@@ -55,7 +55,6 @@ const Register = () => {
         { email, password: pass },
         { withCredentials: true }
       );
-      toast.success("Login Successful! ");
 
       //------Resetting the userdata
       const userResponse = await axios.get(
@@ -65,6 +64,7 @@ const Register = () => {
         }
       );
       setUser(userResponse.data.user);
+      toast.success("Login Successful! ");
       setTimeout(() => {
         navigate("/home");
       }, 1000);
@@ -76,7 +76,7 @@ const Register = () => {
   };
   //----------------------------------------------------
   //-------------------DEBUGGING---------------------
-  console.log("USER DETAILS FROM LOGIN ---------------------------->", user);
+  // console.log("USER DETAILS FROM LOGIN ---------------------------->", user);
   return (
     <div className="flex  font-inter p-1">
       {/* leftside */}
