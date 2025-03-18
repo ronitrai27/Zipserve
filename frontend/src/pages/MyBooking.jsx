@@ -29,7 +29,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { toast } from "react-toastify";
 import GoogleMapComponent from "../components/GoogleDirection";
-
+import confetti from "canvas-confetti";
+import { PartyPopper as Party } from "lucide-react";
 const NewMyBooking = () => {
   const { id } = useParams();
   // storing _id of selected worker
@@ -77,6 +78,57 @@ const NewMyBooking = () => {
   const { userLocation, userAddress } = useContext(LocationContext);
   // console.log("TOTAL PRICE INITIAL -------------->", totalPrice);
   // console.log("EARNED COINS INITIAL ---------------->", earnedCoins);
+  //--------------------------------------------------------CONFETTI
+  const [isVisible, setIsVisible] = useState(false);
+
+  const fireConfetti = () => {
+    const duration = 5 * 1000; // 6 seconds
+    const animationEnd = Date.now() + duration;
+    const defaults = {
+      zIndex: 9999, // Place on top of everything
+      gravity: 0.5,
+      ticks: 300,
+    };
+
+    const intervalId = setInterval(function () {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        clearInterval(intervalId);
+        return;
+      }
+
+      // Create multiple confetti sources around the screen
+      [
+        { x: 0, y: 0.25, angle: 45 }, // Top-left
+        { x: 1, y: 0.25, angle: 135 }, // Top-right
+        { x: 0, y: 0.75, angle: 315 }, // Bottom-left
+        { x: 1, y: 0.75, angle: 225 }, // Bottom-right
+        { x: 0.5, y: 0, angle: 90 }, // Top-center
+      ].forEach((source) => {
+        confetti({
+          ...defaults,
+          particleCount: 8,
+          spread: 60,
+          origin: { x: source.x, y: source.y },
+          angle: source.angle,
+          startVelocity: 30,
+          colors: ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff"],
+          drift: 1,
+          scalar: 1.2,
+        });
+      });
+    }, 300);
+  };
+
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setIsVisible(true);
+  //     fireConfetti();
+  //   }, 500);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
   //----------------------------------------------------------
   // ------------------DEFAULT EVERYTHING ON PAGE LOAD
   //----------------------------------------------------------
@@ -92,13 +144,14 @@ const NewMyBooking = () => {
   //-----------------SHOWING BOOKING CONGRATS
   //------------------------------------------------------------
   const [showDiv, setShowDiv] = useState(false);
-  const [countdown, setCountdown] = useState(6);
+  const [countdown, setCountdown] = useState(5);
   useEffect(() => {
     if (bookingCongrats) {
       // Wait 2 seconds before showing the div
       const delayTimer = setTimeout(() => {
         setShowDiv(true);
-
+        setIsVisible(true);
+        fireConfetti();
         const countdownTimer = setInterval(() => {
           setCountdown((prev) => {
             if (prev === 1) {

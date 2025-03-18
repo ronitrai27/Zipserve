@@ -43,11 +43,7 @@ export const BookingProvider = ({ children }) => {
 
   const [earnedCoins, setEarnedCoins] = useState(0);
   const [storedCoins, setStoredCoins] = useState(0);
-  // const calculateCoins = (price) => {
-  //   let wholePart = Math.floor(price); // Remove decimals
-  //   let coins = Math.floor(wholePart / 100) + (wholePart % 100 >= 50 ? 0.5 : 0);
-  //   return Number(coins.toFixed(1)); // Ensures 1 decimal place
-  // };
+
   const calculateCoins = (price) => {
     let coins = price / 100;
 
