@@ -5,6 +5,7 @@ const {
   toggleFavoriteWorker,
   getFavoriteWorkers,
   getAllUsers,
+  updateUserCoins,
 } = require("../controllers/UserController.js");
 
 // Toggle favorite worker (Add/Remove)
@@ -34,5 +35,7 @@ router.get("/is-favorite/:userId/:workerId", async (req, res) => {
 });
 
 router.get("/all", getAllUsers);
+
+router.put("/coins/:id", updateUserCoins);
 
 module.exports = router;

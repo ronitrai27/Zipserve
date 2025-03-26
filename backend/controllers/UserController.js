@@ -1,4 +1,6 @@
 const User = require("../models/UserModel.js");
+
+//---------------------------------------------------------------
 // this controller is for marking fav workers...
 // Toggle favorite worker (Add/Remove)
 const toggleFavoriteWorker = async (req, res) => {
@@ -62,5 +64,36 @@ const getAllUsers = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+//--------------------------------------------------------------
+//--------------------------------------UPDATE COINS FOR USER
+//--------------------------------------------------------------
 
-module.exports = { toggleFavoriteWorker, getFavoriteWorkers, getAllUsers };
+const updateUserCoins = async (req, res) => {
+  const { id } = req.params; // Extracting user ID from request params
+  const { coins } = req.body; // Extracting coins from request body
+
+  try {
+    // Find user by ID and update coins
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $set: { coins } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: `You received ${coins} coins!` });
+  } catch (error) {
+    console.error("Error updating coins:", error);
+    res.status(500).json({ message: "Failed to update user coins", error });
+  }
+};
+
+module.exports = {
+  toggleFavoriteWorker,
+  getFavoriteWorkers,
+  getAllUsers,
+  updateUserCoins,
+};

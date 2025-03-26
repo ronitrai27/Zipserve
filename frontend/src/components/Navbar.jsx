@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
-import { NavLink, useNavigate } from "react-router-dom";
-import { motion, useResetProjection } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useAppContext } from "../context/AppContext";
 import { IoIosLogOut } from "react-icons/io";
 import ServiceSearch from "./SearchBarNav.jsx";

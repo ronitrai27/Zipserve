@@ -1,8 +1,11 @@
 import { createContext, useState, useContext, useEffect } from "react";
-
+import { useAppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 const BookingContext = createContext();
 
 export const BookingProvider = ({ children }) => {
+  const { user, setUser } = useAppContext();
   // Days of the week array
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   const monthsOfYear = [
@@ -42,13 +45,19 @@ export const BookingProvider = ({ children }) => {
   const [subservices, setSubservices] = useState([]); //SHOW ALL SERVICES from Backend FOR CATEGORY
 
   const [earnedCoins, setEarnedCoins] = useState(0);
-  const [storedCoins, setStoredCoins] = useState(0);
+  const [storedCoins, setStoredCoins] = useState(0); // to store the coins
+  const [tempCoins, setTempCoins] = useState(0); //to store stored coins temp for updating DB
 
+  useEffect(() => {
+    if (storedCoins > 0) {
+      setTempCoins(storedCoins);
+    }
+  }, [storedCoins]);
+  //-------------------------------------------------
+  //-----------CALCULATE COINS
+  //-------------------------------------------------
   const calculateCoins = (price) => {
     let coins = price / 100;
-
-    // coins = Math.round(coins * 2) / 2;
-
     return Number(coins.toFixed(1));
   };
 
@@ -59,6 +68,40 @@ export const BookingProvider = ({ children }) => {
       setEarnedCoins(0);
     }
   }, [totalPrice]);
+
+  //-------------------------------------------
+  //-----------------------UPDATING COINS
+  //-------------------------------------------
+
+  const updateUserCoins = async () => {
+    if (tempCoins > 0 && user) {
+      try {
+        const newCoinTotal = Number((user.coins + tempCoins).toFixed(1));
+
+        const response = await axios.put(
+          `http://localhost:8080/api/users/coins/${user._id}`,
+          {
+            coins: newCoinTotal,
+          }
+        );
+
+        // Update user state in the frontend after successful update in DB
+        setUser({ ...user, coins: newCoinTotal });
+        setTempCoins(0);
+        // toast.success(response.data.message);
+        setTimeout(() => {
+          toast.success("Successfully you received Coins !!");
+        }, 3000);
+        console.log(response.data.message); // Logging success message: You received __ coins!
+      } catch (error) {
+        console.error("Error updating coins:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    updateUserCoins(); // Call the function inside useEffect when storedCoins changes
+  }, [tempCoins]);
 
   return (
     <BookingContext.Provider

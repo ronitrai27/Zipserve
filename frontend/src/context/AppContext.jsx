@@ -13,6 +13,7 @@ export const AppProvider = ({ children }) => {
   const toggleTheme = () => {
     setTheme(!theme);
   };
+  //USER DETAILS-------------------
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -20,11 +21,11 @@ export const AppProvider = ({ children }) => {
           withCredentials: true,
         });
 
-        // console.log("User Details Fetched:", response.data);// debugging logs---
+        console.log("User Details Fetched:", response.data); // debugging logs---
         setUser(response.data.user);
       } catch (error) {
         console.error("Error fetching user details:", error);
-        setUser(null); // Reset user state if not authenticated
+        setUser(null);
       }
     };
 
@@ -85,7 +86,7 @@ export const AppProvider = ({ children }) => {
     const fetchWorkers = async () => {
       try {
         setLoading(true);
-        console.log("Fetching workers with location:", userLocation);
+        // console.log("Fetching workers with location:", userLocation);
 
         const response = await fetch(
           `http://localhost:8080/api/workers/all?latitude=${userLocation.latitude}&longitude=${userLocation.longitude}`

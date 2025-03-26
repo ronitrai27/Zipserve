@@ -25,10 +25,10 @@ const PaymentButton = ({ userId, workerId }) => {
   // const [loading, setLoading] = useState(false);
   const {
     setCurrentBookingId,
-    currentBookingId,
-    userBookDetails,
+    // currentBookingId,
+    // userBookDetails,
     fetchUserBookings,
-    bookingCongrats,
+    // bookingCongrats,
     setBookingCongrats,
   } = useBooked();
   //----
@@ -53,10 +53,10 @@ const PaymentButton = ({ userId, workerId }) => {
     slotTime,
     setSlotTime,
     selectedDayDate,
-    setSelectedDayDate,
+    // setSelectedDayDate,
     subservices,
     earnedCoins,
-    storedCoins,
+    // storedCoins,
     setStoredCoins,
   } = useBooking();
 
@@ -153,6 +153,7 @@ const PaymentButton = ({ userId, workerId }) => {
             setTotalPrice(0);
             setPaymentMethod("");
             setIsDrawerOpen(false);
+            setStoredCoins(earnedCoins);
             setBookingCongrats(true);
           } catch (error) {
             console.error("Error verifying payment or booking:", error);
