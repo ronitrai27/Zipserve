@@ -106,7 +106,7 @@ const Register = () => {
   return (
     <div className="flex  font-inter p-1">
       {/* leftside */}
-      <div className="min-w-[36%] max-w-[38%] px-4 py-6">
+      <div className="min-w-[36%] max-w-[38%] px-4 py-6 bg-white">
         <img src={logo} alt="" className="w-[11rem] " />
 
         <div className=" flex flex-col justify-center h-full ">
