@@ -11,17 +11,35 @@ exports.createOrder = async (req, res) => {
   try {
     const { amount, currency } = req.body;
 
+    console.log("Received payment request:", { amount, currency });
+
+    // Check for missing or invalid amount/currency
+    if (!amount || isNaN(amount) || amount <= 0) {
+      console.error("❌ Invalid amount:", amount);
+      return res.status(400).json({ error: "Invalid payment amount" });
+    }
+
+    if (!currency) {
+      console.error("❌ Currency not provided");
+      return res.status(400).json({ error: "Currency is required" });
+    }
+
     const options = {
       amount: amount * 100, // Convert to paise
       currency,
       receipt: `receipt_${Date.now()}`,
-      payment_capture: 1, // Auto-capture payment
+      payment_capture: 1, // Auto-capture
     };
 
+    console.log("Creating order with options:", options);
+
     const order = await instance.orders.create(options);
+
+    console.log("✅ Razorpay order created:", order);
     res.status(200).json(order);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("❌ Razorpay order creation failed:", error);
+    res.status(500).json({ error: error.message || "Internal server error" });
   }
 };
 
