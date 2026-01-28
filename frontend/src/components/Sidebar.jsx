@@ -1,48 +1,64 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
+import { Context } from "../context/Context";
 const Sidebar = () => {
+  const { setOpened } = useContext(Context); // for AI
   const [expended, setExpended] = useState(true);
   const handleSidebar = () => {
     setExpended(!expended);
   };
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useAppContext();
+  const { theme } = useAppContext();
+  const { user } = useAppContext();
+  // console.log("user details ->", user); debugging log---
+
+  const shortenEmail = (email, maxLength = 10) => {
+    if (!email) return "Guest";
+
+    const [name, domain] = email.split("@");
+
+    if (name.length > maxLength) {
+      return `${name.slice(0, 6)}...@${domain}`;
+    }
+
+    return email;
+  };
   return (
     <div className="h-full ">
       <div
-        className={`h-full pt-3 transition-all ease-linear duration-300 pl-2 pr-3 flex flex-col ${
+        className={`h-full pt-3 transition-all ease-in-out duration-200 pl-2 pr-3 flex flex-col ${
           expended ? "w-[220px] lg:w-[240px]" : "w-[80px] lg:w-[100px]"
         }`}
       >
         {/* ------------------Top-------------------- */}
         <div className="flex items-center justify-between  mt-2 font-outfit">
-          <div
-            className={`w-9 h-9 lg:w-11 lg:h-11  border flex items-center justify-center rounded-full ${
-              theme ? "bg-gray-200" : "bg-gray-200"
-            }`}
-          >
-            <img src={assets.sideUserLogo} alt="" className="w-6 lg:w-8" />
+          <div>
+            <img
+              src={user?.userImage}
+              alt=""
+              className="w-8 lg:w-11 h-8 lg:h-11 object-cover rounded-full"
+            />
           </div>
           <div className={`flex flex-col items-center`}>
             <p
-              className={`font-semibold text-base lg:text-lg w-auto transition-all duration-300 ${
+              className={`font-semibold text-base lg:text-lg w-auto transition-all ease-in-out duration-200 capitalize ${
                 expended
                   ? "opacity-100 max-w-full"
                   : "opacity-0 max-w-0 overflow-hidden"
               } ${theme ? "text-gray-900" : "text-white"}`}
             >
-              John Parker
+              {user ? user.name : "Guest"}
             </p>
             <p
-              className={`font-light text-xs lg:text-sm italic transition-all duration-300 ${
+              className={`font-light text-xs lg:text-sm italic transition-all ease-in-out duration-200 ${
                 expended
                   ? "opacity-100 max-w-full"
                   : "opacity-0 max-w-0 overflow-hidden"
               } ${theme ? "text-gray-900" : "text-gray-300"}`}
             >
-              John12@gmail.com
+              {user ? shortenEmail(user.email) : "Guest"}
             </p>
           </div>
           {expended ? (
@@ -76,10 +92,10 @@ const Sidebar = () => {
           {/* 1 */}
           <div className="cursor-pointer pl-2 lg:pl-4 relative group">
             <NavLink
-              onClick={() => setExpended(true)}
-              to="/"
+              // onClick={() => setExpended(true)}
+              to="/home"
               className={({ isActive }) =>
-                `flex items-center gap-2 w-full px-1 py-1.5 lg:py-2 rounded-xl transition-all ${
+                `flex items-center gap-2 w-full px-1 py-1.5 lg:py-2 rounded-xl transition-all ease-in-out duration-200 ${
                   isActive
                     ? "text-gray-900 bg-stone-100"
                     : "hover:text-gray-900 hover:bg-stone-100"
@@ -102,7 +118,7 @@ const Sidebar = () => {
                 )}
               </div>
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -116,13 +132,13 @@ const Sidebar = () => {
           {/* 2 */}
           <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
-              onClick={() => setExpended(false)}
+              // onClick={() => setExpended(false)}
               to="/workers"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
                   isActive
                     ? "text-gray-900 bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
-                    : "hover:text-gray-900 hover:bg-stone-100 transition-all px-1 py-1.5 lg:py-2 rounded-xl"
+                    : "hover:text-gray-900 hover:bg-stone-100 transition-all ease-in-out duration-200 px-1 py-1.5 lg:py-2 rounded-xl"
                 }`
               }
             >
@@ -140,7 +156,7 @@ const Sidebar = () => {
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -154,13 +170,13 @@ const Sidebar = () => {
 
           <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
-              onClick={() => setExpended(false)}
+              // onClick={() => setExpended(false)}
               to="/messages"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
                   isActive
                     ? "text-gray-900 bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
-                    : "hover:text-gray-900 hover:bg-stone-100 transition-all px-1 py-1.5 lg:py-2 rounded-xl"
+                    : "hover:text-gray-900 hover:bg-stone-100 transition-all ease-in-out duration-200 px-1 py-1.5 lg:py-2 rounded-xl"
                 }`
               }
             >
@@ -178,7 +194,7 @@ const Sidebar = () => {
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -192,13 +208,13 @@ const Sidebar = () => {
           {/* 4 */}
           <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
-              onClick={() => setExpended(false)}
+              // onClick={() => setExpended(false)}
               to="/bookings"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
                   isActive
                     ? "text-gray-900 bg-stone-100 px-1 py-1.5 lg:py-2 rounded-xl"
-                    : "hover:text-gray-900 hover:bg-stone-100 transition-all px-1 py-1.5 lg:py-2 rounded-xl"
+                    : "hover:text-gray-900 hover:bg-stone-100 transition-all ease-in-out duration-200 px-1 py-1.5 lg:py-2 rounded-xl"
                 }`
               }
             >
@@ -216,7 +232,7 @@ const Sidebar = () => {
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -229,7 +245,7 @@ const Sidebar = () => {
           {/* 5 */}
           <div className={`cursor-pointer pl-2 lg:pl-4 relative group`}>
             <NavLink
-              onClick={() => setExpended(false)}
+              // onClick={() => setExpended(false)}
               to="/bookinghistory"
               className={({ isActive }) =>
                 `flex items-center gap-2 w-full ${
@@ -254,7 +270,7 @@ const Sidebar = () => {
               )}
               {expended ? (
                 <p
-                  className={`text-sm lg:text-[0.95rem] transition-all duration-300 max-w-full opacity-100`}
+                  className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 max-w-full opacity-100`}
                 >
                   Booking History
                 </p>
@@ -290,7 +306,7 @@ const Sidebar = () => {
           <div className="flex flex-col gap-1 ">
             {/* 8 ---------------Settings----------------- */}
             <div
-              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all hover:text-gray-700`}
+              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all ease-in-out duration-200 hover:text-gray-700`}
             >
               <assets.IoSettingsOutline
                 className={`${
@@ -301,12 +317,12 @@ const Sidebar = () => {
               />
               {/* Tooltip */}
               {!expended && (
-                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
+                <p className="absolute z-[9999] left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
                   Settings
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -317,7 +333,7 @@ const Sidebar = () => {
             </div>
             {/* 7 ---------------PROFILE----------------- */}
             <div
-              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all hover:text-gray-700`}
+              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all ease-in-out duration-200 hover:text-gray-700`}
               onClick={() => navigate("/my-profile")}
             >
               <assets.CgProfile
@@ -329,12 +345,12 @@ const Sidebar = () => {
               />
               {/* Tooltip */}
               {!expended && (
-                <p className="absolute z-50 left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
+                <p className="absolute z-[60] left-[calc(100%+18px)] lg:left-[calc(100%+22px)] top-1/2 -translate-y-1/2 invisible group-hover:visible opacity-0 group-hover:opacity-80 transition-opacity duration-200 bg-primary text-white px-2 lg:px-3 py-1.5 lg:py-2 rounded-md text-xs lg:text-sm whitespace-nowrap">
                   Profile
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -345,7 +361,11 @@ const Sidebar = () => {
             </div>
             {/* 8 ---------------HELP----------------- */}
             <div
-              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all hover:text-gray-700`}
+              onClick={() => {
+                setOpened(true);
+                navigate("/home");
+              }}
+              className={`cursor-pointer relative pl-4 group flex items-center  gap-2 w-full py-1.5 lg:py-2 hover:translate-x-2 transition-all ease-in-out duration-200 hover:text-gray-700`}
             >
               <assets.RiChatAiLine
                 className={`${
@@ -361,7 +381,7 @@ const Sidebar = () => {
                 </p>
               )}
               <p
-                className={`text-sm lg:text-[0.95rem] transition-all duration-300 ${
+                className={`text-sm lg:text-[0.95rem] transition-all ease-in-out duration-200 ${
                   expended
                     ? "max-w-full opacity-100"
                     : "opacity-0 max-w-0 overflow-hidden"
@@ -385,7 +405,7 @@ const Sidebar = () => {
               )}
             </>
           ) : (
-            <img src={assets.z} className="w-6 lg:w-8 mt-2" />
+            <img src={assets.z} className="w-6 lg:w-6 mt-3" />
           )}
         </div>
       </div>

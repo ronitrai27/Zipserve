@@ -18,7 +18,7 @@ import { FaFire } from "react-icons/fa6";
 import sideUserLogo from "./boy.png";
 import sideUserLogo2 from "./nerd.png";
 import gameCoins from "./coin.png";
-import z from "./z-zipserve.png";
+import z from "./z-zipserve1.png";
 import { PiPaintRoller } from "react-icons/pi";
 import { GiVacuumCleaner } from "react-icons/gi";
 import { LiaBroomSolid } from "react-icons/lia";
@@ -35,6 +35,20 @@ import zipblack from "./newZipserveBlack-removebg-preview.png";
 import { GiBullseye } from "react-icons/gi";
 import { FaRegEye } from "react-icons/fa";
 import { BsWallet2 } from "react-icons/bs";
+import { MdOutlineArrowDropUp } from "react-icons/md";
+import { MdOutlineArrowDropDown } from "react-icons/md";
+import { MdOutlineCall } from "react-icons/md";
+import { IoInformationSharp } from "react-icons/io5";
+import { VscTools } from "react-icons/vsc";
+import wallet from "./crypto-wallet.png";
+import { IoIosSearch } from "react-icons/io";
+import { LuSettings2 } from "react-icons/lu";
+import { ImEnlarge2 } from "react-icons/im";
+import { LuChevronRight } from "react-icons/lu";
+import { LuChevronLeft } from "react-icons/lu";
+import { LuPhoneCall } from "react-icons/lu";
+import { LuFlame } from "react-icons/lu";
+import { RxCross2 } from "react-icons/rx";
 export const assets = {
   GoSidebarCollapse,
   GoSidebarExpand,
@@ -73,4 +87,18 @@ export const assets = {
   GiBullseye,
   FaRegEye,
   BsWallet2,
+  MdOutlineArrowDropUp,
+  MdOutlineArrowDropDown,
+  MdOutlineCall,
+  IoInformationSharp,
+  VscTools,
+  wallet,
+  IoIosSearch,
+  LuSettings2,
+  ImEnlarge2,
+  LuChevronRight,
+  LuChevronLeft,
+  LuPhoneCall,
+  LuFlame,
+  RxCross2,
 };

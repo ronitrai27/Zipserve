@@ -1,12 +1,81 @@
-import express from "express";
-import cors from "cors";
-import "dotenv/config";
-
-//app config
+const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+require("dotenv").config();
+require("./models/db");
 const app = express();
 
-const port = process.env.PORT || 4000;
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3010",
+  // "https://frontend-beryl-seven.vercel.app",
+];
 
-// middlewares
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
+// Middleware
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+//ROUTES--------
+const workerRoutes = require("./routes/workersRoutes");
+const serviceRoutes = require("./routes/serviceRoutes");
+const authRoutes = require("./routes/AuthRoutes");
+const userRoutes = require("./routes/UserRoutes");
+const subServiceRoutes = require("./routes/SubServiceRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+const bookingRoutes = require("./routes/BookingsRoute");
+const profileUserRoutes = require("./routes/ProfileRoutes");
+
+//------workers
+const workerPannelRoutes = require("./workerRoutes/WorkerRoute.js");
+const workerLoginRoutes = require("./workerRoutes/LoginRoutes.js");
+const workerProfileRoutes = require("./workerRoutes/ProfileRoutes");
+const messagesRoutes = require("./routes/MessageRoutes");
+const completeRoute = require("./workerRoutes/CompleteBookingRoute");
+const workerMessage = require("./workerRoutes/WorkerMessageRoutes");
+//  Use Routes
+app.use("/api", workerRoutes);
+app.use("/api", serviceRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api", subServiceRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/bookings", bookingRoutes);
+app.use("/api", profileUserRoutes);
+//worker Routes--------------
+app.use("/api/workers", workerPannelRoutes);
+app.use("/api", workerLoginRoutes);
+app.use("/api", workerProfileRoutes);
+app.use("/api/messages", messagesRoutes);
+app.use("/api/complete", completeRoute);
+app.use("/api/mess", workerMessage);
+//----------------OTHERS
+app.use("/api/auth", require("./routes/GoogleRoutes")); // google login
+app.use("/api/pass", require("./routes/PasswordRoutes"));
+// Global Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    message: "Something went wrong! -- server.js",
+    error: err.message,
+  });
+});
+
+//  Start Server
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(` Server is running on port ${PORT}`);
+});

@@ -3,12 +3,12 @@ import { cn } from "@/lib/utils";
 export const BorderBeam = ({
   className,
   size = 200,
-  duration = 15,
+  duration = 25,
   anchor = 90,
-  borderWidth = 1.5,
+  borderWidth = 2.2,
   colorFrom = "#3b75ef",
   colorTo = "#7ba6f8",
-  delay = 0,
+  delay = 3,
   ...props
 }) => {
   return (

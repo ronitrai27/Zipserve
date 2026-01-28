@@ -1,18 +1,12 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Outfit:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-@import "leaflet/dist/leaflet.css";
+/* @import "leaflet/dist/leaflet.css"; */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-*{
-  /* font-family: Outfit; */
-  /* font-family: Poppins; */
-}
-.active .active-circle{
-  @apply block
-}
+
 @layer base {
   :root {
 
@@ -40,4 +34,27 @@
 
     --color-5: 90 100% 63%
   }
+}
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #efeff181;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e8e9eb86;
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #ebebef88 transparent;
 }
